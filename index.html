@@ -476,6 +476,7 @@
       .hero h1 { font-size: 2.4rem; }
       .roles-grid { grid-template-columns: repeat(2, 1fr); }
       .sidebar { width: 210px; }
+      #pending-approval-banner { left: 210px !important; }
       .main-content { padding: 2rem 1.75rem; }
       .stats-grid { grid-template-columns: repeat(2, 1fr); }
     }
@@ -566,6 +567,9 @@
       .right-panel { padding: 2rem 1.25rem 2.5rem; }
       .hero h1 { font-size: 1.9rem; }
       .roles-grid { grid-template-columns: 1fr; }
+
+      /* Sidebar is an off-canvas drawer here, so the overlay spans full width */
+      #pending-approval-banner { left: 0 !important; }
     }
 
     @media (max-width: 480px) {
@@ -595,10 +599,29 @@
       font-size:0.62rem; font-weight:700; min-width:16px; height:16px;
       padding:0 4px; margin-left:auto; flex-shrink:0;
     }
-    #notif-panel {
-      background:#fff; border-radius:var(--r); box-shadow:var(--shadow-md);
-      border:1px solid var(--border); margin-top:0.5rem;
-      max-height:280px; overflow-y:auto; display:none;
+    /* ── Toast notifications ── */
+    #toast-stack {
+      position: fixed; bottom: 1.25rem; right: 1.25rem; z-index: 500;
+      display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-end;
+      pointer-events: none;
+    }
+    .toast {
+      pointer-events: auto;
+      display: flex; align-items: flex-start; gap: 0.55rem;
+      background: #fff; border: 1px solid var(--border);
+      border-left: 3px solid var(--navy);
+      border-radius: 10px; box-shadow: 0 8px 28px rgba(14,20,40,0.18);
+      padding: 0.65rem 0.9rem; max-width: 340px;
+      font-size: 0.82rem; color: var(--text-soft); line-height: 1.5;
+      animation: toast-in 0.25s cubic-bezier(0.4,0,0.2,1);
+    }
+    .toast.toast-error   { border-left-color: #c0392b; }
+    .toast.toast-success { border-left-color: #1a6e3c; }
+    .toast.toast-out { opacity: 0; transform: translateY(6px); transition: opacity 0.25s, transform 0.25s; }
+    @keyframes toast-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 768px) {
+      #toast-stack { left: 1rem; right: 1rem; align-items: stretch; }
+      .toast { max-width: none; }
     }
 
     /* ── Mobile analytics table fix ── */
@@ -645,6 +668,32 @@
     }
     @keyframes tourCardIn { from { opacity:0; transform:scale(0.95); } to { opacity:1; transform:none; } }
     #tour-card.tour-card-animate { animation: tourCardIn 0.22s ease; }
+    /* ── Feedback FAB ── */
+    #feedback-fab {
+      position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 799;
+      display: none; align-items: center; gap: 0.45rem;
+      background: var(--navy); color: #fff;
+      border: none; border-radius: 50px;
+      padding: 0.65rem 1.1rem 0.65rem 0.9rem;
+      font-size: 0.84rem; font-weight: 600; font-family: 'Inter', sans-serif;
+      cursor: pointer; box-shadow: 0 4px 18px rgba(14,20,40,0.28);
+      transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+    }
+    #feedback-fab:hover {
+      background: var(--navy-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(14,20,40,0.32);
+    }
+    #feedback-fab:active { transform: translateY(0); }
+    #fb-modal { animation: fb-modal-in 0.22s cubic-bezier(0.4,0,0.2,1); }
+    @keyframes fb-modal-in {
+      from { opacity: 0; transform: translateY(12px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @media (max-width: 768px) {
+      #feedback-fab { bottom: 1rem; right: 1rem; }
+      #fb-modal { bottom: 5rem; right: 0.75rem; left: 0.75rem; width: auto; }
+    }
   </style>
 </head>
 <body>
@@ -1363,6 +1412,7 @@
       </div>
     </div>
 
+    <!-- Feedback tab (everyone) -->
     <!-- Staff Status tab (officers+) -->
     <div class="tab-content" id="tab-staff-status">
       <div class="page-header">
@@ -2699,6 +2749,8 @@
     // Always hide the pending banner when booting - only shown explicitly for pending accounts
     const banner = document.getElementById('pending-approval-banner');
     if (banner) banner.style.display = 'none';
+    const fab = document.getElementById('feedback-fab');
+    if (fab) fab.style.display = 'flex';
   }
 
   window.toggleSidebar = () => {
@@ -2717,40 +2769,50 @@
     document.getElementById('tab-' + tab).classList.add('active');
     const nav = document.getElementById('nav-' + tab);
     if (nav) nav.classList.add('active');
-    if (tab === 'requests') loadRequests();
-    if (tab === 'analytics') loadAnalytics();
-    if (tab === 'my-tutor') loadMyTutor();
-    if (tab === 'students') loadMyStudents();
-    if (tab === 'reassignments') loadReassignmentRequests();
-    if (tab === 'tasks') loadTasks();
-    if (tab === 'board-meetings') loadBoardMeetings();
-    if (tab === 'eduhub') loadEduHub();
-    if (tab === 'content-calendar') loadContentCalendar();
-    if (tab === 'grants') loadGrants();
-    if (tab === 'website-requests') loadWebsiteRequests();
-    if (tab === 'chapter-mgmt') loadChapterMgmt();
-    if (tab === 'approvals') loadApprovals();
-    if (tab === 'staff-status') loadStaffStatus();
-    if (tab === 'notifications') loadNotificationsTab();
-    if (tab === 'tutor-review') loadTutorReview();
-    if (tab === 'student-support') loadStudentSupport();
-    if (tab === 'hours') loadHours();
-    if (tab === 'members') loadMembers();
-    if (tab === 'all-students') loadAllStudents();
-    // New tabs
-    if (tab === 'how-it-works') {} // static
-    if (tab === 'signup-tutoring') loadSignupTutoring();
-    if (tab === 'homework') loadHomework();
-    if (tab === 'certificates') loadCertificates();
-    if (tab === 'progress') loadProgress();
-    if (tab === 'messages') loadMessages();
-    if (tab === 'events') loadEvents();
-    if (tab === 'sessions') loadSessions();
-    if (tab === 'tutor-homework') loadTutorHomework();
-    if (tab === 'contact-parents') loadContactParents();
-    if (tab === 'awards') loadAwards();
-    if (tab === 'chapter-trainings') loadChapterTrainings();
-    if (tab === 'chapter-dash') loadChapterDash();
+    const loaders = {
+      'requests':          () => loadRequests(),
+      'analytics':         () => loadAnalytics(),
+      'my-tutor':          () => loadMyTutor(),
+      'students':          () => loadMyStudents(),
+      'reassignments':     () => loadReassignmentRequests(),
+      'tasks':             () => loadTasks(),
+      'board-meetings':    () => loadBoardMeetings(),
+      'eduhub':            () => loadEduHub(),
+      'content-calendar':  () => loadContentCalendar(),
+      'grants':            () => loadGrants(),
+      'website-requests':  () => loadWebsiteRequests(),
+      'chapter-mgmt':      () => loadChapterMgmt(),
+      'approvals':         () => loadApprovals(),
+      'staff-status':      () => loadStaffStatus(),
+      'notifications':     () => loadNotificationsTab(),
+      'tutor-review':      () => loadTutorReview(),
+      'student-support':   () => loadStudentSupport(),
+      'hours':             () => loadHours(),
+      'members':           () => loadMembers(),
+      'all-students':      () => loadAllStudents(),
+      'signup-tutoring':   () => loadSignupTutoring(),
+      'homework':          () => loadHomework(),
+      'certificates':      () => loadCertificates(),
+      'progress':          () => loadProgress(),
+      'messages':          () => loadMessages(),
+      'events':            () => loadEvents(),
+      'sessions':          () => loadSessions(),
+      'tutor-homework':    () => loadTutorHomework(),
+      'contact-parents':   () => loadContactParents(),
+      'awards':            () => loadAwards(),
+      'chapter-trainings': () => loadChapterTrainings(),
+      'chapter-dash':      () => loadChapterDash(),
+    };
+    const loader = loaders[tab];
+    if (loader) Promise.resolve().then(loader).catch(err => {
+      console.error('Tab load failed:', tab, err);
+      const el = document.getElementById('tab-' + tab);
+      const spinner = el && el.querySelector('.empty-state');
+      if (spinner && /Loading/i.test(spinner.textContent)) {
+        spinner.innerHTML = '<span class="empty-icon">⚠️</span>Could not load this page. Check your connection and try again.';
+      }
+      showToast('Could not load that page. Please try again.', 'error');
+    });
   };
 
   window.togglePw = (id, btn) => {
@@ -2879,10 +2941,13 @@
     goPostLogin();
     showTab('announcements');
 
-    // Show tour for any new user who hasn't seen it yet
+    // First login: create the welcome notification (join your chapter Slack!),
+    // then show the tour for any new user who hasn't seen it yet
     setTimeout(async () => {
       const snap = await getDoc(doc(db, 'users', user.uid));
-      if (snap.exists() && !snap.data().tourSeen) showTour();
+      if (!snap.exists()) return;
+      await ensureWelcomeNotification(user, snap.data());
+      if (!snap.data().tourSeen) showTour();
     }, 600);
 
     if (unsubSelf) unsubSelf();
@@ -2894,6 +2959,9 @@
       if (myRole === 'student') {
         _studentEnrolled = !!data.assignedTutor;
         updateStudentNavTabs();
+        // If My Tutor is open, reflect match/pairing changes instantly
+        const myTutorTab = document.getElementById('tab-my-tutor');
+        if (myTutorTab && myTutorTab.classList.contains('active')) loadMyTutor();
       }
       // Skip re-boot while developer is viewing as a different role
       if (_devViewActive) return;
@@ -3007,7 +3075,23 @@
       feed.innerHTML = visible.map(d => {
         const n = d.data();
         const isRead = (n.readBy || []).includes(me.uid);
-        return `<div class="card" style="margin-bottom:0.75rem;border-left:3px solid ${isRead ? 'var(--border-light)' : '#f5a623'};background:${isRead ? 'var(--white)' : '#fffbf0'};">
+        const unreadDot = !isRead
+          ? `<div style="width:11px;height:11px;border-radius:50%;background:#3b7ef8;box-shadow:0 0 0 3px rgba(59,126,248,0.2);flex-shrink:0;margin-top:2px;"></div>`
+          : `<div style="width:11px;flex-shrink:0;"></div>`;
+        if (n.type === 'welcome') {
+          return `<div class="card" style="margin-bottom:0.75rem;background:${isRead ? 'var(--white)' : '#f4f8ff'};">
+            <div style="display:flex;align-items:flex-start;gap:0.75rem;">
+              <div style="font-size:1.3rem;flex-shrink:0;">👋</div>
+              <div style="flex:1;min-width:0;">
+                <div style="font-weight:700;font-size:0.88rem;color:var(--navy);">${esc(n.title)}</div>
+                <div style="font-size:0.75rem;color:var(--muted);margin:0.2rem 0;">${n.chapter ? esc(n.chapter)+' · ' : ''}${timeAgo(n.createdAt)}</div>
+                <div style="font-size:0.82rem;color:var(--text-soft);line-height:1.7;">${esc(n.body).replace(/\n/g,'<br>')}</div>
+              </div>
+              ${unreadDot}
+            </div>
+          </div>`;
+        }
+        return `<div class="card" style="margin-bottom:0.75rem;background:${isRead ? 'var(--white)' : '#fffbf0'};">
           <div style="display:flex;align-items:flex-start;gap:0.75rem;">
             <div style="font-size:1.3rem;flex-shrink:0;">🚨</div>
             <div style="flex:1;min-width:0;">
@@ -3015,7 +3099,7 @@
               <div style="font-size:0.75rem;color:var(--muted);margin:0.2rem 0;">${esc(LABELS[n.fromRole]||n.fromRole)}${n.chapter ? ' · '+esc(n.chapter) : ''} · ${timeAgo(n.createdAt)}</div>
               <div style="font-size:0.82rem;color:var(--text-soft);">"${esc(n.reason)}"</div>
             </div>
-            ${!isRead ? '<div style="width:8px;height:8px;border-radius:50%;background:#c0392b;flex-shrink:0;margin-top:4px;"></div>' : ''}
+            ${unreadDot}
           </div>
         </div>`;
       }).join('');
@@ -3028,6 +3112,62 @@
     } catch(e) {
       feed.innerHTML = '<div class="empty-state"><span class="empty-icon">⚠️</span>Could not load notifications.</div>';
     }
+  }
+
+  // ── Onboarding welcome notification (first notification for new users) ──
+  async function ensureWelcomeNotification(user, data) {
+    if (!data || data.welcomeNotified || _devViewActive) return;
+    const role    = data.role || myRole || '';
+    const chapter = data.chapter || '';
+    const first   = (data.displayName || user.displayName || user.email || 'there').split(' ')[0];
+    const slackLine = '1. Join your ' + (chapter ? chapter + ' chapter' : 'team') + ' Slack! This is where your team communicates day to day. Ask your chapter officers for the invite link, or email tutor@edutinereachout.com and we will get you in.';
+
+    let title, body;
+    if (role === 'student') {
+      title = 'Welcome to Edutine, ' + first + '! Here is how to get started';
+      body = 'We are so glad you are here. Edutine connects you with passionate student tutors, completely free. Your first steps:\n'
+        + slackLine + '\n'
+        + '2. How matching works: our team reviews your subjects and pairs you with a tutor, usually within a week. You will get a notification here when your match is ready.\n'
+        + '3. Check your subjects: make sure the subjects on your profile are the ones you actually need help with.\n'
+        + '4. Code of conduct: be respectful, show up on time, and report any absence in the My Attendance tab so your tutor is never left waiting.\n'
+        + '5. Tech check: before your first session, test your camera, microphone, and internet connection.\n'
+        + 'Questions? Email tutor@edutinereachout.com - we are happy to help.';
+    } else if (role === 'tutor') {
+      title = 'Welcome to the Edutine team, ' + first + '!';
+      body = 'Thank you for volunteering your time. The impact you will make on a student is real and lasting. Your first steps:\n'
+        + slackLine + '\n'
+        + '2. Complete your training: check the Chapter Trainings tab for required modules before your first session.\n'
+        + '3. Set your availability: keep your status and max student count up to date in the My Status tab so we can match you well.\n'
+        + '4. Explore EduHub: lesson plans, worksheets, and teaching guides are ready for you there.\n'
+        + '5. Log your hours: record your volunteer minutes in the Hours tab after each session.\n'
+        + 'Questions? Email tutor@edutinereachout.com or ask in Slack.';
+    } else {
+      title = 'Welcome aboard, ' + first + '!';
+      body = 'Welcome to the Edutine Staff Portal. Your first steps:\n'
+        + slackLine + '\n'
+        + '2. Look around your tabs: everything you are responsible for lives in the sidebar on the left.\n'
+        + '3. Keep your status current: use the My Status tab for availability and time-off requests.\n'
+        + '4. Take the tour: a quick walkthrough will start automatically, and you can replay it anytime.\n'
+        + 'Questions? Email tutor@edutinereachout.com or ask in Slack.';
+    }
+
+    try {
+      await addDoc(collection(db, 'notifications'), {
+        type: 'welcome',
+        targetUid: user.uid,
+        title, body, chapter,
+        createdAt: serverTimestamp(),
+        readBy: []
+      });
+      await updateDoc(doc(db, 'users', user.uid), { welcomeNotified: true });
+      const badge = document.getElementById('notif-badge');
+      if (badge && myRole !== 'ceo' && myRole !== 'super_admin') {
+        badge.textContent = '1';
+        badge.style.display = 'inline-flex';
+      }
+      const sub = document.getElementById('sd-notif-sub');
+      if (sub) sub.textContent = '1 new notification';
+    } catch(e) { /* non-blocking: welcome notification is best-effort */ }
   }
 
   // ── Staff Status tab ─────────────────────────────────────────────────────
@@ -4040,7 +4180,7 @@
   };
 
   window.approveTutor = async (appId, uid) => {
-    if (!uid) { alert('No account found for this applicant yet — they may not have signed in after applying.'); return; }
+    if (!uid) { alert('No account found for this applicant yet - they may not have signed in after applying.'); return; }
     await updateDoc(doc(db, 'users', uid), { pendingApproval: false, approvedBy: me.displayName || me.email, approvedAt: serverTimestamp() });
     await updateDoc(doc(db, 'applications', appId), { reviewStatus: 'verified', reviewedBy: me.uid, reviewedAt: serverTimestamp() });
     document.getElementById('tr-card-' + appId).innerHTML =
@@ -5868,35 +6008,104 @@
     });
   }
 
-  window.toggleNotifPanel = async () => {
-    const panel = document.getElementById('notif-panel');
-    if (panel.style.display === 'block') { panel.style.display = 'none'; return; }
-    panel.style.display = 'block';
-    panel.innerHTML = '<div style="padding:0.75rem;font-size:0.8rem;color:var(--muted);">Loading...</div>';
-    const snap = await getDocs(query(collection(db, 'notifications'), orderBy('createdAt', 'desc')));
-    if (snap.empty) { panel.innerHTML = '<div style="padding:0.75rem;font-size:0.82rem;color:var(--muted);">No notifications yet.</div>'; return; }
-    panel.innerHTML = snap.docs.map(d => {
-      const n = d.data();
-      const isRead = (n.readBy || []).includes(me.uid);
-      const ago = timeAgo(n.createdAt);
-      return `<div onclick="markNotifRead('${d.id}')" style="padding:0.65rem 0.85rem;border-bottom:1px solid var(--border-light);cursor:pointer;background:${isRead ? '#fff' : '#fffbf0'};">
-        <div style="display:flex;align-items:flex-start;gap:0.5rem;">
-          ${!isRead ? '<div style="width:7px;height:7px;border-radius:50%;background:#c0392b;flex-shrink:0;margin-top:4px;"></div>' : '<div style="width:7px;flex-shrink:0;"></div>'}
-          <div style="flex:1;min-width:0;">
-            <div style="font-size:0.82rem;font-weight:700;color:var(--navy);">🚨 ${esc(n.fromName)} - Emergency Unavailable</div>
-            <div style="font-size:0.75rem;color:var(--muted);">${esc(LABELS[n.fromRole]||n.fromRole)}${n.chapter ? ' · '+esc(n.chapter) : ''} · ${ago}</div>
-            <div style="font-size:0.8rem;margin-top:0.2rem;">"${esc(n.reason)}"</div>
-          </div>
-        </div>
-      </div>`;
-    }).join('');
-    // Mark all as read
-    snap.docs.filter(d => !(d.data().readBy || []).includes(me.uid)).forEach(d =>
-      updateDoc(doc(db, 'notifications', d.id), { readBy: [...(d.data().readBy || []), me.uid] })
-    );
+  // ── Toast notifications ──────────────────────────────────────────────────
+
+  window.showToast = (msg, type = 'info', ms = 4500) => {
+    let stack = document.getElementById('toast-stack');
+    if (!stack) {
+      stack = document.createElement('div');
+      stack.id = 'toast-stack';
+      document.body.appendChild(stack);
+    }
+    const t = document.createElement('div');
+    t.className = 'toast' + (type === 'error' ? ' toast-error' : type === 'success' ? ' toast-success' : '');
+    const icon = type === 'error' ? '⚠️' : type === 'success' ? '✅' : 'ℹ️';
+    t.innerHTML = `<span style="flex-shrink:0;">${icon}</span><span>${esc(msg)}</span>`;
+    t.onclick = () => t.remove();
+    stack.appendChild(t);
+    setTimeout(() => { t.classList.add('toast-out'); setTimeout(() => t.remove(), 300); }, ms);
   };
 
-  window.markNotifRead = async (id) => {};
+  // Safety net: any unhandled Firestore/network failure surfaces as a toast
+  // instead of silently dying (covers async actions without their own catch)
+  window.addEventListener('unhandledrejection', e => {
+    const msg = (e.reason && (e.reason.message || e.reason.code)) || '';
+    if (/permission|network|unavailable|failed|deadline|not-found|unauthenticated/i.test(msg)) {
+      showToast('Something went wrong - your last action may not have saved. ' +
+        (/permission/i.test(msg) ? 'You may not have access to do that.' : 'Please check your connection and try again.'), 'error');
+      e.preventDefault();
+    }
+  });
+
+  // ── Feedback (Formspree) ─────────────────────────────────────────────────
+
+  const FEEDBACK_ENDPOINT = 'https://formspree.io/f/mykadzdo';
+
+  window.openFeedbackModal = () => {
+    const ctx = document.getElementById('fb-context');
+    if (ctx && me) {
+      const chapter = document.getElementById('sb-chapter').textContent || '';
+      ctx.textContent = (me.displayName || me.email) + ' · ' + (LABELS[myRole] || myRole) + (chapter ? ' · ' + chapter : '');
+    }
+    document.getElementById('fb-error').style.display = 'none';
+    document.getElementById('fb-modal').style.display = 'block';
+    document.getElementById('fb-modal-backdrop').style.display = 'block';
+    setTimeout(() => document.getElementById('fb-subject').focus(), 50);
+  };
+
+  window.closeFeedbackModal = () => {
+    document.getElementById('fb-modal').style.display = 'none';
+    document.getElementById('fb-modal-backdrop').style.display = 'none';
+  };
+
+  window.initFeedbackTab = () => {}; // no-op: moved to FAB
+
+  window.submitFeedback = async () => {
+    const type = document.getElementById('fb-type').value;
+    const subject = document.getElementById('fb-subject').value.trim();
+    const message = document.getElementById('fb-message').value.trim();
+    const okEl = null; // success handled by toast + modal close
+    const errEl = document.getElementById('fb-error');
+    const btn = document.getElementById('fb-submit-btn');
+    okEl.style.display = 'none'; errEl.style.display = 'none';
+
+    if (!subject) { errEl.textContent = 'Please add a short subject.'; errEl.style.display = 'block'; return; }
+    if (!message) { errEl.textContent = 'Please describe your feedback in the details box.'; errEl.style.display = 'block'; return; }
+
+    btn.disabled = true; btn.textContent = 'Sending...';
+    try {
+      const data = new FormData();
+      data.append('type', type);
+      data.append('subject', subject);
+      data.append('message', message);
+      data.append('name', me ? (me.displayName || '') : '');
+      data.append('email', me ? (me.email || '') : '');
+      data.append('role', LABELS[myRole] || myRole || '');
+      data.append('chapter', document.getElementById('sb-chapter').textContent || '');
+      data.append('page', 'Edutine Portal');
+      data.append('_subject', '[Portal ' + type + '] ' + subject);
+      const res = await fetch(FEEDBACK_ENDPOINT, {
+        method: 'POST',
+        body: data,
+        headers: { 'Accept': 'application/json' }
+      });
+      if (res.ok) {
+        document.getElementById('fb-subject').value = '';
+        document.getElementById('fb-message').value = '';
+        closeFeedbackModal();
+        showToast('Feedback sent - thanks!', 'success');
+      } else {
+        const body = await res.json().catch(() => ({}));
+        const msg = (body.errors && body.errors.map(e => e.message).join(', ')) || 'Something went wrong sending your feedback.';
+        errEl.textContent = msg + ' Please try again or email tutor@edutinereachout.com.';
+        errEl.style.display = 'block';
+      }
+    } catch (e) {
+      errEl.textContent = 'Network error - could not send. Please check your connection and try again.';
+      errEl.style.display = 'block';
+    }
+    btn.disabled = false; btn.textContent = 'Send Feedback';
+  };
 
   // ── Tutor max students + reassignment ────────────────────────────────────
 
@@ -7175,9 +7384,56 @@
   }
   setInterval(_checkDevTools, 2000);
 
+  // Escape closes feedback modal
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeFeedbackModal();
+  });
+
   // Disable drag-to-inspect on images and links
   document.addEventListener('dragstart', function(e) { e.preventDefault(); });
 })();
 </script>
+
+<!-- ── Feedback FAB ─────────────────────────────────────────────────────── -->
+<button id="feedback-fab" onclick="openFeedbackModal()" aria-label="Send feedback" style="display:none;">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+  <span>Feedback</span>
+</button>
+
+<!-- ── Feedback Modal ────────────────────────────────────────────────────── -->
+<div id="fb-modal-backdrop" onclick="closeFeedbackModal()" style="display:none;position:fixed;inset:0;background:rgba(14,20,40,0.5);backdrop-filter:blur(4px);z-index:800;"></div>
+<div id="fb-modal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:801;width:480px;max-width:calc(100vw - 2rem);background:#fff;border-radius:20px;box-shadow:0 24px 64px rgba(14,20,40,0.28);border:1px solid var(--border);overflow:hidden;">
+  <div style="background:var(--navy);padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between;">
+    <div>
+      <div style="font-family:'Lora',serif;font-size:1.05rem;font-weight:700;color:#fff;">Send Feedback</div>
+      <div id="fb-context" style="font-size:0.73rem;color:rgba(255,255,255,0.5);margin-top:0.15rem;"></div>
+    </div>
+    <button onclick="closeFeedbackModal()" style="background:rgba(255,255,255,0.1);border:none;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:rgba(255,255,255,0.8);font-size:1.1rem;line-height:1;flex-shrink:0;transition:background 0.15s;" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">&times;</button>
+  </div>
+  <div style="padding:1.5rem;display:flex;flex-direction:column;gap:1rem;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+      <div>
+        <label style="font-size:0.72rem;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:0.4rem;">Type</label>
+        <select class="form-input" id="fb-type" style="font-size:0.85rem;padding:0.55rem 0.75rem;">
+          <option value="Bug Report">🐞 Bug Report</option>
+          <option value="Feature Request">💡 Feature Request</option>
+          <option value="Question">❓ Question</option>
+          <option value="General Feedback">💬 General Feedback</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-size:0.72rem;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:0.4rem;">Subject</label>
+        <input class="form-input" id="fb-subject" placeholder="Short summary..." style="font-size:0.85rem;padding:0.55rem 0.75rem;" />
+      </div>
+    </div>
+    <div>
+      <label style="font-size:0.72rem;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:0.4rem;">Details</label>
+      <textarea class="form-input" id="fb-message" rows="5" placeholder="What happened? What did you expect? For bugs, include the steps to reproduce." style="font-size:0.85rem;padding:0.6rem 0.75rem;resize:none;height:120px;font-family:inherit;line-height:1.55;display:block;width:100%;box-sizing:border-box;"></textarea>
+    </div>
+    <div id="fb-error" style="display:none;font-size:0.82rem;color:#a33;background:#fdf0f0;border:1px solid #ecc;border-radius:8px;padding:0.5rem 0.75rem;margin-top:-0.25rem;"></div>
+    <button id="fb-submit-btn" onclick="submitFeedback()" style="background:var(--navy);color:#fff;border:none;border-radius:10px;padding:0.7rem 1rem;font-size:0.9rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;width:100%;transition:opacity 0.15s;letter-spacing:0.01em;">Send Feedback</button>
+  </div>
+</div>
+
 </body>
 </html>
