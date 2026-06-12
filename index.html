@@ -13,7 +13,7 @@
       --navy:        #2d3d6b;
       --navy-dark:   #1e2d52;
       --blue:        #6ab0d8;
-      --bg:          #edf1f8;
+      --bg:          #e8eef8;
       --panel:       #f6f9fd;
       --white:       #ffffff;
       --border:      #d4dff0;
@@ -34,7 +34,7 @@
 
     body {
       font-family: 'Inter', sans-serif;
-      background: var(--bg);
+      background: linear-gradient(160deg, #dde8f7 0%, #e8eef8 40%, #eef2fb 100%);
       color: var(--text);
       min-height: 100vh;
       -webkit-font-smoothing: antialiased;
@@ -668,6 +668,31 @@
     }
     @keyframes tourCardIn { from { opacity:0; transform:scale(0.95); } to { opacity:1; transform:none; } }
     #tour-card.tour-card-animate { animation: tourCardIn 0.22s ease; }
+    /* ── Pinned nav items (bold, not draggable) ── */
+    .nav-item.nav-pinned { font-weight: 700; }
+    .nav-item.nav-pinned .nav-drag-handle { display: none !important; }
+
+    /* ── Nav drag-and-drop ── */
+    .nav-drag-handle {
+      opacity: 0; flex-shrink: 0;
+      font-size: 0.72rem; color: rgba(255,255,255,0.35);
+      cursor: grab; user-select: none;
+      margin-right: 0.3rem; margin-left: -0.15rem;
+      transition: opacity 0.15s;
+      letter-spacing: -0.5px;
+    }
+    .nav-item:hover .nav-drag-handle { opacity: 1; }
+    .nav-item.nav-dragging { opacity: 0.35 !important; background: rgba(255,255,255,0.04) !important; }
+    .nav-item[draggable="true"] { cursor: pointer; }
+    #nav-drop-line {
+      height: 2px; margin: 1px 6px;
+      background: #3b7ef8;
+      border-radius: 2px;
+      box-shadow: 0 0 8px rgba(59,126,248,0.6);
+      pointer-events: none;
+      display: none;
+    }
+
     /* ── Feedback FAB ── */
     #feedback-fab {
       position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 799;
@@ -1114,10 +1139,10 @@
     </div>
 
     <nav class="sidebar-nav">
-      <button class="nav-item active" id="nav-announcements" onclick="showTab('announcements')">
+      <button class="nav-item nav-pinned active" id="nav-announcements" onclick="showTab('announcements')">
         <span class="nav-icon">📢</span> Announcements
       </button>
-      <button class="nav-item" id="nav-notifications" onclick="showTab('notifications')" style="display:flex;">
+      <button class="nav-item nav-pinned" id="nav-notifications" onclick="showTab('notifications')" style="display:flex;">
         <span class="nav-icon">🔔</span> Notifications
         <span id="notif-badge" class="notif-badge" style="display:none;margin-left:auto;"></span>
       </button>
@@ -1471,29 +1496,27 @@
         <div class="empty-state"><span class="empty-icon">🧑‍💼</span>No pending approvals.</div>
       </div>
       <div class="page-header" style="margin-top:2.5rem;">
-        <div class="page-title" style="font-size:1.1rem;">Match Students to Tutors</div>
-        <p class="page-sub">Click a student to highlight tutors who teach their subjects. Send requests - first tutor to accept gets the student.</p>
+        <div class="page-title" style="font-size:1.1rem;">Assign Students to Tutors</div>
+        <p class="page-sub">Click a student, then click a tutor to assign them directly. Green border = subject match.</p>
       </div>
 
-      <!-- Action bar - shown when a student is selected -->
-      <div id="match-action-bar" style="display:none;background:#f0f4ff;border:1.5px solid var(--navy);border-radius:10px;padding:0.75rem 1rem;margin-bottom:1rem;display:none;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.65rem;">
-        <div id="match-action-label" style="font-size:0.85rem;font-weight:600;color:var(--navy);"></div>
-        <div style="display:flex;gap:0.5rem;">
-          <button onclick="sendMatchRequests()" style="background:var(--navy);color:#fff;border:none;border-radius:6px;padding:0.4rem 0.9rem;font-size:0.82rem;font-weight:600;cursor:pointer;">Send Match Requests</button>
-          <button onclick="clearStudentSelection()" style="background:none;border:1px solid #c0c8d8;border-radius:6px;padding:0.4rem 0.75rem;font-size:0.82rem;color:var(--muted);cursor:pointer;">Clear</button>
+      <!-- Action bar: updates as student/tutor are selected -->
+      <div id="match-action-bar" style="display:none;background:#f0f4ff;border:1.5px solid var(--navy);border-radius:10px;padding:0.75rem 1rem;margin-bottom:1rem;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.65rem;">
+        <div id="match-action-label" style="font-size:0.85rem;font-weight:600;color:var(--navy);flex:1;min-width:0;"></div>
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+          <button id="assign-direct-btn" onclick="assignStudentDirect()" style="display:none;background:#1a6e3c;color:#fff;border:none;border-radius:6px;padding:0.4rem 0.9rem;font-size:0.82rem;font-weight:600;cursor:pointer;">Assign Now</button>
+          <button onclick="clearMatchSelection()" style="background:none;border:1px solid #c0c8d8;border-radius:6px;padding:0.4rem 0.75rem;font-size:0.82rem;color:var(--muted);cursor:pointer;">Clear</button>
         </div>
       </div>
-      <div id="match-msg" style="display:none;font-size:0.82rem;font-weight:600;margin-bottom:0.75rem;"></div>
+      <div id="match-msg" style="display:none;font-size:0.82rem;font-weight:600;margin-bottom:0.75rem;padding:0.5rem 0.75rem;border-radius:8px;"></div>
 
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-top:0.5rem;">
-        <!-- Students column -->
         <div>
           <div style="font-size:0.9rem;font-weight:700;color:var(--navy);margin-bottom:0.6rem;">
             Unassigned Students <span id="unassigned-count" style="font-size:0.75rem;color:var(--muted);font-weight:500;"></span>
           </div>
           <div id="match-students-list" style="max-height:460px;overflow-y:auto;display:flex;flex-direction:column;gap:0.5rem;"></div>
         </div>
-        <!-- Tutors column -->
         <div>
           <div style="font-size:0.9rem;font-weight:700;color:var(--navy);margin-bottom:0.6rem;">
             Available Tutors <span id="tutors-count" style="font-size:0.75rem;color:var(--muted);font-weight:500;"></span>
@@ -1627,7 +1650,9 @@
             <option value="">Loading supervisors...</option>
           </select>
         </div>
-        <button class="btn-sm" onclick="submitHours()">Submit for Sign-off</button>
+        <div style="margin-top:0.75rem;">
+          <button class="btn-sm" onclick="submitHours()">Submit for Sign-off</button>
+        </div>
         <div id="hours-error" class="error-msg" style="display:none;margin-top:0.5rem;"></div>
       </div>
       <div class="card" style="padding:0;">
@@ -2940,6 +2965,8 @@
     if (role === 'ceo' || role === 'super_admin') startNotificationListener();
     goPostLogin();
     showTab('announcements');
+    // Nav order: init drag-drop (idempotent) then restore saved order for this user+role
+    setTimeout(() => { initNavDragDrop(); restoreNavOrder(); }, 0);
 
     // First login: create the welcome notification (join your chapter Slack!),
     // then show the tour for any new user who hasn't seen it yet
@@ -3067,7 +3094,10 @@
       // Only ceo/super_admin can see all; others see their own
       const visible = (myRole === 'ceo' || myRole === 'super_admin')
         ? snap.docs
-        : snap.docs.filter(d => (d.data().targetUid === me.uid || d.data().toRole === myRole));
+        : snap.docs.filter(d => {
+            const n = d.data();
+            return n.targetUid === me.uid || n.uid === me.uid || n.toRole === myRole;
+          });
       if (!visible.length) {
         feed.innerHTML = '<div class="empty-state"><span class="empty-icon">🔔</span>No notifications for you yet.</div>';
         return;
@@ -3086,6 +3116,19 @@
                 <div style="font-weight:700;font-size:0.88rem;color:var(--navy);">${esc(n.title)}</div>
                 <div style="font-size:0.75rem;color:var(--muted);margin:0.2rem 0;">${n.chapter ? esc(n.chapter)+' · ' : ''}${timeAgo(n.createdAt)}</div>
                 <div style="font-size:0.82rem;color:var(--text-soft);line-height:1.7;">${esc(n.body).replace(/\n/g,'<br>')}</div>
+              </div>
+              ${unreadDot}
+            </div>
+          </div>`;
+        }
+        if (n.type === 'match') {
+          return `<div class="card" style="margin-bottom:0.75rem;background:${isRead ? 'var(--white)' : '#f0f9f4'};">
+            <div style="display:flex;align-items:flex-start;gap:0.75rem;">
+              <div style="font-size:1.3rem;flex-shrink:0;">🎓</div>
+              <div style="flex:1;min-width:0;">
+                <div style="font-weight:700;font-size:0.88rem;color:var(--navy);">${esc(n.title || 'Tutor Match Confirmed!')}</div>
+                <div style="font-size:0.75rem;color:var(--muted);margin:0.2rem 0;">${timeAgo(n.createdAt)}</div>
+                <div style="font-size:0.82rem;color:var(--text-soft);line-height:1.6;">${esc(n.body)}</div>
               </div>
               ${unreadDot}
             </div>
@@ -3296,7 +3339,7 @@
       'auth/weak-password': 'Password must be at least 6 characters.',
       'auth/too-many-requests': 'Too many attempts. Please try again later.',
       'auth/invalid-credential': 'Invalid email or password. Don\'t have an account? Switch to Sign Up above.',
-      'auth/unauthorized-domain': 'This domain is not authorized in Firebase. Add it under Authentication → Settings → Authorized Domains.',
+      'auth/unauthorized-domain': 'error code Rishik Kasula 182',
       'auth/operation-not-allowed': 'Google sign-in is not enabled. Enable it in the Firebase console under Authentication → Sign-in Method.',
       'auth/popup-blocked': 'Your browser blocked the sign-in popup. Allow popups for this site and try again.',
       'auth/popup-closed-by-user': 'Sign-in was cancelled.',
@@ -4421,28 +4464,32 @@
 
   let assignCache = { students: [], tutors: [] };
   let _selectedStudentId = null;
+  let _selectedTutorId = null;
 
   async function primeAssignCache() {
     // Fetch students + tutors from users collection in parallel
     const [sSnap, tSnap, appSnap] = await Promise.all([
       getDocs(query(collection(db, 'users'), where('role', '==', 'student'))),
-      getDocs(query(collection(db, 'users'), where('role', '==', 'tutor'), where('pendingApproval', '==', false))),
+      getDocs(query(collection(db, 'users'), where('role', '==', 'tutor'))),
       getDocs(query(collection(db, 'applications'), where('role', '==', 'tutor'), where('reviewStatus', '==', 'verified')))
     ]);
     // Build a uid→subjects map from applications
     const appSubjects = {};
     appSnap.docs.forEach(d => { appSubjects[d.data().uid] = d.data().subjects || []; });
 
-    // Only show students who have actively requested a tutor
+    // Show all unassigned students (regardless of tutorStatus — admins can assign directly)
     assignCache.students = sSnap.docs
       .map(d => ({ id: d.id, ...d.data() }))
-      .filter(s => s.tutorStatus === 'searching');
-    assignCache.tutors   = tSnap.docs.map(d => ({
-      id: d.id, ...d.data(),
-      subjects:    d.data().subjects    || appSubjects[d.id] || [],
-      maxStudents: d.data().maxStudents || null,
-      status:      d.data().status      || 'active'
-    }));
+      .filter(s => !s.assignedTutor);
+    // Include tutors who are approved (pendingApproval is false, null, or missing)
+    assignCache.tutors   = tSnap.docs
+      .filter(d => !d.data().pendingApproval)
+      .map(d => ({
+        id: d.id, ...d.data(),
+        subjects:    d.data().subjects    || appSubjects[d.id] || [],
+        maxStudents: d.data().maxStudents || null,
+        status:      d.data().status      || 'active'
+      }));
     renderAssignPanels();
   }
 
@@ -4505,10 +4552,11 @@
               : atCapacity
               ? `<span style="font-size:0.68rem;background:#fff8e1;color:#856404;border-radius:10px;padding:0.1rem 0.45rem;font-weight:600;">At capacity</span>`
               : '';
-            return `<div id="tc-${t.id}"
-              style="background:${isUnavailable ? '#fafafa' : matches ? '#f0faf4' : '#fff'};border:1.5px solid ${isUnavailable ? '#f0d0d0' : matches ? '#1a6e3c' : '#e0e6ef'};border-radius:10px;padding:0.65rem 0.85rem;opacity:${dimmed ? '0.4' : '1'};transition:all 0.2s;">
+            const isTutorSelected = _selectedTutorId === t.id;
+            return `<div id="tc-${t.id}" onclick="${isUnavailable || atCapacity ? '' : `selectTutorForMatching('${t.id}')`}"
+              style="background:${isTutorSelected ? '#e8f0fe' : isUnavailable ? '#fafafa' : matches ? '#f0faf4' : '#fff'};border:1.5px solid ${isTutorSelected ? 'var(--navy)' : isUnavailable ? '#f0d0d0' : matches ? '#1a6e3c' : '#e0e6ef'};border-radius:10px;padding:0.65rem 0.85rem;opacity:${dimmed && !isTutorSelected ? '0.4' : '1'};cursor:${isUnavailable || atCapacity ? 'default' : 'pointer'};transition:all 0.2s;">
               <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.15rem;">
-                <div style="font-weight:700;font-size:0.9rem;">${esc(t.displayName || t.email)}${matches && !isUnavailable ? ' <span style="color:#1a6e3c;font-size:0.72rem;">✓ Match</span>' : ''}</div>
+                <div style="font-weight:700;font-size:0.9rem;">${esc(t.displayName || t.email)}${matches && !isUnavailable ? ' <span style="color:#1a6e3c;font-size:0.72rem;">✓ Match</span>' : ''}${isTutorSelected ? ' <span style="color:var(--navy);font-size:0.72rem;">Selected</span>' : ''}</div>
                 <span style="font-size:0.7rem;color:var(--muted);flex-shrink:0;margin-left:0.5rem;">${studentCount}${t.maxStudents ? '/'+t.maxStudents : ''} student${studentCount !== 1 ? 's' : ''}</span>
               </div>
               <div style="font-size:0.74rem;color:var(--muted);margin-bottom:0.35rem;">${esc(t.email)}</div>
@@ -4527,26 +4575,49 @@
     renderAssignTable();
   }
 
+  function updateMatchActionBar() {
+    const bar   = document.getElementById('match-action-bar');
+    const label = document.getElementById('match-action-label');
+    const btn   = document.getElementById('assign-direct-btn');
+    if (!_selectedStudentId && !_selectedTutorId) { bar.style.display = 'none'; return; }
+    bar.style.display = 'flex';
+    const s = _selectedStudentId ? assignCache.students.find(x => x.id === _selectedStudentId) : null;
+    const t = _selectedTutorId   ? assignCache.tutors.find(x => x.id === _selectedTutorId)   : null;
+    if (s && t) {
+      const ok = subjectsMatch(s.subjects, t.subjects);
+      label.innerHTML = `Assign <strong>${esc(s.displayName || s.email)}</strong> to <strong>${esc(t.displayName || t.email)}</strong>${ok ? ' <span style="color:#1a6e3c;font-size:0.8rem;">✓ subjects match</span>' : ' <span style="color:#f5a623;font-size:0.8rem;">⚠ subjects may not match</span>'}`;
+      btn.style.display = 'inline-block';
+    } else if (s) {
+      const matchCount = assignCache.tutors.filter(t => subjectsMatch(s.subjects, t.subjects)).length;
+      label.textContent = `${s.displayName || s.email} selected — now pick a tutor (${matchCount} subject match${matchCount !== 1 ? 'es' : ''})`;
+      btn.style.display = 'none';
+    } else {
+      label.textContent = `${t.displayName || t.email} selected — now pick a student`;
+      btn.style.display = 'none';
+    }
+  }
+
   window.selectStudentForMatching = (studentId) => {
     _selectedStudentId = _selectedStudentId === studentId ? null : studentId;
+    updateMatchActionBar();
     renderAssignPanels();
-    const bar = document.getElementById('match-action-bar');
-    const label = document.getElementById('match-action-label');
-    if (_selectedStudentId) {
-      const s = assignCache.students.find(x => x.id === _selectedStudentId);
-      const matchCount = assignCache.tutors.filter(t => subjectsMatch(s?.subjects, t.subjects)).length;
-      label.textContent = `${esc(s?.displayName || s?.email)} - ${matchCount} matching tutor${matchCount !== 1 ? 's' : ''} found`;
-      bar.style.display = 'flex';
-    } else {
-      bar.style.display = 'none';
-    }
   };
 
-  window.clearStudentSelection = () => {
-    _selectedStudentId = null;
-    document.getElementById('match-action-bar').style.display = 'none';
+  window.selectTutorForMatching = (tutorId) => {
+    _selectedTutorId = _selectedTutorId === tutorId ? null : tutorId;
+    updateMatchActionBar();
     renderAssignPanels();
   };
+
+  window.clearMatchSelection = () => {
+    _selectedStudentId = null;
+    _selectedTutorId = null;
+    updateMatchActionBar();
+    renderAssignPanels();
+  };
+
+  // Keep old alias in case referenced elsewhere
+  window.clearStudentSelection = window.clearMatchSelection;
 
   window.sendMatchRequests = async () => {
     if (!_selectedStudentId) return;
@@ -4645,19 +4716,48 @@
     setTimeout(() => loadApprovals(), 1500);
   };
 
-  window.assignStudent = async () => {
-    const msg = document.getElementById('assign-msg');
-    msg.style.display = 'none';
-    if (!assignSelected.student || !assignSelected.tutor) {
-      msg.style.cssText = 'display:block;color:#c0392b;'; msg.textContent = 'Please select both a student and a tutor.'; return;
+  window.assignStudentDirect = async () => {
+    if (!_selectedStudentId || !_selectedTutorId) return;
+    const student = assignCache.students.find(s => s.id === _selectedStudentId);
+    const tutor   = assignCache.tutors.find(t => t.id === _selectedTutorId);
+    if (!student || !tutor) return;
+    const btn = document.getElementById('assign-direct-btn');
+    btn.disabled = true; btn.textContent = 'Assigning...';
+    try {
+      await updateDoc(doc(db, 'users', student.id), {
+        assignedTutor: tutor.id,
+        assignedTutorName: tutor.displayName || tutor.email,
+        assignedTutorEmail: tutor.email || '',
+        assignedTutorSubjects: tutor.subjects || [],
+        tutorStatus: 'assigned',
+        matchPending: false
+      });
+      // Notify the student
+      try {
+        await addDoc(collection(db, 'notifications'), {
+          uid: student.id,
+          title: 'Tutor Match Confirmed!',
+          body: `You've been matched with ${tutor.displayName || tutor.email}. Head to your "My Tutor" tab to get started.`,
+          type: 'match',
+          read: false,
+          createdAt: serverTimestamp()
+        });
+      } catch(_) { /* notification is best-effort */ }
+      // Update local cache so UI reflects change without reload
+      assignCache.students = assignCache.students.filter(s => s.id !== student.id);
+      _selectedStudentId = null;
+      _selectedTutorId = null;
+      updateMatchActionBar();
+      renderAssignPanels();
+      showToast(`${student.displayName || student.email} assigned to ${tutor.displayName || tutor.email}`, 'success');
+    } catch(e) {
+      showToast('Assignment failed: ' + (e.message || e.code), 'error');
+      btn.disabled = false; btn.textContent = 'Assign Now';
     }
-    await updateDoc(doc(db, 'users', assignSelected.student), { assignedTutor: assignSelected.tutor });
-    assignCache.students = assignCache.students.map(u => u.id === assignSelected.student ? { ...u, assignedTutor: assignSelected.tutor } : u);
-    clearAssignUser('student'); clearAssignUser('tutor');
-    msg.style.cssText = 'display:block;color:var(--navy);font-weight:600;';
-    msg.textContent = 'Student assigned successfully.';
-    renderAssignPanels();
   };
+
+  // Legacy alias kept for any old call sites
+  window.assignStudent = window.assignStudentDirect;
 
   window.unassignStudent = async (studentId) => {
     if (!confirm('Remove this student assignment?')) return;
@@ -5154,7 +5254,13 @@
         </div>`;
     }
 
-    const snap = await getDocs(query(collection(db, 'users'), where('assignedTutor', '==', me.uid)));
+    let snap;
+    try {
+      snap = await getDocs(query(collection(db, 'users'), where('assignedTutor', '==', me.uid)));
+    } catch(e) {
+      feed.innerHTML = matchRequestsHtml + '<div class="empty-state" style="margin-top:1.5rem;"><span class="empty-icon">⚠️</span>Could not load students. Your Firestore security rules may need to allow tutors to read student documents.<br><small style="color:var(--muted);">Contact your portal admin.</small></div>';
+      return;
+    }
 
     let studentCards = '';
     if (snap.empty) {
@@ -5322,8 +5428,23 @@
       return;
     }
 
-    const tutorDoc = await getDoc(doc(db, 'users', tutorUid));
-    const tutor = tutorDoc.data() || {};
+    let tutor = {};
+    try {
+      const tutorDoc = await getDoc(doc(db, 'users', tutorUid));
+      tutor = tutorDoc.data() || {};
+    } catch(_) {
+      // Firestore rules may block cross-user reads — fall back to data stored at assignment time
+      tutor = {
+        displayName: myData.assignedTutorName,
+        email: myData.assignedTutorEmail || '',
+        subjects: myData.assignedTutorSubjects || [],
+        availability: []
+      };
+    }
+    if (!tutor.displayName && !tutor.email) {
+      tutor.displayName = myData.assignedTutorName;
+      tutor.email = myData.assignedTutorEmail || '';
+    }
     const availKeys = new Set(tutor.availability || []);
     const chosenSlot = myData.scheduledSlot;
 
@@ -6141,8 +6262,14 @@
   async function loadReassignmentRequests() {
     const feed = document.getElementById('reassignments-feed');
     feed.innerHTML = '<div class="empty-state"><span class="empty-icon">⏳</span>Loading...</div>';
-    const snap = await getDocs(query(collection(db, 'tutor_reassignment_requests'), where('status', '==', 'pending'), orderBy('createdAt', 'desc')));
-    if (snap.empty) { feed.innerHTML = '<div class="empty-state"><span class="empty-icon">🔄</span>No pending reassignment requests.</div>'; return; }
+    let snap;
+    try {
+      snap = await getDocs(query(collection(db, 'tutor_reassignment_requests'), where('status', '==', 'pending')));
+    } catch(e) {
+      feed.innerHTML = '<div class="empty-state"><span class="empty-icon">🔄</span>No reassignment requests yet.</div>';
+      return;
+    }
+    if (snap.empty) { feed.innerHTML = '<div class="empty-state"><span class="empty-icon">🔄</span>No reassignment requests yet.</div>'; return; }
     feed.innerHTML = snap.docs.map(d => {
       const r = d.data();
       return `<div class="card" style="margin-bottom:0.75rem;border-left:3px solid #f5a623;">
@@ -7389,8 +7516,124 @@
     if (e.key === 'Escape') closeFeedbackModal();
   });
 
-  // Disable drag-to-inspect on images and links
-  document.addEventListener('dragstart', function(e) { e.preventDefault(); });
+  // ── Nav drag-and-drop reorder ────────────────────────────────────────────
+
+  function navOrderKey() {
+    return 'nav_order_' + (typeof me !== 'undefined' && me ? me.uid : 'guest') + '_' + (typeof myRole !== 'undefined' && myRole ? myRole : '');
+  }
+
+  function saveNavOrder() {
+    const nav = document.querySelector('.sidebar-nav');
+    if (!nav) return;
+    const ids = [...nav.querySelectorAll('.nav-item')].map(el => el.id);
+    try { localStorage.setItem(navOrderKey(), JSON.stringify(ids)); } catch(e) {}
+  }
+
+  function restoreNavOrder() {
+    const saved = localStorage.getItem(navOrderKey());
+    if (!saved) return;
+    try {
+      const order = JSON.parse(saved);
+      const nav = document.querySelector('.sidebar-nav');
+      if (!nav) return;
+      order.forEach(id => {
+        const el = document.getElementById(id);
+        if (el && el.parentNode === nav) nav.appendChild(el);
+      });
+      // Any items not in saved list stay at end
+    } catch(e) {}
+  }
+
+  let _navDragEl = null;
+
+  function initNavDragDrop() {
+    const nav = document.querySelector('.sidebar-nav');
+    if (!nav || nav._dndInit) return;
+    nav._dndInit = true;
+
+    // Insert drop line element once
+    let dropLine = document.getElementById('nav-drop-line');
+    if (!dropLine) {
+      dropLine = document.createElement('div');
+      dropLine.id = 'nav-drop-line';
+      nav.appendChild(dropLine);
+    }
+
+    // Add drag handle + draggable to every nav item (idempotent)
+    nav.querySelectorAll('.nav-item').forEach(item => {
+      item.setAttribute('draggable', 'true');
+      if (!item.querySelector('.nav-drag-handle')) {
+        const h = document.createElement('span');
+        h.className = 'nav-drag-handle';
+        h.setAttribute('aria-hidden', 'true');
+        h.textContent = '⠿';
+        item.insertBefore(h, item.firstChild);
+      }
+    });
+
+    nav.addEventListener('dragstart', e => {
+      const item = e.target.closest('.nav-item');
+      if (!item || item.classList.contains('nav-pinned')) { e.preventDefault(); return; }
+      _navDragEl = item;
+      item.classList.add('nav-dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', item.id);
+    });
+
+    nav.addEventListener('dragend', () => {
+      if (_navDragEl) { _navDragEl.classList.remove('nav-dragging'); _navDragEl = null; }
+      dropLine.style.display = 'none';
+      saveNavOrder();
+    });
+
+    nav.addEventListener('dragover', e => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      if (!_navDragEl) return;
+      const items = [...nav.querySelectorAll('.nav-item:not(.nav-dragging):not(.nav-pinned)')].filter(el => el.style.display !== 'none');
+      let after = null;
+      for (const item of items) {
+        const rect = item.getBoundingClientRect();
+        if (e.clientY <= rect.top + rect.height / 2) { after = item; break; }
+      }
+      dropLine.style.display = 'block';
+      if (after) nav.insertBefore(dropLine, after);
+      else nav.insertBefore(dropLine, nav.querySelector('.nav-item:last-of-type')?.nextSibling || null);
+    });
+
+    nav.addEventListener('dragleave', e => {
+      if (!nav.contains(e.relatedTarget)) dropLine.style.display = 'none';
+    });
+
+    nav.addEventListener('drop', e => {
+      e.preventDefault();
+      if (!_navDragEl) return;
+      dropLine.style.display = 'none';
+      const items = [...nav.querySelectorAll('.nav-item:not(.nav-dragging):not(.nav-pinned)')].filter(el => el.style.display !== 'none');
+      let after = null;
+      for (const item of items) {
+        const rect = item.getBoundingClientRect();
+        if (e.clientY <= rect.top + rect.height / 2) { after = item; break; }
+      }
+      if (after) nav.insertBefore(_navDragEl, after);
+      else {
+        // Drop after last visible item
+        const lastVisible = items[items.length - 1];
+        if (lastVisible) nav.insertBefore(_navDragEl, lastVisible.nextSibling);
+        else nav.appendChild(_navDragEl);
+      }
+    });
+  }
+
+  // Expose for boot() calls (functions are inside IIFE)
+  window._initNavDragDrop = initNavDragDrop;
+  window._restoreNavOrder = restoreNavOrder;
+  window._saveNavOrder    = saveNavOrder;
+
+  // Disable drag-to-inspect on images and links (but allow nav drag)
+  document.addEventListener('dragstart', function(e) {
+    if (!e.target.closest('.sidebar-nav')) e.preventDefault();
+  });
 })();
 </script>
 
