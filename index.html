@@ -808,6 +808,10 @@
           Looking to get tutored?
           <button onclick="document.getElementById('auth-section').style.display='none';document.getElementById('student-signup-section').style.display='block';if(window.buildStudentSubjectPills){buildStudentSubjectPills();populateChapterDropdowns();}" style="background:none;border:none;color:#7ecef4;font-weight:600;cursor:pointer;font-size:0.78rem;padding:0;font-family:'Inter',sans-serif;">Sign up as a student</button>
         </div>
+        <div style="text-align:center;margin-top:0.6rem;font-size:0.78rem;color:rgba(180,210,255,0.5);">
+          Want to volunteer as a tutor?
+          <button onclick="showTutorInquiryModal()" style="background:none;border:none;color:#7ecef4;font-weight:600;cursor:pointer;font-size:0.78rem;padding:0;font-family:'Inter',sans-serif;">Apply here</button>
+        </div>
       </div>
 
       <div id="role-section" style="display:none;">
@@ -1550,6 +1554,10 @@
       <div class="page-header">
         <div class="page-title">Tutor Review</div>
         <p class="page-sub" id="tutor-review-sub">Review tutor applications and manage interviews.</p>
+      </div>
+      <div id="tutor-inquiry-section" style="display:none;margin-bottom:1.5rem;">
+        <div class="card-label" style="margin-bottom:0.65rem;">Interview Requests</div>
+        <div id="tutor-inquiry-feed"></div>
       </div>
       <div id="tutor-review-feed">
         <div class="empty-state"><span class="empty-icon">📝</span>Loading...</div>
@@ -4575,11 +4583,59 @@
       html += tutorDocs.map(renderTutorCard).join('');
     }
     feed.innerHTML = html;
+
+    // Load tutor inquiries (walk-in applications)
+    const inquirySection = document.getElementById('tutor-inquiry-section');
+    const inquiryFeed = document.getElementById('tutor-inquiry-feed');
+    if (inquirySection && inquiryFeed) {
+      try {
+        const iqSnap = await getDocs(query(collection(db, 'tutor_inquiries'), orderBy('submittedAt', 'desc')));
+        if (!iqSnap.empty) {
+          inquirySection.style.display = 'block';
+          inquiryFeed.innerHTML = iqSnap.docs.map(d => {
+            const r = d.data();
+            const dateStr = r.submittedAt?.toDate ? r.submittedAt.toDate().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : 'Recently';
+            const statusBadge = r.status === 'contacted'
+              ? `<span style="background:#e6f4ee;color:#1a6e3c;padding:0.2rem 0.6rem;border-radius:20px;font-size:0.72rem;font-weight:600;">Contacted</span>`
+              : `<span style="background:#fff4e5;color:#b36b00;padding:0.2rem 0.6rem;border-radius:20px;font-size:0.72rem;font-weight:600;">New</span>`;
+            return `<div class="card" style="display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
+              <div>
+                <div style="font-weight:600;color:var(--text);">${esc(r.name||'Unknown')}</div>
+                <div style="font-size:0.8rem;color:var(--muted);margin-top:0.15rem;">
+                  <a href="mailto:${esc(r.email||'')}" style="color:var(--blue);text-decoration:none;">${esc(r.email||'—')}</a>
+                  &nbsp;·&nbsp; ${esc(r.phone||'—')} &nbsp;·&nbsp; ${dateStr}
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:0.6rem;">
+                ${statusBadge}
+                ${r.status !== 'contacted' ? `<button onclick="markInquiryContacted('${d.id}',this)" class="btn-sm" style="font-size:0.76rem;padding:0.3rem 0.85rem;">Mark Contacted</button>` : ''}
+              </div>
+            </div>`;
+          }).join('');
+        } else {
+          inquirySection.style.display = 'none';
+        }
+      } catch(e) {
+        inquirySection.style.display = 'block';
+        inquiryFeed.innerHTML = `<div style="font-size:0.82rem;color:var(--muted);padding:0.5rem 0;">Could not load inquiries.</div>`;
+      }
+    }
     } catch (e) {
       console.error('loadTutorReview failed:', e);
       feed.innerHTML = `<div class="empty-state"><span class="empty-icon">⚠️</span>Failed to load applications.<br><span style="font-size:0.78rem;color:var(--muted);margin-top:0.35rem;display:block;">${esc(e.message || e.code || String(e))}</span></div>`;
     }
   }
+
+  window.markInquiryContacted = async function(id, btn) {
+    btn.disabled = true; btn.textContent = 'Saving…';
+    try {
+      await updateDoc(doc(db, 'tutor_inquiries', id), { status: 'contacted' });
+      loadTutorReview();
+    } catch(e) {
+      btn.disabled = false; btn.textContent = 'Mark Contacted';
+      alert('Failed: ' + (e.message || e.code));
+    }
+  };
 
   window.toggleTrDetails = (id) => {
     const el = document.getElementById('tr-details-' + id);
@@ -6550,6 +6606,65 @@
       }
     });
   }
+
+  // ── Apply as Tutor modal (public, no auth required) ─────────────────────
+
+  window.showTutorInquiryModal = function showTutorInquiryModal() {
+    const overlay = document.createElement('div');
+    overlay.id = 'tutor-inquiry-overlay';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(28,24,20,0.55);z-index:9000;display:flex;align-items:center;justify-content:center;padding:1rem;';
+    overlay.innerHTML = `
+      <div style="background:var(--panel);border-radius:var(--r);padding:2rem 1.75rem;width:100%;max-width:420px;box-shadow:var(--shadow-md);position:relative;">
+        <button onclick="document.getElementById('tutor-inquiry-overlay').remove()" style="position:absolute;top:0.9rem;right:1rem;background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--muted);">×</button>
+        <div style="font-family:'Lora',serif;font-size:1.3rem;font-weight:700;color:var(--navy);margin-bottom:0.25rem;">Apply as a Tutor</div>
+        <p style="font-size:0.82rem;color:var(--muted);margin:0 0 1.25rem;">Fill out the form below and our team will reach out to schedule an interview.</p>
+        <div style="display:flex;flex-direction:column;gap:0.75rem;">
+          <input id="tiq-name" placeholder="Full Name" style="padding:0.6rem 0.85rem;border:1px solid var(--input-border);border-radius:var(--r-sm);font-family:'Inter',sans-serif;font-size:0.88rem;background:var(--white);color:var(--text);">
+          <input id="tiq-email" type="email" placeholder="Email Address" style="padding:0.6rem 0.85rem;border:1px solid var(--input-border);border-radius:var(--r-sm);font-family:'Inter',sans-serif;font-size:0.88rem;background:var(--white);color:var(--text);">
+          <input id="tiq-phone" type="tel" placeholder="Phone Number" style="padding:0.6rem 0.85rem;border:1px solid var(--input-border);border-radius:var(--r-sm);font-family:'Inter',sans-serif;font-size:0.88rem;background:var(--white);color:var(--text);">
+          <div id="tiq-err" style="font-size:0.78rem;color:#c0392b;display:none;"></div>
+          <button id="tiq-submit" onclick="submitTutorInquiry()" style="background:var(--navy);color:#fff;border:none;border-radius:20px;padding:0.65rem 1.25rem;font-family:'Inter',sans-serif;font-size:0.88rem;font-weight:600;cursor:pointer;margin-top:0.25rem;">Submit Application</button>
+        </div>
+      </div>`;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+  }
+
+  window.submitTutorInquiry = async function() {
+    const name = document.getElementById('tiq-name')?.value.trim();
+    const email = document.getElementById('tiq-email')?.value.trim();
+    const phone = document.getElementById('tiq-phone')?.value.trim();
+    const err = document.getElementById('tiq-err');
+    if (!name || !email || !phone) {
+      err.textContent = 'Please fill in all fields.'; err.style.display = 'block'; return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      err.textContent = 'Please enter a valid email address.'; err.style.display = 'block'; return;
+    }
+    const btn = document.getElementById('tiq-submit');
+    btn.textContent = 'Submitting…'; btn.disabled = true; err.style.display = 'none';
+    try {
+      await addDoc(collection(db, 'tutor_inquiries'), {
+        name, email, phone,
+        status: 'new',
+        submittedAt: serverTimestamp()
+      });
+      document.getElementById('tutor-inquiry-overlay').remove();
+      const thanks = document.createElement('div');
+      thanks.style.cssText = 'position:fixed;inset:0;background:rgba(28,24,20,0.55);z-index:9000;display:flex;align-items:center;justify-content:center;padding:1rem;';
+      thanks.innerHTML = `<div style="background:var(--panel);border-radius:var(--r);padding:2rem 1.75rem;max-width:360px;text-align:center;box-shadow:var(--shadow-md);">
+        <div style="font-size:2rem;margin-bottom:0.5rem;">✅</div>
+        <div style="font-family:'Lora',serif;font-size:1.15rem;font-weight:700;color:var(--navy);margin-bottom:0.5rem;">Application Received!</div>
+        <p style="font-size:0.85rem;color:var(--muted);margin:0 0 1.25rem;">We'll be in touch at <strong>${esc(email)}</strong> to schedule your interview.</p>
+        <button onclick="this.closest('div[style]').remove()" style="background:var(--navy);color:#fff;border:none;border-radius:20px;padding:0.6rem 1.4rem;font-size:0.88rem;font-weight:600;cursor:pointer;">Close</button>
+      </div>`;
+      document.body.appendChild(thanks);
+      thanks.addEventListener('click', e => { if (e.target === thanks) thanks.remove(); });
+    } catch(e) {
+      err.textContent = 'Submission failed: ' + (e.message || 'Please try again.'); err.style.display = 'block';
+      btn.textContent = 'Submit Application'; btn.disabled = false;
+    }
+  };
 
   // ── Toast notifications ──────────────────────────────────────────────────
 
