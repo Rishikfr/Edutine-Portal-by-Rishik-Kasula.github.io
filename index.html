@@ -10,31 +10,31 @@
   <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --navy:        #2d3d6b;
-      --navy-dark:   #1e2d52;
-      --blue:        #6ab0d8;
-      --bg:          #e8eef8;
-      --panel:       #f6f9fd;
+      --navy:        #2c3a5c;
+      --navy-dark:   #1e2840;
+      --blue:        #5a9fbf;
+      --bg:          #f0ebe3;
+      --panel:       #f8f4ef;
       --white:       #ffffff;
-      --border:      #d4dff0;
-      --border-light:#e4ecf6;
-      --text:        #18192e;
-      --text-soft:   #3a4560;
-      --muted:       #6878a0;
-      --light:       #9aaac8;
-      --input-border:#c4d4e8;
-      --selected-bg: #eaf2fb;
-      --shadow-sm:   0 1px 3px rgba(30,45,82,0.06), 0 2px 8px rgba(30,45,82,0.04);
-      --shadow-md:   0 2px 8px rgba(30,45,82,0.08), 0 8px 24px rgba(30,45,82,0.06);
-      --r:           12px;
-      --r-sm:        8px;
+      --border:      #ddd6cc;
+      --border-light:#e8e2d9;
+      --text:        #1c1814;
+      --text-soft:   #3a342c;
+      --muted:       #7a6e62;
+      --light:       #a89f94;
+      --input-border:#cdc5bb;
+      --selected-bg: #ede7df;
+      --shadow-sm:   0 1px 4px rgba(28,24,20,0.07), 0 2px 10px rgba(28,24,20,0.04);
+      --shadow-md:   0 3px 10px rgba(28,24,20,0.09), 0 8px 28px rgba(28,24,20,0.06);
+      --r:           14px;
+      --r-sm:        10px;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: 'Inter', sans-serif;
-      background: linear-gradient(160deg, #dde8f7 0%, #e8eef8 40%, #eef2fb 100%);
+      background: linear-gradient(160deg, #e8e0d5 0%, #f0ebe3 40%, #f4f0ea 100%);
       color: var(--text);
       min-height: 100vh;
       -webkit-font-smoothing: antialiased;
@@ -263,19 +263,19 @@
     }
     .sidebar-signout:hover { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.8); }
 
-    .main-content { flex: 1; padding: 1.75rem 2rem; overflow-y: auto; max-height: 100vh; }
+    .main-content { flex: 1; padding: 2rem 2.5rem; overflow-y: auto; max-height: 100vh; }
 
     .tab-content { display: none; max-width: 820px; }
     .tab-content.active { display: block; }
 
     .page-header { margin-bottom: 1.25rem; }
-    .page-title { font-family: 'Lora', serif; font-size: 1.35rem; font-weight: 700; margin-bottom: 0.2rem; }
+    .page-title { font-family: 'Lora', serif; font-size: 1.55rem; font-weight: 700; margin-bottom: 0.25rem; letter-spacing: -0.01em; }
     .page-sub { font-size: 0.82rem; color: var(--muted); line-height: 1.45; }
 
     .card {
       background: var(--white); border: 1px solid var(--border-light);
-      border-radius: var(--r); padding: 1rem 1.2rem;
-      margin-bottom: 0.75rem; box-shadow: var(--shadow-sm);
+      border-radius: var(--r); padding: 1.1rem 1.35rem;
+      margin-bottom: 0.85rem; box-shadow: var(--shadow-sm);
     }
     .card-label { font-size: 0.67rem; font-weight: 700; letter-spacing: 0.09em; color: var(--light); margin-bottom: 0.65rem; text-transform: uppercase; }
 
@@ -294,9 +294,9 @@
 
     .btn-sm {
       display: inline-flex; align-items: center; gap: 0.35rem;
-      padding: 0.55rem 1.1rem;
+      padding: 0.55rem 1.25rem;
       background: var(--navy); color: #fff; border: none;
-      border-radius: var(--r-sm); font-size: 0.82rem; font-weight: 600;
+      border-radius: 20px; font-size: 0.82rem; font-weight: 600;
       font-family: 'Inter', sans-serif; cursor: pointer;
       transition: background 0.15s, transform 0.1s; white-space: nowrap;
     }
@@ -429,10 +429,10 @@
     .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.65rem; margin-bottom: 1.25rem; }
     .stat-card {
       background: var(--white); border: 1px solid var(--border-light);
-      border-radius: var(--r); padding: 0.85rem 1rem; box-shadow: var(--shadow-sm);
+      border-radius: var(--r); padding: 1rem 1.15rem; box-shadow: var(--shadow-sm);
     }
-    .stat-value { font-family: 'Lora', serif; font-size: 1.7rem; font-weight: 700; color: var(--navy); line-height: 1; margin-bottom: 0.2rem; }
-    .stat-label { font-size: 0.72rem; color: var(--muted); font-weight: 500; }
+    .stat-value { font-family: 'Lora', serif; font-size: 1.85rem; font-weight: 700; color: var(--navy); line-height: 1; margin-bottom: 0.25rem; }
+    .stat-label { font-size: 0.7rem; color: var(--muted); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
 
     .analytics-table { width: 100%; border-collapse: collapse; font-size: 0.855rem; min-width: 400px; }
     .table-scroll-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
@@ -1251,14 +1251,15 @@
       </button>
     </nav>
     <button class="sidebar-signout" onclick="signOut()">Sign Out</button>
+    <div style="text-align:center;font-size:0.62rem;color:rgba(255,255,255,0.2);padding:0.4rem 0 0.6rem;letter-spacing:0.04em;">v1.0.0</div>
   </div>
 
   <!-- Pending approval banner - shown as overlay across main content -->
   <div id="pending-approval-banner" style="display:none;position:fixed;top:0;left:232px;right:0;bottom:0;z-index:200;background:rgba(14,20,40,0.82);backdrop-filter:blur(6px);align-items:center;justify-content:center;flex-direction:column;gap:1rem;">
     <div style="background:#fff;border-radius:16px;padding:2.5rem 2.75rem;max-width:420px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.35);">
       <div style="font-size:2.5rem;margin-bottom:0.75rem;">⏳</div>
-      <div style="font-family:'Lora',serif;font-size:1.4rem;font-weight:700;color:var(--navy);margin-bottom:0.5rem;">Application Submitted!</div>
-      <div style="font-size:0.875rem;color:var(--muted);line-height:1.7;margin-bottom:1.25rem;">Your application is currently under review by our team. Here's what to expect:</div>
+      <div style="font-family:'Lora',serif;font-size:1.4rem;font-weight:700;color:var(--navy);margin-bottom:0.5rem;">Application Received!</div>
+      <div style="font-size:0.875rem;color:var(--muted);line-height:1.7;margin-bottom:1.25rem;">Thank you — your application has been received and is under review by our team. Here's what to expect:</div>
       <div style="text-align:left;background:#f4f7ff;border-radius:10px;padding:1rem 1.1rem;margin-bottom:1.25rem;font-size:0.84rem;color:var(--text-soft);line-height:1.75;">
         <div>📧 <strong>Check your email</strong> - you'll be contacted directly once a decision has been made.</div>
         <div>📅 <strong>Check back in a few days</strong> - reviews typically take 2–5 business days.</div>
@@ -1344,10 +1345,10 @@
       </div>
       <!-- Welcome banner shown when feed is empty -->
       <div id="announce-welcome-banner" style="display:none;background:linear-gradient(135deg,var(--navy-dark) 0%,var(--navy) 100%);border-radius:var(--r);padding:1.5rem 1.75rem;margin-bottom:1rem;color:#fff;">
-        <div style="font-family:'Lora',serif;font-size:1.1rem;font-weight:700;margin-bottom:0.35rem;">Welcome to the Edutine Staff Portal</div>
-        <div style="font-size:0.82rem;color:rgba(255,255,255,0.65);line-height:1.6;max-width:480px;">Announcements from your tutors, leads, and leadership will appear here. Check back regularly for updates, break notices, and organization news.</div>
+        <div id="announce-welcome-title" style="font-family:'Lora',serif;font-size:1.1rem;font-weight:700;margin-bottom:0.35rem;">Welcome to the Edutine Portal</div>
+        <div id="announce-welcome-body" style="font-size:0.82rem;color:rgba(255,255,255,0.65);line-height:1.6;max-width:480px;">Announcements will appear here. Check back regularly for updates.</div>
         <div style="display:flex;gap:1.5rem;margin-top:1rem;flex-wrap:wrap;">
-          <div style="font-size:0.78rem;color:rgba(255,255,255,0.55);"><span style="font-weight:700;color:#7ecef4;">📍 Chapters</span><br/>Tri-Valley · Contra Costa · San Joaquin County · Texas</div>
+          <div style="font-size:0.78rem;color:rgba(255,255,255,0.55);"><span style="font-weight:700;color:#7ecef4;">📍 Chapters</span><br/>Alameda · Contra Costa · San Joaquin County · Texas</div>
           <div style="font-size:0.78rem;color:rgba(255,255,255,0.55);"><span style="font-weight:700;color:#7ecef4;">📧 Contact</span><br/>tutor@edutinereachout.com</div>
         </div>
       </div>
@@ -1573,7 +1574,7 @@
 
       <!-- CEO / super_admin tools -->
       <div id="ceo-hours-tools" style="display:none;margin-bottom:1.5rem;">
-        <div class="card" style="margin-bottom:0.75rem;">
+        <div class="card" id="ceo-set-hours-card" style="margin-bottom:0.75rem;">
           <div class="card-label">Set Member Hours</div>
           <div style="font-size:0.8rem;color:var(--muted);margin-bottom:0.75rem;">Override a member's approved hours total (e.g. importing from a previous spreadsheet). This adds an approved import entry to their log.</div>
           <div style="display:flex;gap:0.65rem;flex-wrap:wrap;align-items:flex-end;">
@@ -1595,9 +1596,9 @@
           <div id="ceo-hours-msg" style="display:none;font-size:0.8rem;font-weight:600;margin-top:0.5rem;"></div>
         </div>
 
-        <div class="card">
+        <div class="card" id="ceo-approver-card">
           <div class="card-label">Change Hours Approver</div>
-          <div style="font-size:0.8rem;color:var(--muted);margin-bottom:0.75rem;">Override who signs off a specific member's volunteer hours.</div>
+          <div style="font-size:0.8rem;color:var(--muted);margin-bottom:0.75rem;" id="ceo-approver-desc">Override who signs off a specific member's volunteer hours.</div>
           <div style="display:flex;gap:0.65rem;flex-wrap:wrap;align-items:flex-end;">
             <div style="flex:1;min-width:160px;position:relative;">
               <input class="form-input" id="ceo-approver-search" placeholder="Search member name…" oninput="ceoApproverSearch()" autocomplete="off" style="width:100%;" />
@@ -2038,7 +2039,7 @@
       <div class="card" style="margin-bottom:1.25rem;">
         <div class="card-label">Active Chapters</div>
         <div id="chapter-list" style="display:flex;flex-direction:column;gap:0.5rem;margin-bottom:1rem;">
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:0.65rem 0;border-bottom:1px solid var(--border-light);font-size:0.88rem;font-weight:600;">Tri-Valley <span class="badge green">Active</span></div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:0.65rem 0;border-bottom:1px solid var(--border-light);font-size:0.88rem;font-weight:600;">Alameda <span class="badge green">Active</span></div>
           <div style="display:flex;align-items:center;justify-content:space-between;padding:0.65rem 0;border-bottom:1px solid var(--border-light);font-size:0.88rem;font-weight:600;">Contra Costa <span class="badge green">Active</span></div>
           <div style="display:flex;align-items:center;justify-content:space-between;padding:0.65rem 0;border-bottom:1px solid var(--border-light);font-size:0.88rem;font-weight:600;">San Joaquin County <span class="badge green">Active</span></div>
           <div style="display:flex;align-items:center;justify-content:space-between;padding:0.65rem 0;font-size:0.88rem;font-weight:600;">Texas <span class="badge green">Active</span></div>
@@ -2077,7 +2078,7 @@
             <label class="form-label">Applies To</label>
             <select class="form-input" id="training-scope">
               <option value="all">All Chapters</option>
-              <option value="Tri-Valley">Tri-Valley</option>
+              <option value="Alameda">Alameda</option>
               <option value="Contra Costa">Contra Costa</option>
               <option value="San Joaquin County">San Joaquin County</option>
               <option value="Texas">Texas</option>
@@ -2172,7 +2173,7 @@
             <label class="form-label">Chapter *</label>
             <select class="form-input" id="ist-chapter">
               <option value="">Select chapter...</option>
-              <option>Tri-Valley</option><option>Contra Costa</option><option>San Joaquin County</option><option>Texas</option>
+              <option>Alameda</option><option>Contra Costa</option><option>San Joaquin County</option><option>Texas</option>
             </select>
           </div>
         </div>
@@ -2256,7 +2257,7 @@
     <div class="tab-content" id="tab-messages">
       <div class="page-header">
         <div class="page-title">Messages</div>
-        <p class="page-sub">Direct messages with your tutor and Edutine staff.</p>
+        <p class="page-sub">In-portal messages with your tutor and Edutine staff — an alternative to email for quick questions.</p>
       </div>
       <div style="display:grid;grid-template-columns:220px 1fr;gap:1rem;height:520px;">
         <div style="background:var(--white);border-radius:var(--r);border:1px solid var(--border);overflow-y:auto;">
@@ -2310,7 +2311,7 @@
     <div class="tab-content" id="tab-sessions">
       <div class="page-header">
         <div class="page-title">Sessions</div>
-        <p class="page-sub">Log session notes and manage meeting links for each student.</p>
+        <p class="page-sub">Submit a required post-session report after every tutoring session.</p>
       </div>
       <div class="card" style="margin-bottom:1.25rem;">
         <div class="card-label">Log a Session</div>
@@ -2325,14 +2326,25 @@
           </div>
         </div>
         <div class="form-group">
-          <label class="form-label">Google Meet / Zoom Link</label>
+          <label class="form-label">Google Meet / Zoom Link *</label>
           <input class="form-input" id="sn-link" placeholder="https://meet.google.com/..." />
         </div>
         <div class="form-group">
-          <label class="form-label">Session Notes</label>
-          <textarea class="form-input" id="sn-notes" rows="3" style="resize:vertical;" placeholder="Topics covered, student progress, next steps..."></textarea>
+          <label class="form-label">Topics Covered *</label>
+          <textarea class="form-input" id="sn-notes" rows="3" style="resize:vertical;" placeholder="What did you cover today? What should the student practice before next session?"></textarea>
         </div>
-        <button onclick="logSession()" class="btn-sm">Log Session</button>
+        <div class="form-group">
+          <label class="form-label">Student Progress (1–5) *</label>
+          <select class="form-input" id="sn-rating">
+            <option value="">Select rating...</option>
+            <option value="5">5 — Excellent progress</option>
+            <option value="4">4 — Good progress</option>
+            <option value="3">3 — Steady progress</option>
+            <option value="2">2 — Needs more support</option>
+            <option value="1">1 — Struggling</option>
+          </select>
+        </div>
+        <button onclick="logSession()" class="btn-sm">Submit Post-Session Report</button>
         <span id="sn-msg" style="display:none;font-size:0.8rem;font-weight:600;margin-left:0.75rem;"></span>
       </div>
       <div class="card-label" style="margin-bottom:0.65rem;">Session History</div>
@@ -2629,6 +2641,101 @@
     'niti.jain@edutinereachout.com':             'vp_website',
     'sanju.vinodh@edutinereachout.com':          'vp_finance',
     'riona.vora@edutinereachout.com':            'director_finance',
+    // Org team — loaded from SCM roster
+    'dhoon.patel@edutinereachout.com':           'ceo',
+    'ahaana.varadharaj@edutinereachout.com':     'vp_student_tutor',
+    'vihaan.giri@edutinereachout.com':           'vp_finance',
+    'udayan.singhal@edutinereachout.com':        'vp_marketing',
+    'deepika.narasimhan@edutinereachout.com':    'vp_website',
+    'simran.singh@edutinereachout.com':          'vp_website',
+    'prithvi.sukumar@edutinereachout.com':       'student_support_lead',
+    'elle.chang@edutinereachout.com':            'student_support_lead',
+    'pujita.pattanshetti@edutinereachout.com':   'student_support_lead',
+    'tanishi.srivastava@edutinereachout.com':    'lead',
+    'rheanne.soon@edutinereachout.com':          'lead',
+    'maya.harit@edutinereachout.com':            'tutor_support_lead',
+    'srishti.samhita@edutinereachout.com':       'tutor_support_lead',
+    'ansh.gupta@edutinereachout.com':            'lead',
+    'pranav.joshi@edutinereachout.com':          'lead',
+    'sanvi.sharma@edutinereachout.com':          'lead',
+    'blessing.anarwat@edutinereachout.com':      'lead',
+    'vanshikaa.anand@edutinereachout.com':       'lead',
+    'bowlgod42@gmail.com':                       'student_support_lead',
+  };
+
+  const TEAM_NAMES = {
+    'dhoon.patel@edutinereachout.com':           'Dhoon',
+    'ahaana.varadharaj@edutinereachout.com':     'Ahaana',
+    'vihaan.giri@edutinereachout.com':           'Vihaan',
+    'udayan.singhal@edutinereachout.com':        'Udayan',
+    'deepika.narasimhan@edutinereachout.com':    'Deepika',
+    'simran.singh@edutinereachout.com':          'Simran',
+    'prithvi.sukumar@edutinereachout.com':       'Prithvi',
+    'elle.chang@edutinereachout.com':            'Elle',
+    'pujita.pattanshetti@edutinereachout.com':   'Pujita',
+    'tanishi.srivastava@edutinereachout.com':    'Tanishi',
+    'rheanne.soon@edutinereachout.com':          'Rheanne',
+    'maya.harit@edutinereachout.com':            'Maya',
+    'srishti.samhita@edutinereachout.com':       'Srishti',
+    'ansh.gupta@edutinereachout.com':            'Ansh',
+    'pranav.joshi@edutinereachout.com':          'Pranav',
+    'sanvi.sharma@edutinereachout.com':          'Sanvi',
+    'blessing.anarwat@edutinereachout.com':      'Blessing',
+    'vanshikaa.anand@edutinereachout.com':       'Vanshikaa',
+    'nidarshana.natarajan@edutinereachout.com':  'Nidarshana',
+    'avigna.gowdru@edutinereachout.com':         'Avigna',
+    'anay.gandhi@edutinereachout.com':           'Anay',
+    'aarushi.gupta@edutinereachout.com':         'Aarushi',
+    'aarya.godse@edutinereachout.com':           'Aarya',
+    'veda.mungara@edutinereachout.com':          'Veda',
+    'niti.jain@edutinereachout.com':             'Niti',
+    'sanju.vinodh@edutinereachout.com':          'Sanju',
+    'riona.vora@edutinereachout.com':            'Riona',
+  };
+
+  const TEAM_APPROVER_EMAIL = {
+    // Alameda chapter members → Dhoon Patel signs off hours
+    'ahaana.varadharaj@edutinereachout.com':     'dhoon.patel@edutinereachout.com',
+    'vihaan.giri@edutinereachout.com':           'dhoon.patel@edutinereachout.com',
+    'udayan.singhal@edutinereachout.com':        'dhoon.patel@edutinereachout.com',
+    'deepika.narasimhan@edutinereachout.com':    'dhoon.patel@edutinereachout.com',
+    'simran.singh@edutinereachout.com':          'dhoon.patel@edutinereachout.com',
+    'prithvi.sukumar@edutinereachout.com':       'dhoon.patel@edutinereachout.com',
+    'elle.chang@edutinereachout.com':            'dhoon.patel@edutinereachout.com',
+    'pujita.pattanshetti@edutinereachout.com':   'dhoon.patel@edutinereachout.com',
+    'tanishi.srivastava@edutinereachout.com':    'dhoon.patel@edutinereachout.com',
+    'rheanne.soon@edutinereachout.com':          'dhoon.patel@edutinereachout.com',
+    'maya.harit@edutinereachout.com':            'dhoon.patel@edutinereachout.com',
+    'srishti.samhita@edutinereachout.com':       'dhoon.patel@edutinereachout.com',
+    'ansh.gupta@edutinereachout.com':            'dhoon.patel@edutinereachout.com',
+    'pranav.joshi@edutinereachout.com':          'dhoon.patel@edutinereachout.com',
+    'sanvi.sharma@edutinereachout.com':          'dhoon.patel@edutinereachout.com',
+    'blessing.anarwat@edutinereachout.com':      'dhoon.patel@edutinereachout.com',
+    'vanshikaa.anand@edutinereachout.com':       'dhoon.patel@edutinereachout.com',
+    'bowlgod42@gmail.com':                       'dhoon.patel@edutinereachout.com',
+    // Rishik → Aarushi signs off
+    'rishik.kasula@edutinereachout.com':         'aarushi.gupta@edutinereachout.com',
+  };
+
+  const TEAM_CHAPTERS = {
+    'dhoon.patel@edutinereachout.com':           'Alameda',
+    'ahaana.varadharaj@edutinereachout.com':     'Alameda',
+    'vihaan.giri@edutinereachout.com':           'Alameda',
+    'udayan.singhal@edutinereachout.com':        'Alameda',
+    'deepika.narasimhan@edutinereachout.com':    'Alameda',
+    'simran.singh@edutinereachout.com':          'Alameda',
+    'prithvi.sukumar@edutinereachout.com':       'Alameda',
+    'elle.chang@edutinereachout.com':            'Alameda',
+    'pujita.pattanshetti@edutinereachout.com':   'Alameda',
+    'tanishi.srivastava@edutinereachout.com':    'Alameda',
+    'rheanne.soon@edutinereachout.com':          'Alameda',
+    'maya.harit@edutinereachout.com':            'Alameda',
+    'srishti.samhita@edutinereachout.com':       'Alameda',
+    'ansh.gupta@edutinereachout.com':            'Alameda',
+    'pranav.joshi@edutinereachout.com':          'Alameda',
+    'sanvi.sharma@edutinereachout.com':          'Alameda',
+    'blessing.anarwat@edutinereachout.com':      'Alameda',
+    'vanshikaa.anand@edutinereachout.com':       'Alameda',
   };
 
   const LEVELS = {
@@ -2672,7 +2779,7 @@
 
   // Helper: is this role a board-level position?
   const CHAPTERS = [
-    'Tri-Valley',
+    'Alameda',
     'Contra Costa',
     'San Joaquin County',
     'Texas'
@@ -2718,7 +2825,7 @@
     ceo:'board_president', board_president:'super_admin'
   };
 
-  let me = null, myRole = null;
+  let me = null, myRole = null, myRoles = [];
   let unsubAnnouncements = null, unsubRequests = null, unsubSelf = null;
   let _devViewActive = false, _devRealRole = null;
   let _studentEnrolled = false;
@@ -2766,6 +2873,34 @@
   function goPreLogin() {
     document.getElementById('pre-login').style.display = 'flex';
     document.getElementById('post-login').style.display = 'none';
+  }
+
+  function hasRole(role) {
+    return myRole === role || myRoles.includes(role);
+  }
+
+  function allMyRoles() {
+    return [...new Set([myRole, ...myRoles].filter(Boolean))];
+  }
+
+  function roleLevel() {
+    return Math.max(LEVELS[myRole] || 0, ...myRoles.map(r => LEVELS[r] || 0));
+  }
+
+  function updateWelcomeBanner() {
+    const title = document.getElementById('announce-welcome-title');
+    const body = document.getElementById('announce-welcome-body');
+    if (!title || !body) return;
+    if (myRole === 'student') {
+      title.textContent = 'Welcome to the Edutine Student Portal';
+      body.textContent = 'Announcements from your tutors and Edutine staff will appear here. Check back for session updates, break notices, and organization news.';
+    } else if (myRole === 'tutor') {
+      title.textContent = 'Welcome to the Edutine Tutor Portal';
+      body.textContent = 'Announcements from your chapter officers and leadership will appear here. Check back regularly for updates, break notices, and organization news.';
+    } else {
+      title.textContent = 'Welcome to the Edutine Staff Portal';
+      body.textContent = 'Announcements from your tutors, leads, and leadership will appear here. Check back regularly for updates, break notices, and organization news.';
+    }
   }
 
   function goPostLogin() {
@@ -2855,23 +2990,24 @@
     hideErr('auth-error');
   };
 
-  function boot(user, role, chapter = '') {
+  function boot(user, role, chapter = '', userData = {}) {
     me = user; myRole = role;
+    myRoles = Array.isArray(userData.roles) ? userData.roles.filter(r => r && r !== role) : [];
     const name = user.displayName || user.email.split('@')[0];
     const initials = name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
     const isStudent = role === 'student';
 
     document.getElementById('sb-avatar').textContent = initials;
     document.getElementById('sb-name').textContent = name.split(' ')[0];
-    document.getElementById('sb-role').textContent = LABELS[role] || role;
+    document.getElementById('sb-role').textContent = (LABELS[role] || role) + (myRoles.length ? ' +' + myRoles.length : '');
     document.getElementById('sb-chapter').textContent = chapter || '';
     const mobileAv = document.getElementById('mobile-avatar');
     if (mobileAv) mobileAv.textContent = initials;
 
     document.getElementById('nav-status').style.display = 'flex';
     document.getElementById('nav-status-label').textContent = isStudent ? 'My Attendance' : 'My Status';
-    const lv = LEVELS[role] || 0;
-    const isBoard = BOARD_ROLES.has(role);
+    const lv = roleLevel();
+    const isBoard = allMyRoles().some(r => BOARD_ROLES.has(r));
 
     document.getElementById('nav-my-tutor').style.display = (role === 'student') ? 'flex' : 'none';
     document.getElementById('nav-students').style.display = (role === 'tutor') ? 'flex' : 'none';
@@ -2895,37 +3031,35 @@
     } else {
       devSwitcher.style.display = 'none';
     }
-    document.getElementById('nav-reassignments').style.display = (role === 'vp_student_tutor' || role === 'super_admin') ? 'flex' : 'none';
+    document.getElementById('nav-reassignments').style.display = (hasRole('vp_student_tutor') || hasRole('super_admin')) ? 'flex' : 'none';
     // Notification badge count is handled later in boot() via startNotificationListener()
     // Show emergency section for non-students, non-board (tutors, officers, leads, etc.)
-    document.getElementById('emergency-section').style.display = (!isStudent && !BOARD_ROLES.has(role)) ? 'block' : 'none';
+    document.getElementById('emergency-section').style.display = (!isStudent && !isBoard) ? 'block' : 'none';
     document.getElementById('nav-approvals').style.display = (lv >= LEVELS['tutor_director'] || _devRealRole === 'super_admin') ? 'flex' : 'none';
-    document.getElementById('nav-tutor-review').style.display = (role === 'tutor_support_lead' || role === 'tutor_director' || role === 'super_admin' || role === 'ceo') ? 'flex' : 'none';
-    document.getElementById('nav-student-support').style.display = (role === 'student_support_lead' || role === 'student_support_director') ? 'flex' : 'none';
+    document.getElementById('nav-tutor-review').style.display = (hasRole('tutor_support_lead') || hasRole('tutor_director') || hasRole('super_admin') || hasRole('ceo')) ? 'flex' : 'none';
+    document.getElementById('nav-student-support').style.display = (hasRole('student_support_lead') || hasRole('student_support_director')) ? 'flex' : 'none';
     document.getElementById('nav-hours').style.display = (role !== 'student') ? 'flex' : 'none';
     document.getElementById('nav-requests').style.display = (lv >= 2 && !isBoard) ? 'flex' : 'none';
     document.getElementById('nav-analytics').style.display = (lv >= LEVELS['ceo']) ? 'flex' : 'none';
     // Members tab: admin/CEO/board_president + VPs who need roster access
-    const canSeeRoster = (role === 'super_admin' || role === 'ceo' || role === 'board_president' ||
-      role === 'vp_student_tutor' || role === 'vp_marketing' || role === 'vp_website' || role === 'vp_chapter_dev');
+    const canSeeRoster = hasRole('super_admin') || hasRole('ceo') || hasRole('board_president') ||
+      hasRole('vp_student_tutor') || hasRole('vp_marketing') || hasRole('vp_website') || hasRole('vp_chapter_dev');
     document.getElementById('nav-members').style.display = canSeeRoster ? 'flex' : 'none';
-    // All Students: VP Student+Tutor Relations and admin
-    document.getElementById('nav-all-students').style.display = (role === 'super_admin' || role === 'ceo' || role === 'board_president' || role === 'vp_student_tutor') ? 'flex' : 'none';
+    document.getElementById('nav-all-students').style.display = (hasRole('super_admin') || hasRole('ceo') || hasRole('board_president') || hasRole('vp_student_tutor')) ? 'flex' : 'none';
     // Board nav items
     document.getElementById('nav-tasks').style.display = isBoard ? 'flex' : 'none';
     document.getElementById('nav-board-meetings').style.display = isBoard ? 'flex' : 'none';
     // EduHub: students, all board, and tutors (VP EduHub communicates with tutors via EduHub)
     document.getElementById('nav-eduhub').style.display = (role === 'student' || role === 'tutor' || isBoard) ? 'flex' : 'none';
-    document.getElementById('nav-content-calendar').style.display = (role === 'vp_marketing' || role === 'super_admin') ? 'flex' : 'none';
-    document.getElementById('nav-grants').style.display = (role === 'vp_finance' || role === 'director_finance' || role === 'super_admin' || role === 'board_president') ? 'flex' : 'none';
-    document.getElementById('nav-website-requests').style.display = (role === 'vp_website' || role === 'super_admin') ? 'flex' : 'none';
-    // Chapter Management: VP of Chapter Development + admin
-    document.getElementById('nav-chapter-mgmt').style.display = (role === 'vp_chapter_dev' || role === 'super_admin') ? 'flex' : 'none';
+    document.getElementById('nav-content-calendar').style.display = (hasRole('vp_marketing') || hasRole('super_admin')) ? 'flex' : 'none';
+    document.getElementById('nav-grants').style.display = (hasRole('vp_finance') || hasRole('director_finance') || hasRole('super_admin') || hasRole('board_president')) ? 'flex' : 'none';
+    document.getElementById('nav-website-requests').style.display = (hasRole('vp_website') || hasRole('super_admin')) ? 'flex' : 'none';
+    document.getElementById('nav-chapter-mgmt').style.display = (hasRole('vp_chapter_dev') || hasRole('super_admin')) ? 'flex' : 'none';
     // Chapter officer dashboard - chapter-level roles
     const CHAPTER_ROLES = new Set(['officer','chapter_social_media','chapter_grants','chapter_vp',
       'chapter_director','chapter_president','tutor_director','student_support_director',
       'student_support_lead','tutor_support_lead','lead']);
-    document.getElementById('nav-chapter-dash').style.display = CHAPTER_ROLES.has(role) ? 'flex' : 'none';
+    document.getElementById('nav-chapter-dash').style.display = allMyRoles().some(r => CHAPTER_ROLES.has(r)) ? 'flex' : 'none';
 
     // Tutor-specific tabs
     document.getElementById('nav-sessions').style.display = (role === 'tutor') ? 'flex' : 'none';
@@ -2943,13 +3077,15 @@
     document.getElementById('announce-compose-wrap').style.display = (lv >= LEVELS['executive']) ? 'block' : 'none';
     document.getElementById('break-compose-wrap').style.display = (role === 'super_admin') ? 'block' : 'none';
     // Board President sees task-create form; VP of Finance can assign tasks to Director of Finance
-    document.getElementById('task-create-wrap').style.display = (role === 'board_president' || role === 'super_admin' || role === 'vp_finance') ? 'block' : 'none';
-    document.getElementById('board-meeting-create-wrap').style.display = (role === 'board_president' || role === 'super_admin') ? 'block' : 'none';
-    document.getElementById('eduhub-manage-wrap').style.display = (role === 'vp_eduhub' || role === 'super_admin') ? 'block' : 'none';
+    document.getElementById('task-create-wrap').style.display = (hasRole('board_president') || hasRole('super_admin') || hasRole('vp_finance')) ? 'block' : 'none';
+    document.getElementById('board-meeting-create-wrap').style.display = (hasRole('board_president') || hasRole('super_admin')) ? 'block' : 'none';
+    document.getElementById('eduhub-manage-wrap').style.display = (hasRole('vp_eduhub') || hasRole('super_admin')) ? 'block' : 'none';
 
     document.getElementById('announce-page-sub').textContent = isStudent
       ? 'Announcements from your Edutine tutors and staff.'
       : 'Organization-wide updates from leadership.';
+    document.getElementById('student-dashboard').style.display = isStudent ? 'block' : 'none';
+    updateWelcomeBanner();
 
     document.getElementById('status-page-title').textContent = isStudent ? 'My Attendance' : 'My Status';
     document.getElementById('status-page-sub').textContent = isStudent
@@ -2982,6 +3118,9 @@
       if (!snap.exists() || !me) return;
       const data = snap.data();
       document.getElementById('sb-chapter').textContent = data.chapter || '';
+      const newRoles = Array.isArray(data.roles) ? data.roles.filter(r => r && r !== data.role) : [];
+      const rolesChanged = JSON.stringify(newRoles) !== JSON.stringify(myRoles);
+      myRoles = newRoles;
       // Update student enrollment nav state
       if (myRole === 'student') {
         _studentEnrolled = !!data.assignedTutor;
@@ -2992,7 +3131,7 @@
       }
       // Skip re-boot while developer is viewing as a different role
       if (_devViewActive) return;
-      if (data.role && data.role !== myRole) boot(user, data.role, data.chapter || '');
+      if ((data.role && data.role !== myRole) || rolesChanged) boot(user, data.role || myRole, data.chapter || '', data);
     });
 
     // For students, check enrollment immediately
@@ -3158,8 +3297,10 @@
   }
 
   // ── Onboarding welcome notification (first notification for new users) ──
+  let _welcomeNotifSent = false;
   async function ensureWelcomeNotification(user, data) {
-    if (!data || data.welcomeNotified || _devViewActive) return;
+    if (!data || data.welcomeNotified || _devViewActive || _welcomeNotifSent) return;
+    _welcomeNotifSent = true;
     const role    = data.role || myRole || '';
     const chapter = data.chapter || '';
     const first   = (data.displayName || user.displayName || user.email || 'there').split(' ')[0];
@@ -3169,11 +3310,10 @@
     if (role === 'student') {
       title = 'Welcome to Edutine, ' + first + '! Here is how to get started';
       body = 'We are so glad you are here. Edutine connects you with passionate student tutors, completely free. Your first steps:\n'
-        + slackLine + '\n'
-        + '2. How matching works: our team reviews your subjects and pairs you with a tutor, usually within a week. You will get a notification here when your match is ready.\n'
-        + '3. Check your subjects: make sure the subjects on your profile are the ones you actually need help with.\n'
-        + '4. Code of conduct: be respectful, show up on time, and report any absence in the My Attendance tab so your tutor is never left waiting.\n'
-        + '5. Tech check: before your first session, test your camera, microphone, and internet connection.\n'
+        + '1. How matching works: our team reviews your subjects and pairs you with a tutor, usually within a week. You will get a notification here when your match is ready.\n'
+        + '2. Check your subjects: make sure the subjects on your profile are the ones you actually need help with.\n'
+        + '3. Code of conduct: be respectful, show up on time, and report any absence in the My Attendance tab so your tutor is never left waiting.\n'
+        + '4. Tech check: before your first session, test your camera, microphone, and internet connection.\n'
         + 'Questions? Email tutor@edutinereachout.com - we are happy to help.';
     } else if (role === 'tutor') {
       title = 'Welcome to the Edutine team, ' + first + '!';
@@ -3297,21 +3437,35 @@
     hideErr('auth-error');
     const special = SPECIAL[user.email.toLowerCase()];
     if (special) {
-      await setDoc(doc(db, 'users', user.uid), {
-        email: user.email, displayName: user.displayName || '', role: special, updatedAt: serverTimestamp()
-      }, { merge: true });
+      const knownName = TEAM_NAMES[user.email.toLowerCase()];
+      const knownChapter = TEAM_CHAPTERS[user.email.toLowerCase()] || null;
+      const docData = { email: user.email, displayName: knownName || user.displayName || '', role: special, updatedAt: serverTimestamp() };
+      if (knownChapter) docData.chapter = knownChapter;
+      const approverEmail = TEAM_APPROVER_EMAIL[user.email.toLowerCase()];
+      if (approverEmail) {
+        try {
+          const aSnap = await getDocs(query(collection(db, 'users'), where('email', '==', approverEmail)));
+          if (!aSnap.empty) {
+            docData.customApproverUid = aSnap.docs[0].id;
+            docData.customApproverName = aSnap.docs[0].data().displayName || TEAM_NAMES[approverEmail] || approverEmail;
+          }
+        } catch(e) { /* best-effort */ }
+      }
+      await setDoc(doc(db, 'users', user.uid), docData, { merge: true });
       boot(user, special);
+      if (knownName) {
+        setTimeout(() => showTeamWelcomePopup(knownName), 900);
+      }
       return;
     }
     const snap = await getDoc(doc(db, 'users', user.uid));
     if (snap.exists() && snap.data().role) {
       if (snap.data().pendingApproval) {
-        // Boot them into the portal but show a pending banner
-        boot(user, snap.data().role, snap.data().chapter || '');
+        boot(user, snap.data().role, snap.data().chapter || '', snap.data());
         document.getElementById('pending-approval-banner').style.display = 'flex';
         return;
       }
-      boot(user, snap.data().role, snap.data().chapter || ''); return;
+      boot(user, snap.data().role, snap.data().chapter || '', snap.data()); return;
     }
     if (isOrgEmail(user.email)) {
       document.getElementById('auth-section').style.display = 'none';
@@ -3574,8 +3728,10 @@
       }, { merge: true });
 
       document.getElementById('application-section').style.display = 'none';
-      // Boot them into portal with pending banner
-      boot(user, appRole, '');
+      document.getElementById('auth-section').style.display = 'none';
+      document.getElementById('role-section').style.display = 'none';
+      document.getElementById('pre-login').style.display = 'none';
+      document.getElementById('post-login').style.display = 'flex';
       document.getElementById('pending-approval-banner').style.display = 'flex';
     } catch (e) {
       btn.disabled = false;
@@ -3800,7 +3956,7 @@
     if (unsubAnnouncements) { unsubAnnouncements(); unsubAnnouncements = null; }
     if (unsubRequests) { unsubRequests(); unsubRequests = null; }
     if (unsubSelf) { unsubSelf(); unsubSelf = null; }
-    readCache.clear(); me = null; myRole = null;
+    readCache.clear(); me = null; myRole = null; myRoles = [];
     await fbSignOut(auth);
     document.getElementById('auth-section').style.display = 'block';
     document.getElementById('role-section').style.display = 'none';
@@ -3866,20 +4022,39 @@
   function memberCard(u, showTutor) {
     const color = ROLE_COLORS[u.role] || '#6d6d6d';
     const canManage = myRole === 'super_admin' || myRole === 'ceo';
-    const roleOptions = ['student','tutor','lead','officer','tutor_director','chapter_director','executive','ceo']
+    const extraRoles = (u.roles || []).filter(r => r && r !== u.role);
+    const roleOptions = ['student','tutor','lead','officer','tutor_director','chapter_director','executive','ceo','vp_student_tutor','vp_chapter_dev','vp_marketing','vp_website','vp_finance','vp_eduhub','board_president']
       .map(r => `<option value="${r}"${u.role===r?' selected':''}>${esc(LABELS[r]||r)}</option>`).join('');
+    const addRoleOptions = ['tutor','lead','officer','tutor_director','student_support_director','chapter_director','chapter_president','vp_student_tutor','vp_chapter_dev','vp_marketing','vp_website','vp_finance','vp_eduhub','executive','ceo']
+      .filter(r => r !== u.role && !extraRoles.includes(r))
+      .map(r => `<option value="${r}">${esc(LABELS[r]||r)}</option>`).join('');
     const changeBtn = canManage ? `
-      <div style="display:flex;align-items:center;gap:0.5rem;">
-        <select onchange="changeRole('${u.id}',this.value,this,'${esc(u.displayName||u.email)}')" style="font-size:0.75rem;padding:0.25rem 0.5rem;border:1px solid var(--border);border-radius:6px;background:var(--panel);color:var(--text);cursor:pointer;">
-          ${roleOptions}
-        </select>
-        ${myRole === 'super_admin' ? `<button onclick="resetTour('${u.id}')" title="Reset tour" style="background:none;border:1px solid #d0d8e8;border-radius:6px;color:var(--muted);cursor:pointer;font-size:0.72rem;padding:0.25rem 0.5rem;font-weight:600;line-height:1;flex-shrink:0;">↺ Tour</button>` : ''}
-        ${myRole === 'super_admin' ? `<button onclick="deleteMember('${u.id}','${esc(u.displayName||u.email)}')" title="Delete account" style="background:none;border:1px solid #f5c6c6;border-radius:6px;color:#c0392b;cursor:pointer;font-size:0.75rem;padding:0.25rem 0.5rem;font-weight:600;line-height:1;flex-shrink:0;">✕</button>` : ''}
-      </div>` : `<span style="font-size:0.72rem;font-weight:700;letter-spacing:0.04em;background:${color}18;color:${color};border:1px solid ${color}40;border-radius:20px;padding:0.2rem 0.65rem;white-space:nowrap;">${esc(LABELS[u.role]||u.role)}</span>`;
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.35rem;">
+        <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;justify-content:flex-end;">
+          <select onchange="changeRole('${u.id}',this.value,this,'${esc(u.displayName||u.email)}')" style="font-size:0.75rem;padding:0.25rem 0.5rem;border:1px solid var(--border);border-radius:6px;background:var(--panel);color:var(--text);cursor:pointer;">
+            ${roleOptions}
+          </select>
+          ${myRole === 'super_admin' ? `<button onclick="resetTour('${u.id}')" title="Reset tour" style="background:none;border:1px solid #d0d8e8;border-radius:6px;color:var(--muted);cursor:pointer;font-size:0.72rem;padding:0.25rem 0.5rem;font-weight:600;line-height:1;flex-shrink:0;">↺ Tour</button>` : ''}
+          ${myRole === 'super_admin' ? `<button onclick="deleteMember('${u.id}','${esc(u.displayName||u.email)}')" title="Delete account" style="background:none;border:1px solid #f5c6c6;border-radius:6px;color:#c0392b;cursor:pointer;font-size:0.75rem;padding:0.25rem 0.5rem;font-weight:600;line-height:1;flex-shrink:0;">✕</button>` : ''}
+        </div>
+        ${addRoleOptions ? `<div style="display:flex;align-items:center;gap:0.35rem;">
+          <select id="add-role-${u.id}" style="font-size:0.72rem;padding:0.2rem 0.45rem;border:1px solid var(--border);border-radius:6px;background:var(--panel);color:var(--text);cursor:pointer;">
+            <option value="">+ Add position...</option>${addRoleOptions}
+          </select>
+          <button onclick="addMemberRole('${u.id}')" style="background:var(--navy);color:#fff;border:none;border-radius:6px;padding:0.2rem 0.55rem;font-size:0.72rem;font-weight:600;cursor:pointer;">Add</button>
+        </div>` : ''}
+      </div>` : `<div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.25rem;">
+        <span style="font-size:0.72rem;font-weight:700;letter-spacing:0.04em;background:${color}18;color:${color};border:1px solid ${color}40;border-radius:20px;padding:0.2rem 0.65rem;white-space:nowrap;">${esc(LABELS[u.role]||u.role)}</span>
+        ${extraRoles.map(r => `<span style="font-size:0.68rem;font-weight:600;color:var(--muted);">${esc(LABELS[r]||r)}</span>`).join('')}
+      </div>`;
+    const extraBadges = extraRoles.length ? `<div style="display:flex;flex-wrap:wrap;gap:0.25rem;margin-top:0.2rem;">${extraRoles.map(r =>
+      `<span style="font-size:0.66rem;font-weight:600;background:#f0f4ff;color:var(--navy);border-radius:20px;padding:0.1rem 0.45rem;">${esc(LABELS[r]||r)}${canManage ? ` <span onclick="removeMemberRole('${u.id}','${r}')" style="cursor:pointer;opacity:0.6;margin-left:2px;">✕</span>` : ''}</span>`
+    ).join('')}</div>` : '';
     return `<div style="display:flex;align-items:center;justify-content:space-between;padding:0.75rem 0;border-bottom:1px solid var(--border-light);gap:1rem;">
       <div style="flex:1;min-width:0;">
         <div style="font-weight:600;font-size:0.92rem;">${esc(u.displayName || u.email)}</div>
         <div style="font-size:0.78rem;color:var(--muted);margin-top:0.1rem;">${esc(u.email)}</div>
+        ${extraBadges}
       </div>
       ${changeBtn}
     </div>`;
@@ -3972,6 +4147,33 @@
     }
   };
 
+  window.addMemberRole = async (uid) => {
+    const sel = document.getElementById('add-role-' + uid);
+    const newRole = sel?.value;
+    if (!newRole) return;
+    const user = membersCache.find(u => u.id === uid) || allStudentsCache.find(u => u.id === uid);
+    const currentRoles = user?.roles || [];
+    if (user?.role === newRole || currentRoles.includes(newRole)) return;
+    const roles = [...currentRoles, newRole];
+    await updateDoc(doc(db, 'users', uid), { roles });
+    const updater = u => u.id === uid ? { ...u, roles } : u;
+    membersCache = membersCache.map(updater);
+    allStudentsCache = allStudentsCache.map(updater);
+    if (membersCache.find(u => u.id === uid)) renderMembersList(membersCache, 'members-feed');
+    if (allStudentsCache.find(u => u.id === uid)) renderStudentsList(allStudentsCache);
+  };
+
+  window.removeMemberRole = async (uid, roleToRemove) => {
+    const user = membersCache.find(u => u.id === uid) || allStudentsCache.find(u => u.id === uid);
+    const roles = (user?.roles || []).filter(r => r !== roleToRemove);
+    await updateDoc(doc(db, 'users', uid), { roles });
+    const updater = u => u.id === uid ? { ...u, roles } : u;
+    membersCache = membersCache.map(updater);
+    allStudentsCache = allStudentsCache.map(updater);
+    if (membersCache.find(u => u.id === uid)) renderMembersList(membersCache, 'members-feed');
+    if (allStudentsCache.find(u => u.id === uid)) renderStudentsList(allStudentsCache);
+  };
+
   window.resetTour = async (uid) => {
     await updateDoc(doc(db, 'users', uid), { tourSeen: false });
     alert('Tour reset - they\'ll see it on next login.');
@@ -3999,8 +4201,13 @@
   };
 
   async function loadHours() {
-    const snap = await getDocs(query(collection(db, 'volunteer_hours'), where('uid', '==', me.uid), orderBy('submittedAt', 'desc')));
-    const rows = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    let rows = [];
+    try {
+      const snap = await getDocs(query(collection(db, 'volunteer_hours'), where('uid', '==', me.uid)));
+      rows = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (b.submittedAt?.seconds || 0) - (a.submittedAt?.seconds || 0));
+    } catch (e) {
+      console.error('Could not load volunteer hours:', e);
+    }
     const approved = rows.filter(r => r.status === 'approved');
     const pending = rows.filter(r => r.status === 'pending');
     const totalMin = approved.reduce((s, r) => s + (parseInt(r.duration) || 0), 0);
@@ -4025,9 +4232,15 @@
           </tr>`;
         }).join('');
 
-    // Show CEO tools
+    // Show CEO tools (full set) / president tools (approver assignment only, scoped to their chapter)
+    const isCeoLevel = myRole === 'ceo' || myRole === 'super_admin';
+    const isChapterPrez = hasRole('chapter_president') || hasRole('chapter_director');
     const ceoTools = document.getElementById('ceo-hours-tools');
-    if (ceoTools) ceoTools.style.display = (myRole === 'ceo' || myRole === 'super_admin') ? 'block' : 'none';
+    if (ceoTools) ceoTools.style.display = (isCeoLevel || isChapterPrez) ? 'block' : 'none';
+    const setHoursCard = document.getElementById('ceo-set-hours-card');
+    if (setHoursCard) setHoursCard.style.display = isCeoLevel ? 'block' : 'none';
+    const approverDesc = document.getElementById('ceo-approver-desc');
+    if (approverDesc && isChapterPrez && !isCeoLevel) approverDesc.textContent = 'Set who signs off a member\'s volunteer hours in your chapter.';
 
     const canApprove = LEVELS[myRole] >= 2;
     const approveSection = document.getElementById('hours-approve-section');
@@ -4043,18 +4256,25 @@
       const isTask = hoursType.value === 'task';
     };
 
-    // Populate supervisor dropdown - use custom approver if CEO has assigned one
-    const myUserDoc = await getDoc(doc(db, 'users', me.uid));
-    const customApproverUid = myUserDoc.data()?.customApproverUid;
-    const approverRole = customApproverUid ? null : HOURS_APPROVER[myRole];
+    // Populate supervisor dropdown - use custom approver if CEO/president has assigned one
     const supSel = document.getElementById('hours-supervisor');
     supSel.innerHTML = '<option value="">Select supervisor...</option>';
     try {
+      let myUserDoc = null;
+      try { myUserDoc = await getDoc(doc(db, 'users', me.uid)); } catch(e) { /* fall through to role-based */ }
+      const customApproverUid = myUserDoc?.data()?.customApproverUid;
+      const customApproverName = myUserDoc?.data()?.customApproverName;
+      const approverRole = customApproverUid ? null : HOURS_APPROVER[myRole];
       if (customApproverUid) {
-        // CEO has assigned a specific approver for this person
-        const aDoc = await getDoc(doc(db, 'users', customApproverUid));
-        const aName = aDoc.data()?.displayName || aDoc.data()?.email || 'Assigned Approver';
-        supSel.innerHTML = `<option value="${esc(aName)}" selected>${esc(aName)} (assigned by CEO)</option>`;
+        // CEO or chapter president has assigned a specific approver for this person
+        let aName = customApproverName;
+        if (!aName) {
+          try {
+            const aDoc = await getDoc(doc(db, 'users', customApproverUid));
+            aName = aDoc.data()?.displayName || aDoc.data()?.email || 'Assigned Approver';
+          } catch(e) { aName = 'Assigned Approver'; }
+        }
+        supSel.innerHTML = `<option value="${esc(aName)}" selected>${esc(aName)} (assigned approver)</option>`;
       } else if (approverRole) {
         const supSnap = await getDocs(query(collection(db, 'users'), where('role', '==', approverRole)));
         if (supSnap.empty) {
@@ -4070,19 +4290,34 @@
           });
         }
       } else {
-        supSel.innerHTML = '<option value="">No approver configured</option>';
+        // No approver mapping for this role - let them type a name
+        supSel.outerHTML = `<input class="form-input" id="hours-supervisor" placeholder="Supervisor name..." />`;
       }
     } catch(e) {
-      supSel.innerHTML = '<option value="">Could not load - enter name manually</option>';
+      const el = document.getElementById('hours-supervisor');
+      if (el) el.outerHTML = `<input class="form-input" id="hours-supervisor" placeholder="Supervisor name..." />`;
     }
   }
 
   async function loadHoursApproval() {
-    const approverRole = myRole;
-    const snap = await getDocs(query(collection(db, 'volunteer_hours'), where('status', '==', 'pending'), where('approverRole', '==', approverRole)));
     const feed = document.getElementById('hours-approve-feed');
-    if (snap.empty) { feed.innerHTML = '<div class="empty-state"><span class="empty-icon">🕐</span>No pending sign-offs.</div>'; return; }
-    feed.innerHTML = snap.docs.map(d => {
+    // Pending hours route to an approver either by role (default) OR by uid (custom approver assigned).
+    // Query both and merge so custom-approver sign-offs are never lost.
+    let docs = [];
+    try {
+      const [byRole, byUid] = await Promise.all([
+        getDocs(query(collection(db, 'volunteer_hours'), where('status', '==', 'pending'), where('approverRole', '==', myRole))),
+        getDocs(query(collection(db, 'volunteer_hours'), where('status', '==', 'pending'), where('approverRole', '==', me.uid)))
+      ]);
+      const seen = new Set();
+      [...byRole.docs, ...byUid.docs].forEach(d => { if (!seen.has(d.id)) { seen.add(d.id); docs.push(d); } });
+    } catch (e) {
+      console.error('loadHoursApproval failed:', e);
+      feed.innerHTML = `<div class="empty-state"><span class="empty-icon">⚠️</span>Could not load sign-off requests.<br><span style="font-size:0.78rem;color:var(--muted);margin-top:0.35rem;display:block;">${esc(e.message || e.code || String(e))}</span></div>`;
+      return;
+    }
+    if (!docs.length) { feed.innerHTML = '<div class="empty-state"><span class="empty-icon">🕐</span>No pending sign-offs.</div>'; return; }
+    feed.innerHTML = docs.map(d => {
       const r = d.data();
       const durMin = parseInt(r.duration) || 0;
       const isSuspicious = durMin > 480;
@@ -4123,6 +4358,7 @@
     const isSuspicious = minutes > 480;
     await addDoc(collection(db, 'volunteer_hours'), {
       uid: me.uid, submittedBy: me.displayName || me.email, role: myRole,
+      chapter: document.getElementById('sb-chapter')?.textContent || myDoc.data()?.chapter || '',
       type, date,
       duration: minutes,
       description: desc, supervisor,
@@ -4165,20 +4401,94 @@
 
   async function loadTutorReview() {
     const feed = document.getElementById('tutor-review-feed');
+    const sub = document.getElementById('tutor-review-sub');
+    const canReviewStaff = myRole === 'ceo' || myRole === 'super_admin';
+    if (sub) sub.textContent = canReviewStaff
+      ? 'Review tutor, officer, and lead applications.'
+      : 'Review tutor applications and manage interviews.';
+
     feed.innerHTML = '<div class="empty-state"><span class="empty-icon">⏳</span>Loading...</div>';
-    const snap = await getDocs(query(collection(db, 'applications'), where('role', '==', 'tutor')));
-    if (snap.empty) { feed.innerHTML = '<div class="empty-state"><span class="empty-icon">📝</span>No tutor applications.</div>'; return; }
 
     const statusColor = { pending:'#f5a623', interview_offered:'#2d7aac', rejected:'#c0392b', verified:'#1a6e3c' };
     const statusLabel = { pending:'Pending', interview_offered:'Interview Scheduled', rejected:'Rejected', verified:'Approved' };
-
-    // Pending first, then interview_offered, then rest
     const order = { pending:0, interview_offered:1, rejected:2, verified:3 };
-    const docs = snap.docs.slice().sort((a,b) =>
+    const sortApps = docs => docs.slice().sort((a,b) =>
       (order[a.data().reviewStatus||'pending']||0) - (order[b.data().reviewStatus||'pending']||0)
     );
 
-    feed.innerHTML = docs.map(d => {
+    let staffItems = [];
+    let staffLoadError = '';
+    try {
+      const tutorSnap = await getDocs(query(collection(db, 'applications'), where('role', '==', 'tutor')));
+      if (canReviewStaff) {
+        let officerAppSnap, leadAppSnap, officerUserSnap, leadUserSnap;
+        try {
+          [officerAppSnap, leadAppSnap, officerUserSnap, leadUserSnap] = await Promise.all([
+            getDocs(query(collection(db, 'applications'), where('role', '==', 'officer'))),
+            getDocs(query(collection(db, 'applications'), where('role', '==', 'lead'))),
+            getDocs(query(collection(db, 'users'), where('role', '==', 'officer'), where('pendingApproval', '==', true))),
+            getDocs(query(collection(db, 'users'), where('role', '==', 'lead'), where('pendingApproval', '==', true)))
+          ]);
+        } catch (e) {
+          console.error('Staff application load failed:', e);
+          staffLoadError = e.message || e.code || String(e);
+          try {
+            [officerUserSnap, leadUserSnap] = await Promise.all([
+              getDocs(query(collection(db, 'users'), where('role', '==', 'officer'), where('pendingApproval', '==', true))),
+              getDocs(query(collection(db, 'users'), where('role', '==', 'lead'), where('pendingApproval', '==', true)))
+            ]);
+          } catch (e2) {
+            console.error('Pending staff user load failed:', e2);
+          }
+        }
+
+        const appUids = new Set();
+        const appItems = [];
+        if (officerAppSnap) {
+          officerAppSnap.docs.forEach(d => {
+            const uid = d.data().uid;
+            if (uid) appUids.add(uid);
+            appItems.push({ kind:'app', id: d.id, data: d.data() });
+          });
+        }
+        if (leadAppSnap) {
+          leadAppSnap.docs.forEach(d => {
+            const uid = d.data().uid;
+            if (uid) appUids.add(uid);
+            appItems.push({ kind:'app', id: d.id, data: d.data() });
+          });
+        }
+        const userItems = [];
+        if (officerUserSnap) {
+          officerUserSnap.docs.forEach(d => {
+            if (appUids.has(d.id)) return;
+            userItems.push({ kind:'user', id: d.id, data: { uid: d.id, email: d.data().email, name: d.data().displayName, role: d.data().role, reviewStatus: 'pending' } });
+          });
+        }
+        if (leadUserSnap) {
+          leadUserSnap.docs.forEach(d => {
+            if (appUids.has(d.id)) return;
+            userItems.push({ kind:'user', id: d.id, data: { uid: d.id, email: d.data().email, name: d.data().displayName, role: d.data().role, reviewStatus: 'pending' } });
+          });
+        }
+        staffItems = sortApps([...appItems, ...userItems].map(item => ({
+          data: () => item.data,
+          id: item.kind === 'app' ? item.id : 'user-' + item.id,
+          _kind: item.kind,
+          _appId: item.kind === 'app' ? item.id : '',
+          _uid: item.data.uid || item.id
+        })));
+      }
+
+      const tutorDocs = sortApps(tutorSnap.docs);
+      if (!tutorDocs.length && !staffItems.length) {
+        feed.innerHTML = staffLoadError
+          ? `<div class="empty-state"><span class="empty-icon">🔒</span>Could not load officer/lead applications.<br><span style="font-size:0.78rem;color:var(--muted);margin-top:0.35rem;display:block;">${esc(staffLoadError)} — you may need to update Firebase rules.</span></div>`
+          : '<div class="empty-state"><span class="empty-icon">📝</span>No applications to review.</div>';
+        return;
+      }
+
+    const renderTutorCard = d => {
       const a = d.data(); const id = d.id;
       const status = a.reviewStatus || 'pending';
       const isDone = status === 'rejected' || status === 'verified';
@@ -4211,7 +4521,64 @@
           <button onclick="rejectTutor('${id}')" class="btn-sm danger">Reject</button>
         </div>`}
       </div>`;
-    }).join('');
+    };
+
+    const renderStaffCard = d => {
+      const a = d.data(); const id = d.id;
+      const appId = d._appId || '';
+      const uid = d._uid || a.uid || '';
+      const isUserOnly = d._kind === 'user';
+      const status = a.reviewStatus || 'pending';
+      const isDone = status === 'rejected' || status === 'verified';
+      const roleLabel = LABELS[a.role] || a.role;
+      const snippet = a.staffWhy || a.roleWhy || (isUserOnly ? 'Pending account — full application may be blocked by Firebase rules.' : '');
+      return `<div class="card" style="margin-bottom:0.85rem;" id="tr-card-${id}">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:0.6rem;">
+          <div>
+            <div style="font-weight:700;font-size:0.95rem;">${esc(a.name || a.email)}</div>
+            <div style="font-size:0.78rem;color:var(--muted);margin-top:0.1rem;">${esc(a.email)}${a.grade ? ` &middot; Grade ${esc(a.grade)}` : ''}${a.school ? ` &middot; ${esc(a.school)}` : ''}</div>
+            <div style="font-size:0.78rem;color:var(--muted);margin-top:0.1rem;"><strong>Applying for:</strong> ${esc(roleLabel)}</div>
+          </div>
+          <span style="font-size:0.68rem;font-weight:700;color:${statusColor[status]||'#f5a623'};white-space:nowrap;flex-shrink:0;">${statusLabel[status]||status.toUpperCase()}</span>
+        </div>
+        ${snippet ? `<div style="font-size:0.8rem;color:var(--text-soft);background:var(--panel);border-radius:6px;padding:0.55rem 0.75rem;margin-bottom:0.7rem;line-height:1.6;">
+          "${esc(snippet.slice(0,200))}${snippet.length>200?'...':''}"
+        </div>` : ''}
+        ${isUserOnly ? '' : `<div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.5rem;">
+          <button onclick="toggleTrDetails('${id}')" style="background:none;border:1px solid var(--border);border-radius:6px;padding:0.3rem 0.75rem;font-size:0.78rem;color:var(--muted);cursor:pointer;" id="tr-toggle-${id}">View Full Application</button>
+        </div>
+        <div id="tr-details-${id}" style="display:none;font-size:0.8rem;color:var(--muted);line-height:1.75;background:var(--panel);border-radius:6px;padding:0.75rem;margin-bottom:0.7rem;">
+          <div><strong>Phone:</strong> ${esc(a.phone||'-')} &nbsp;|&nbsp; <strong>Emergency contact:</strong> ${esc(a.emergencyContact||'-')}</div>
+          <div><strong>Why this role:</strong> ${esc(a.roleWhy||'-')}</div>
+          <div><strong>Experience:</strong> ${esc(a.roleExperience||'-')}</div>
+          <div><strong>Availability:</strong> ${esc(a.availability||'-')}</div>
+          <div><strong>Why Edutine:</strong> ${esc(a.staffWhy||'-')}</div>
+          <div><strong>Referrals:</strong> ${esc(a.staffReferrals||'-')}</div>
+        </div>`}
+        ${isDone ? '' : `<div style="display:flex;gap:0.5rem;">
+          <button onclick="approveTutor('${appId}','${uid}')" class="btn-sm success">Approve</button>
+          <button onclick="rejectTutor('${appId}','${uid}')" class="btn-sm danger">Reject</button>
+        </div>`}
+      </div>`;
+    };
+
+    let html = '';
+    if (staffLoadError && staffItems.length) {
+      html += `<div style="background:#fff8e6;border:1px solid #f5d78e;border-radius:8px;padding:0.65rem 0.85rem;font-size:0.78rem;color:#8a6d00;margin-bottom:0.85rem;">Some application details could not be loaded (${esc(staffLoadError)}). Showing pending accounts where available — update Firebase rules to see full applications.</div>`;
+    }
+    if (staffItems.length) {
+      html += `<div class="card-label" style="margin-bottom:0.65rem;">Officer &amp; Lead Applications</div>`;
+      html += staffItems.map(renderStaffCard).join('');
+    }
+    if (tutorDocs.length) {
+      if (staffItems.length) html += `<div class="card-label" style="margin:1.25rem 0 0.65rem;">Tutor Applications</div>`;
+      html += tutorDocs.map(renderTutorCard).join('');
+    }
+    feed.innerHTML = html;
+    } catch (e) {
+      console.error('loadTutorReview failed:', e);
+      feed.innerHTML = `<div class="empty-state"><span class="empty-icon">⚠️</span>Failed to load applications.<br><span style="font-size:0.78rem;color:var(--muted);margin-top:0.35rem;display:block;">${esc(e.message || e.code || String(e))}</span></div>`;
+    }
   }
 
   window.toggleTrDetails = (id) => {
@@ -4224,17 +4591,50 @@
 
   window.approveTutor = async (appId, uid) => {
     if (!uid) { alert('No account found for this applicant yet - they may not have signed in after applying.'); return; }
-    await updateDoc(doc(db, 'users', uid), { pendingApproval: false, approvedBy: me.displayName || me.email, approvedAt: serverTimestamp() });
-    await updateDoc(doc(db, 'applications', appId), { reviewStatus: 'verified', reviewedBy: me.uid, reviewedAt: serverTimestamp() });
-    document.getElementById('tr-card-' + appId).innerHTML =
-      `<div style="display:flex;align-items:center;gap:0.6rem;color:#1a6e3c;font-size:0.88rem;font-weight:600;padding:0.25rem 0;">
-        <span style="font-size:1.1rem;">✓</span> Approved and account activated
-      </div>`;
+    try {
+      let applicantEmail = '';
+      if (appId) {
+        const appSnap = await getDoc(doc(db, 'applications', appId));
+        applicantEmail = appSnap.data()?.email || '';
+      } else {
+        const userSnap = await getDoc(doc(db, 'users', uid));
+        applicantEmail = userSnap.data()?.email || '';
+      }
+      const needsOrgEmail = applicantEmail && !applicantEmail.toLowerCase().endsWith('@edutinereachout.com');
+      if (needsOrgEmail && !confirm('This applicant uses a personal email (' + applicantEmail + '). After approval, an @edutinereachout.com account must be created for them to access the full portal. Approve anyway?')) return;
+      await updateDoc(doc(db, 'users', uid), { pendingApproval: false, approvedBy: me.displayName || me.email, approvedAt: serverTimestamp() });
+      if (appId) {
+        await updateDoc(doc(db, 'applications', appId), { reviewStatus: 'verified', reviewedBy: me.uid, reviewedAt: serverTimestamp() });
+      }
+      if (needsOrgEmail) {
+        await addDoc(collection(db, 'notifications'), {
+          type: 'approval',
+          targetUid: uid,
+          title: 'Application approved — next step: Edutine email',
+          body: 'Congratulations! Your application has been approved. To access the full Edutine portal, please email tutor@edutinereachout.com to request your @edutinereachout.com account. Include your full name and the role you were approved for.',
+          createdAt: serverTimestamp(),
+          readBy: []
+        });
+      }
+      const cardId = appId || ('user-' + uid);
+      const card = document.getElementById('tr-card-' + cardId);
+      if (card) card.innerHTML =
+        `<div style="display:flex;align-items:center;gap:0.6rem;color:#1a6e3c;font-size:0.88rem;font-weight:600;padding:0.25rem 0;">
+          <span style="font-size:1.1rem;">✓</span> Approved${needsOrgEmail ? ' — applicant needs @edutinereachout.com account' : ' and account activated'}
+        </div>`;
+    } catch (e) {
+      console.error('approveTutor failed:', e);
+      alert('Approval failed: ' + (e.message || e.code || String(e)));
+    }
   };
 
-  window.rejectTutor = async (appId) => {
-    if (!confirm('Reject this tutor application?')) return;
-    await updateDoc(doc(db, 'applications', appId), { reviewStatus: 'rejected', reviewedBy: me.uid, reviewedAt: serverTimestamp() });
+  window.rejectTutor = async (appId, uid) => {
+    if (!confirm('Reject this application?')) return;
+    if (appId) {
+      await updateDoc(doc(db, 'applications', appId), { reviewStatus: 'rejected', reviewedBy: me.uid, reviewedAt: serverTimestamp() });
+    } else if (uid) {
+      await updateDoc(doc(db, 'users', uid), { pendingApproval: false, rejectedBy: me.uid, rejectedAt: serverTimestamp(), accountStatus: 'rejected' });
+    }
     loadTutorReview();
   };
 
@@ -4389,8 +4789,15 @@
   async function loadApprovals() {
     const feed = document.getElementById('approvals-feed');
     feed.innerHTML = '<div class="empty-state"><span class="empty-icon">⏳</span>Loading...</div>';
-    await primeAssignCache();
-    const snap = await getDocs(query(collection(db, 'users'), where('pendingApproval', '==', true)));
+    try { await primeAssignCache(); } catch (e) { console.warn('primeAssignCache failed:', e); }
+    let snap;
+    try {
+      snap = await getDocs(query(collection(db, 'users'), where('pendingApproval', '==', true)));
+    } catch (e) {
+      console.error('loadApprovals failed:', e);
+      feed.innerHTML = `<div class="empty-state"><span class="empty-icon">⚠️</span>Could not load approvals.<br><span style="font-size:0.78rem;color:var(--muted);margin-top:0.35rem;display:block;">${esc(e.message || e.code || String(e))}</span></div>`;
+      return;
+    }
     if (snap.empty) {
       feed.innerHTML = '<div class="empty-state"><span class="empty-icon">🧑‍💼</span>No pending approvals.</div>';
     } else {
@@ -5455,6 +5862,20 @@
     ));
     const hasPendingRequest = !rSnap.empty;
 
+    let meetingLink = myData.latestMeetingLink || '';
+    if (!meetingLink) {
+      try {
+        const sessSnap = await getDocs(query(collection(db, 'session_notes'), where('studentUid', '==', me.uid), orderBy('createdAt', 'desc')));
+        meetingLink = sessSnap.docs[0]?.data()?.link || '';
+      } catch(_) {}
+    }
+    const meetingLinkSection = meetingLink ? `
+      <div class="card" style="margin-bottom:1rem;border-left:3px solid #1a6e3c;">
+        <div class="card-label" style="margin-bottom:0.35rem;">Session Meeting Link</div>
+        <div style="font-size:0.82rem;color:var(--muted);margin-bottom:0.6rem;">Your tutor shared this link for your tutoring sessions.</div>
+        <a href="${esc(meetingLink)}" target="_blank" style="display:inline-flex;align-items:center;gap:0.4rem;background:var(--navy);color:#fff;text-decoration:none;border-radius:8px;padding:0.5rem 1rem;font-size:0.85rem;font-weight:600;">🎥 Join Session</a>
+      </div>` : '';
+
     let scheduleSection = '';
     if (chosenSlot) {
       scheduleSection = `
@@ -5517,6 +5938,7 @@
         <div style="font-weight:700;font-size:1rem;margin-bottom:0.15rem;">${esc(tutor.displayName || tutor.email)}</div>
         <div style="font-size:0.8rem;color:var(--muted);">${esc(tutor.email)}</div>
       </div>
+      ${meetingLinkSection}
       ${scheduleSection}
       ${retutorSection}`;
 
@@ -6131,6 +6553,25 @@
 
   // ── Toast notifications ──────────────────────────────────────────────────
 
+  function showTeamWelcomePopup(name) {
+    const existing = document.getElementById('team-welcome-popup');
+    if (existing) existing.remove();
+    const overlay = document.createElement('div');
+    overlay.id = 'team-welcome-popup';
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(14,20,40,0.7);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;animation:fadeIn 0.25s ease;';
+    overlay.innerHTML = `
+      <div style="background:#fff;border-radius:18px;padding:2.5rem 2.75rem;max-width:440px;width:90%;text-align:center;box-shadow:0 24px 64px rgba(14,20,40,0.28);animation:slideUp 0.3s ease;">
+        <div style="font-size:2.8rem;margin-bottom:0.75rem;">👋</div>
+        <div style="font-size:1.35rem;font-weight:700;color:var(--navy);margin-bottom:0.5rem;">Welcome back, ${esc(name)}!</div>
+        <div style="font-size:0.88rem;color:var(--text-soft);line-height:1.6;margin-bottom:1.5rem;">
+          You have been recognized as an existing member of the <strong>Edutine team</strong>. Your account has been set up with the correct access level. Welcome to the portal!
+        </div>
+        <button onclick="document.getElementById('team-welcome-popup').remove()" style="background:var(--navy);color:#fff;border:none;border-radius:8px;padding:0.65rem 2rem;font-size:0.9rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;">Let's go →</button>
+      </div>`;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+  }
+
   window.showToast = (msg, type = 'info', ms = 4500) => {
     let stack = document.getElementById('toast-stack');
     if (!stack) {
@@ -6589,6 +7030,7 @@
           <div style="font-weight:700;font-size:0.9rem;color:var(--navy);">${esc(s.studentName||'')}</div>
           <div style="font-size:0.78rem;color:var(--muted);">${esc(s.sessionDate||'')}</div>
         </div>
+        ${s.rating ? `<div style="font-size:0.78rem;color:var(--muted);margin-bottom:0.3rem;">Progress: ${'⭐'.repeat(s.rating)}</div>` : ''}
         ${s.link ? `<div style="font-size:0.78rem;margin-bottom:0.3rem;"><a href="${esc(s.link)}" target="_blank" style="color:var(--navy);">Meeting Link</a></div>` : ''}
         <div style="font-size:0.85rem;color:var(--text-soft);">${esc(s.notes||'')}</div>
       </div>`;
@@ -6602,19 +7044,25 @@
     const sessionDate = document.getElementById('sn-date').value;
     const link = document.getElementById('sn-link').value.trim();
     const notes = document.getElementById('sn-notes').value.trim();
+    const rating = parseInt(document.getElementById('sn-rating').value, 10);
     const msgEl = document.getElementById('sn-msg');
-    if (!studentUid || !sessionDate || !notes) {
-      msgEl.textContent = 'Please fill in student, date, and notes.';
+    if (!studentUid || !sessionDate || !link || !notes || !rating) {
+      msgEl.textContent = 'Please fill in student, date, meeting link, topics covered, and progress rating.';
       msgEl.style.color = '#e74c3c';
       msgEl.style.display = 'inline';
       return;
     }
     await addDoc(collection(db, 'session_notes'), {
-      tutorUid: me.uid, studentUid, studentName, sessionDate, link, notes, createdAt: serverTimestamp()
+      tutorUid: me.uid, studentUid, studentName, sessionDate, link, notes, rating, createdAt: serverTimestamp()
     });
+    await addDoc(collection(db, 'progress_notes'), {
+      studentUid, tutorUid: me.uid, note: notes, rating, sessionDate, meetingLink: link, createdAt: serverTimestamp()
+    });
+    await updateDoc(doc(db, 'users', studentUid), { latestMeetingLink: link, latestMeetingLinkAt: serverTimestamp() });
     document.getElementById('sn-notes').value = '';
     document.getElementById('sn-link').value = '';
-    msgEl.textContent = 'Session logged!';
+    document.getElementById('sn-rating').value = '';
+    msgEl.textContent = 'Post-session report submitted!';
     msgEl.style.color = '#27ae60';
     msgEl.style.display = 'inline';
     setTimeout(() => { msgEl.style.display = 'none'; }, 2000);
@@ -7272,7 +7720,13 @@
     const q = document.getElementById(inputId).value.toLowerCase();
     const results = document.getElementById(resultsId);
     if (!q) { results.style.display = 'none'; return; }
-    const matches = _allMembersCache.filter(u =>
+    // Chapter presidents/directors (not CEO-level) can only manage their own chapter's members
+    const isCeoLevel = myRole === 'ceo' || myRole === 'super_admin';
+    const myChapter = document.getElementById('sb-chapter')?.textContent || '';
+    const scope = (!isCeoLevel && myChapter)
+      ? _allMembersCache.filter(u => u.chapter === myChapter)
+      : _allMembersCache;
+    const matches = scope.filter(u =>
       (u.displayName || '').toLowerCase().includes(q) || (u.email || '').toLowerCase().includes(q)
     ).slice(0, 8);
     if (!matches.length) { results.style.display = 'none'; return; }
@@ -7329,17 +7783,27 @@
     if (!reason) { msg.textContent = 'Please provide a reason.'; msg.style.color='#c0392b'; msg.style.display='block'; return; }
     const target = _allMembersCache.find(u => u.id === _ceoHoursTarget);
     try {
+      // Calculate current approved hours total so we can log the before/after
+      const existingSnap = await getDocs(query(collection(db, 'volunteer_hours'), where('uid', '==', _ceoHoursTarget), where('status', '==', 'approved')));
+      const prevMinutes = existingSnap.docs.reduce((s, d) => s + (parseInt(d.data().duration) || 0), 0);
+      const prevHours = +(prevMinutes / 60).toFixed(2);
+      const newTotalHours = +(prevHours + hours).toFixed(2);
+
       await addDoc(collection(db, 'volunteer_hours'), {
         uid: _ceoHoursTarget,
         submittedBy: target?.displayName || target?.email || _ceoHoursTarget,
         role: target?.role || 'unknown',
-        type: 'import', date: new Date().toISOString().split('T')[0],
-        duration: hours, description: reason || 'Hours set by CEO',
+        type: 'import',
+        date: new Date().toISOString().split('T')[0],
+        duration: Math.round(hours * 60),
+        description: `${reason} (adjusted from ${prevHours}h → ${newTotalHours}h total)`,
         supervisor: me.displayName || me.email,
         approverRole: myRole, status: 'approved',
-        importedBy: me.uid, submittedAt: serverTimestamp()
+        importedBy: me.uid,
+        prevHours, addedHours: hours, newTotalHours,
+        submittedAt: serverTimestamp()
       });
-      msg.textContent = `✓ Set ${hours}h for ${target?.displayName || target?.email}.`;
+      msg.textContent = `✓ Added ${hours}h for ${target?.displayName || target?.email} (was ${prevHours}h, now ${newTotalHours}h total).`;
       msg.style.color = '#1a6e3c'; msg.style.display = 'block';
       _ceoHoursTarget = null;
       document.getElementById('ceo-hours-selected').style.display = 'none';
