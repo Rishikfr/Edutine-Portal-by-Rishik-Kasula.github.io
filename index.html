@@ -1781,7 +1781,7 @@
         <div class="page-title">My Tasks</div>
         <p class="page-sub" id="tasks-page-sub">Tasks assigned to you by board leadership.</p>
       </div>
-      <!-- Board President: create task form -->
+      <!-- Leadership: create task form -->
       <div class="card" id="task-create-wrap" style="display:none;margin-bottom:1.25rem;">
         <div class="card-label">Assign a Task</div>
         <div class="form-row">
@@ -1791,10 +1791,24 @@
           </div>
           <div class="form-group">
             <label class="form-label">Assign to</label>
-            <select class="form-input" id="task-assignee">
-              <option value="">Select a role or person...</option>
+            <select class="form-input" id="task-assign-mode" onchange="onTaskAssignModeChange()">
+              <option value="everyone">Everyone</option>
+              <option value="role">A specific role</option>
+              <option value="individual">A specific person</option>
             </select>
           </div>
+        </div>
+        <!-- Role picker (mode = role) -->
+        <div class="form-group" id="task-role-wrap" style="display:none;">
+          <label class="form-label">Role</label>
+          <select class="form-input" id="task-assignee-role"></select>
+        </div>
+        <!-- Person picker (mode = individual) -->
+        <div class="form-group" id="task-person-wrap" style="display:none;position:relative;">
+          <label class="form-label">Person</label>
+          <input class="form-input" id="task-person-search" oninput="taskPersonSearch()" placeholder="Search by name or email..." autocomplete="off" />
+          <div id="task-person-results" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--white);border:1px solid var(--border);border-radius:var(--r-sm);box-shadow:var(--shadow-md);z-index:50;max-height:260px;overflow-y:auto;"></div>
+          <div id="task-person-selected" style="display:none;margin-top:0.45rem;font-size:0.84rem;font-weight:600;color:#1a6e3c;"></div>
         </div>
         <div class="form-row">
           <div class="form-group">
@@ -1814,7 +1828,7 @@
           <label class="form-label">Description</label>
           <textarea class="form-input" id="task-description" rows="2" placeholder="Additional details..." style="resize:vertical;"></textarea>
         </div>
-        <button onclick="createTask()" style="background:var(--navy);color:#fff;border:none;border-radius:6px;padding:0.4rem 1rem;font-size:0.82rem;font-weight:600;cursor:pointer;margin-top:0.4rem;">Assign Task</button>
+        <button onclick="createTask()" style="background:var(--navy);color:#fff;border:none;border-radius:20px;padding:0.55rem 1.25rem;font-size:0.82rem;font-weight:600;cursor:pointer;margin-top:0.4rem;">Assign Task</button>
         <span id="task-create-msg" style="display:none;font-size:0.8rem;font-weight:600;margin-left:0.75rem;"></span>
       </div>
       <div id="tasks-feed">
@@ -3055,7 +3069,7 @@
     document.getElementById('nav-members').style.display = canSeeRoster ? 'flex' : 'none';
     document.getElementById('nav-all-students').style.display = (hasRole('super_admin') || hasRole('ceo') || hasRole('board_president') || hasRole('vp_student_tutor')) ? 'flex' : 'none';
     // Board nav items
-    document.getElementById('nav-tasks').style.display = isBoard ? 'flex' : 'none';
+    document.getElementById('nav-tasks').style.display = 'flex';
     document.getElementById('nav-board-meetings').style.display = isBoard ? 'flex' : 'none';
     // EduHub: students, all board, and tutors (VP EduHub communicates with tutors via EduHub)
     document.getElementById('nav-eduhub').style.display = (role === 'student' || role === 'tutor' || isBoard) ? 'flex' : 'none';
@@ -3084,8 +3098,8 @@
 
     document.getElementById('announce-compose-wrap').style.display = (lv >= LEVELS['executive']) ? 'block' : 'none';
     document.getElementById('break-compose-wrap').style.display = (role === 'super_admin') ? 'block' : 'none';
-    // Board President sees task-create form; VP of Finance can assign tasks to Director of Finance
-    document.getElementById('task-create-wrap').style.display = (hasRole('board_president') || hasRole('super_admin') || hasRole('vp_finance')) ? 'block' : 'none';
+    // CEO / Board President / VPs / Developer can assign tasks to anyone
+    document.getElementById('task-create-wrap').style.display = canAssignTasks() ? 'block' : 'none';
     document.getElementById('board-meeting-create-wrap').style.display = (hasRole('board_president') || hasRole('super_admin')) ? 'block' : 'none';
     document.getElementById('eduhub-manage-wrap').style.display = (hasRole('vp_eduhub') || hasRole('super_admin')) ? 'block' : 'none';
 
@@ -6063,108 +6077,228 @@
 
   // ── Tasks ────────────────────────────────────────────────────────────────
 
-  const TASK_ASSIGNEES = [
-    { label:'VP of Student & Tutor Relations', value:'vp_student_tutor' },
-    { label:'VP of Chapter Development',       value:'vp_chapter_dev' },
-    { label:'VP of EduHub',                    value:'vp_eduhub' },
-    { label:'VP of Community Engagement',      value:'vp_community' },
-    { label:'VP of Technology',                value:'vp_technology' },
-    { label:'VP of Marketing',                 value:'vp_marketing' },
-    { label:'VP of Website Management',        value:'vp_website' },
-    { label:'VP of Finance',                   value:'vp_finance' },
-    { label:'Director of Finance',             value:'director_finance' },
+  // Roles available in the "specific role" picker, ordered by seniority
+  const ASSIGNABLE_ROLES = [
+    'ceo','board_president',
+    'vp_student_tutor','vp_chapter_dev','vp_eduhub','vp_community',
+    'vp_technology','vp_marketing','vp_website','vp_finance',
+    'director_finance','executive','executive_vp',
+    'chapter_president','chapter_director','chapter_vp','chapter_social_media','chapter_grants',
+    'tutor_director','student_support_director',
+    'officer','tutor_support_lead','student_support_lead','lead',
+    'tutor','student'
   ];
 
+  let _taskPersonTarget = null;
+
+  // CEO, Board President, VPs and Developer can assign tasks to anyone
+  function canAssignTasks() { return roleLevel() >= LEVELS['ceo']; }
+
   function initTaskAssigneeDropdown() {
-    const sel = document.getElementById('task-assignee');
+    const sel = document.getElementById('task-assignee-role');
     if (!sel) return;
-    // Board President sees all VPs; VP Finance sees Director of Finance
-    const options = (myRole === 'board_president' || myRole === 'super_admin')
-      ? TASK_ASSIGNEES
-      : TASK_ASSIGNEES.filter(a => a.value === 'director_finance');
-    sel.innerHTML = '<option value="">Assign to...</option>' +
-      options.map(a => `<option value="${a.value}">${a.label}</option>`).join('');
+    sel.innerHTML = '<option value="">Select a role...</option>' +
+      ASSIGNABLE_ROLES.map(r => `<option value="${r}">${esc(LABELS[r]||r)}</option>`).join('');
   }
+
+  window.onTaskAssignModeChange = () => {
+    const mode = document.getElementById('task-assign-mode').value;
+    document.getElementById('task-role-wrap').style.display   = mode === 'role' ? 'block' : 'none';
+    document.getElementById('task-person-wrap').style.display = mode === 'individual' ? 'block' : 'none';
+  };
+
+  window.taskPersonSearch = async () => {
+    await loadAllMembersForCeo();
+    const q = document.getElementById('task-person-search').value.toLowerCase();
+    const results = document.getElementById('task-person-results');
+    if (!q) { results.style.display = 'none'; return; }
+    const matches = _allMembersCache.filter(u =>
+      (u.displayName || '').toLowerCase().includes(q) || (u.email || '').toLowerCase().includes(q)
+    ).slice(0, 8);
+    if (!matches.length) { results.style.display = 'none'; return; }
+    results.style.display = 'block';
+    results.innerHTML = matches.map(u =>
+      `<div onclick="selectTaskPerson('${u.id}','${esc(u.displayName||u.email)}')"
+        style="padding:0.55rem 0.85rem;cursor:pointer;font-size:0.85rem;border-bottom:1px solid var(--border-light);"
+        onmouseover="this.style.background='var(--panel)'" onmouseout="this.style.background=''">
+        ${esc(u.displayName || u.email)}
+        <span style="color:var(--muted);font-size:0.74rem;margin-left:0.4rem;">${esc(u.email)} · ${esc(LABELS[u.role]||u.role)}${u.chapter ? ' · '+esc(u.chapter) : ''}</span>
+      </div>`
+    ).join('');
+  };
+
+  window.selectTaskPerson = (id, name) => {
+    _taskPersonTarget = { id, name };
+    document.getElementById('task-person-search').value = '';
+    document.getElementById('task-person-results').style.display = 'none';
+    const sel = document.getElementById('task-person-selected');
+    sel.style.display = 'block';
+    sel.textContent = '✓ ' + name;
+  };
 
   async function loadTasks() {
     initTaskAssigneeDropdown();
+    const sub = document.getElementById('tasks-page-sub');
+    if (sub) sub.textContent = canAssignTasks()
+      ? 'Assign tasks to the team and track your own.'
+      : 'Tasks assigned to you by leadership.';
     const feed = document.getElementById('tasks-feed');
     feed.innerHTML = '<div class="empty-state"><span class="empty-icon">⏳</span>Loading...</div>';
 
-    let snap;
-    if (myRole === 'board_president' || myRole === 'super_admin') {
-      // See all tasks they created
-      snap = await getDocs(query(collection(db, 'tasks'), where('createdBy', '==', me.uid), orderBy('createdAt', 'desc')));
-    } else if (myRole === 'vp_finance') {
-      // See own tasks + tasks they assigned to director_finance
-      const [mine, assigned] = await Promise.all([
-        getDocs(query(collection(db, 'tasks'), where('assigneeRole', '==', myRole), orderBy('createdAt', 'desc'))),
-        getDocs(query(collection(db, 'tasks'), where('createdBy', '==', me.uid), orderBy('createdAt', 'desc')))
-      ]);
-      const combined = [...mine.docs, ...assigned.docs.filter(d => !mine.docs.find(m => m.id === d.id))];
-      renderTasks(combined, feed);
-      return;
-    } else {
-      snap = await getDocs(query(collection(db, 'tasks'), where('assigneeRole', '==', myRole), orderBy('createdAt', 'desc')));
-    }
+    try {
+      // Tasks assigned to me: directly, by my role, or broadcast to everyone
+      const queries = [
+        getDocs(query(collection(db, 'tasks'), where('assigneeUid', '==', me.uid))),
+        getDocs(query(collection(db, 'tasks'), where('assigneeRole', '==', myRole))),
+        getDocs(query(collection(db, 'tasks'), where('assigneeType', '==', 'everyone')))
+      ];
+      // Assigners also see everything they created (to track progress)
+      if (canAssignTasks()) {
+        queries.push(getDocs(query(collection(db, 'tasks'), where('createdBy', '==', me.uid))));
+      }
+      const snaps = await Promise.all(queries);
 
-    renderTasks(snap.docs, feed);
+      const mineMap = new Map();     // tasks assigned to me
+      const createdMap = new Map();  // tasks I created (manager view)
+      const createdSnap = canAssignTasks() ? snaps[3] : null;
+      [snaps[0], snaps[1], snaps[2]].forEach(s => s.docs.forEach(d => mineMap.set(d.id, d)));
+      if (createdSnap) createdSnap.docs.forEach(d => createdMap.set(d.id, d));
+
+      const byCreatedAt = (a, b) => (b.data().createdAt?.seconds || 0) - (a.data().createdAt?.seconds || 0);
+      const mine = [...mineMap.values()].sort(byCreatedAt);
+      const created = [...createdMap.values()].sort(byCreatedAt);
+
+      let html = '';
+      // My assigned tasks
+      html += `<div class="card-label" style="margin-bottom:0.65rem;">Assigned to Me</div>`;
+      html += mine.length
+        ? mine.map(d => renderTaskCard(d, 'assignee')).join('')
+        : '<div class="empty-state" style="padding:1.5rem;"><span class="empty-icon">✅</span>No tasks assigned to you.</div>';
+
+      // Tasks I assigned (manager rollup)
+      if (canAssignTasks()) {
+        html += `<div class="card-label" style="margin:1.5rem 0 0.65rem;">Tasks I Assigned</div>`;
+        html += created.length
+          ? created.map(d => renderTaskCard(d, 'manager')).join('')
+          : '<div class="empty-state" style="padding:1.5rem;"><span class="empty-icon">📋</span>You haven\'t assigned any tasks yet.</div>';
+      }
+      feed.innerHTML = html;
+    } catch (e) {
+      console.error('loadTasks failed:', e);
+      feed.innerHTML = `<div class="empty-state"><span class="empty-icon">⚠️</span>Could not load tasks.<br><span style="font-size:0.78rem;color:var(--muted);margin-top:0.35rem;display:block;">${esc(e.message||e.code||String(e))}</span></div>`;
+    }
   }
 
-  function renderTasks(docs, feed) {
-    if (!docs.length) { feed.innerHTML = '<div class="empty-state"><span class="empty-icon">✅</span>No tasks assigned.</div>'; return; }
+  function taskTargetLabel(t) {
+    if (t.assigneeType === 'everyone') return 'Everyone';
+    if (t.assigneeType === 'individual') return t.assigneeName || 'A team member';
+    return LABELS[t.assigneeRole] || t.assigneeRole || 'A role';
+  }
+
+  function renderTaskCard(d, view) {
+    const t = d.data();
     const priorityColor = { urgent:'#c0392b', high:'#f5a623', normal:'var(--navy)' };
-    const isCreator = (myRole === 'board_president' || myRole === 'super_admin' || myRole === 'vp_finance');
-    feed.innerHTML = docs.map(d => {
-      const t = d.data();
-      const isAssigned = t.assigneeRole === myRole;
-      const due = t.dueDate ? `Due ${new Date(t.dueDate).toLocaleDateString('en-US',{month:'short',day:'numeric'})}` : '';
-      return `<div class="card" style="margin-bottom:0.75rem;border-left:3px solid ${priorityColor[t.priority]||'var(--navy)'};">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.3rem;">
-          <div style="font-weight:700;font-size:0.95rem;">${esc(t.title)}</div>
-          <div style="display:flex;gap:0.5rem;align-items:center;flex-shrink:0;margin-left:1rem;">
-            ${due ? `<span style="font-size:0.72rem;color:var(--muted);">${esc(due)}</span>` : ''}
-            <span style="font-size:0.7rem;font-weight:700;text-transform:uppercase;color:${priorityColor[t.priority]||'var(--navy)'};">${esc(t.priority||'normal')}</span>
-          </div>
-        </div>
-        ${t.description ? `<div style="font-size:0.82rem;color:var(--muted);margin-bottom:0.5rem;">${esc(t.description)}</div>` : ''}
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;">
-          <div style="font-size:0.75rem;color:var(--muted);">
-            ${isCreator && !isAssigned ? `Assigned to: <strong>${esc(LABELS[t.assigneeRole]||t.assigneeRole)}</strong>` : ''}
-          </div>
-          ${isAssigned ? `<select onchange="updateTaskStatus('${d.id}',this.value)" style="font-size:0.78rem;border:1px solid #d0d8e8;border-radius:6px;padding:0.25rem 0.5rem;background:#fff;color:var(--navy);font-weight:600;">
-            <option value="pending" ${t.status==='pending'?'selected':''}>Pending</option>
-            <option value="in_progress" ${t.status==='in_progress'?'selected':''}>In Progress</option>
-            <option value="completed" ${t.status==='completed'?'selected':''}>Completed</option>
-          </select>` : `<span style="font-size:0.78rem;font-weight:600;color:${t.status==='completed'?'#1a6e3c':t.status==='in_progress'?'#f5a623':'var(--muted)'};">${t.status==='completed'?'✓ Done':t.status==='in_progress'?'In Progress':'Pending'}</span>`}
+    const due = t.dueDate ? `Due ${new Date(t.dueDate + 'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'})}` : '';
+    const progress = t.progress || {};
+    const myStatus = progress[me.uid] || 'pending';
+
+    let footer = '';
+    if (view === 'manager') {
+      // Completion rollup
+      const vals = Object.values(progress);
+      const done = vals.filter(v => v === 'completed').length;
+      const inProg = vals.filter(v => v === 'in_progress').length;
+      let rollup;
+      if (t.assigneeType === 'individual') {
+        const s = vals[0] || 'pending';
+        rollup = s === 'completed' ? '✓ Completed' : s === 'in_progress' ? 'In Progress' : 'Pending';
+      } else {
+        rollup = (done || inProg) ? `${done} completed · ${inProg} in progress` : 'No updates yet';
+      }
+      footer = `<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;">
+        <div style="font-size:0.75rem;color:var(--muted);">To: <strong>${esc(taskTargetLabel(t))}</strong></div>
+        <div style="display:flex;align-items:center;gap:0.65rem;">
+          <span style="font-size:0.76rem;font-weight:600;color:var(--muted);">${rollup}</span>
+          <button onclick="deleteTask('${d.id}')" style="background:none;border:none;color:#c0392b;font-size:0.74rem;font-weight:600;cursor:pointer;padding:0;">Delete</button>
         </div>
       </div>`;
-    }).join('');
+    } else {
+      // Assignee view — personal status dropdown
+      footer = `<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;">
+        <div style="font-size:0.75rem;color:var(--muted);">From: ${esc(t.createdByName || 'Leadership')}</div>
+        <select onchange="updateTaskStatus('${d.id}',this.value)" style="font-size:0.78rem;border:1px solid var(--input-border);border-radius:8px;padding:0.25rem 0.5rem;background:var(--white);color:var(--navy);font-weight:600;">
+          <option value="pending" ${myStatus==='pending'?'selected':''}>Pending</option>
+          <option value="in_progress" ${myStatus==='in_progress'?'selected':''}>In Progress</option>
+          <option value="completed" ${myStatus==='completed'?'selected':''}>Completed</option>
+        </select>
+      </div>`;
+    }
+
+    return `<div class="card" style="margin-bottom:0.75rem;border-left:3px solid ${priorityColor[t.priority]||'var(--navy)'};">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.3rem;">
+        <div style="font-weight:700;font-size:0.95rem;">${esc(t.title)}</div>
+        <div style="display:flex;gap:0.5rem;align-items:center;flex-shrink:0;margin-left:1rem;">
+          ${due ? `<span style="font-size:0.72rem;color:var(--muted);">${esc(due)}</span>` : ''}
+          <span style="font-size:0.7rem;font-weight:700;text-transform:uppercase;color:${priorityColor[t.priority]||'var(--navy)'};">${esc(t.priority||'normal')}</span>
+        </div>
+      </div>
+      ${t.description ? `<div style="font-size:0.82rem;color:var(--muted);margin-bottom:0.5rem;">${esc(t.description)}</div>` : ''}
+      ${footer}
+    </div>`;
   }
 
   window.createTask = async () => {
     const title = document.getElementById('task-title').value.trim();
-    const assigneeRole = document.getElementById('task-assignee').value;
+    const mode = document.getElementById('task-assign-mode').value;
     const priority = document.getElementById('task-priority').value;
     const due = document.getElementById('task-due').value;
     const desc = document.getElementById('task-description').value.trim();
     const msg = document.getElementById('task-create-msg');
-    if (!title || !assigneeRole) { msg.textContent = 'Title and assignee are required.'; msg.style.color='#c0392b'; msg.style.display='block'; return; }
+    const show = (text, ok) => { msg.textContent = text; msg.style.color = ok ? '#1a6e3c' : '#c0392b'; msg.style.display = 'block'; };
+    if (!title) return show('A title is required.', false);
+
+    const data = {
+      title, priority, dueDate: due || null, description: desc,
+      assigneeType: mode,
+      progress: {},
+      createdBy: me.uid, createdByName: me.displayName || me.email,
+      createdAt: serverTimestamp()
+    };
+    if (mode === 'role') {
+      const role = document.getElementById('task-assignee-role').value;
+      if (!role) return show('Please choose a role.', false);
+      data.assigneeRole = role;
+    } else if (mode === 'individual') {
+      if (!_taskPersonTarget) return show('Please select a person.', false);
+      data.assigneeUid = _taskPersonTarget.id;
+      data.assigneeName = _taskPersonTarget.name;
+    }
+    // mode === 'everyone' needs no extra fields
+
     try {
-      await addDoc(collection(db, 'tasks'), {
-        title, assigneeRole, priority, dueDate: due || null, description: desc,
-        status: 'pending', createdBy: me.uid, createdByName: me.displayName||me.email,
-        createdAt: serverTimestamp()
-      });
+      await addDoc(collection(db, 'tasks'), data);
       ['task-title','task-description','task-due'].forEach(id => document.getElementById(id).value = '');
-      document.getElementById('task-assignee').value = '';
-      msg.textContent = 'Task assigned.'; msg.style.color='#1a6e3c'; msg.style.display='block';
+      document.getElementById('task-assign-mode').value = 'everyone';
+      _taskPersonTarget = null;
+      document.getElementById('task-person-selected').style.display = 'none';
+      onTaskAssignModeChange();
+      show('Task assigned to ' + taskTargetLabel(data) + '.', true);
       loadTasks();
-    } catch(e) { msg.textContent='Failed: '+(e.message||e.code); msg.style.color='#c0392b'; msg.style.display='block'; }
+    } catch(e) { show('Failed: ' + (e.message || e.code), false); }
   };
 
   window.updateTaskStatus = async (taskId, status) => {
-    await updateDoc(doc(db, 'tasks', taskId), { status, updatedAt: serverTimestamp() });
+    try {
+      await updateDoc(doc(db, 'tasks', taskId), { ['progress.' + me.uid]: status, updatedAt: serverTimestamp() });
+    } catch(e) { alert('Could not update status: ' + (e.message || e.code)); }
+  };
+
+  window.deleteTask = async (taskId) => {
+    if (!confirm('Delete this task for everyone?')) return;
+    try {
+      await deleteDoc(doc(db, 'tasks', taskId));
+      loadTasks();
+    } catch(e) { alert('Could not delete: ' + (e.message || e.code)); }
   };
 
   // ── Board Meetings ────────────────────────────────────────────────────────
