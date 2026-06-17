@@ -804,14 +804,10 @@
           Continue with Google
         </button>
         <div id="auth-error" class="error-msg" style="display:none;"></div>
-        <div style="text-align:center;margin-top:1.1rem;font-size:0.78rem;color:rgba(180,210,255,0.5);">
-          Looking to get tutored?
-          <button onclick="document.getElementById('auth-section').style.display='none';document.getElementById('student-signup-section').style.display='block';if(window.buildStudentSubjectPills){buildStudentSubjectPills();populateChapterDropdowns();}" style="background:none;border:none;color:#7ecef4;font-weight:600;cursor:pointer;font-size:0.78rem;padding:0;font-family:'Inter',sans-serif;">Sign up as a student</button>
-        </div>
-        <div style="text-align:center;margin-top:0.6rem;font-size:0.78rem;color:rgba(180,210,255,0.5);">
-          Want to volunteer as a tutor?
-          <button onclick="showTutorInquiryModal()" style="background:none;border:none;color:#7ecef4;font-weight:600;cursor:pointer;font-size:0.78rem;padding:0;font-family:'Inter',sans-serif;">Apply here</button>
-        </div>
+        <button onclick="showTutorInquiryModal()" style="display:block;width:100%;margin-top:1.4rem;background:linear-gradient(135deg,#5a9fbf,#7ecef4);color:#0f1b2e;border:none;border-radius:14px;padding:0.85rem 1.25rem;font-family:'Inter',sans-serif;font-size:0.95rem;font-weight:700;cursor:pointer;box-shadow:0 4px 18px rgba(126,206,244,0.25);transition:transform 0.12s,box-shadow 0.12s;" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 6px 22px rgba(126,206,244,0.35)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 18px rgba(126,206,244,0.25)'">
+          ✦ Want to volunteer as a tutor?
+        </button>
+        <div style="text-align:center;margin-top:0.5rem;font-size:0.74rem;color:rgba(180,210,255,0.45);">Apply to join a chapter's tutoring team</div>
       </div>
 
       <div id="role-section" style="display:none;">
@@ -1140,6 +1136,12 @@
       <select id="dev-chapter-select" onchange="applyDevRole()" style="width:100%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:5px;color:#fff;font-size:0.78rem;padding:0.3rem 0.4rem;font-family:'Inter',sans-serif;cursor:pointer;">
         <option value="">All Chapters</option>
       </select>
+      <div style="font-size:0.58rem;font-weight:700;letter-spacing:0.1em;color:rgba(245,166,35,0.9);margin:0.6rem 0 0.4rem;">⚙ DEV - VIEW AS PERSON</div>
+      <div style="position:relative;">
+        <input id="dev-person-search" oninput="devPersonSearch()" autocomplete="off" placeholder="Search name or email..." style="width:100%;box-sizing:border-box;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:5px;color:#fff;font-size:0.78rem;padding:0.3rem 0.4rem;font-family:'Inter',sans-serif;" />
+        <div id="dev-person-results" style="display:none;position:absolute;top:100%;left:0;right:0;margin-top:2px;background:#1e2840;border:1px solid rgba(255,255,255,0.2);border-radius:6px;box-shadow:0 8px 28px rgba(0,0,0,0.4);z-index:60;max-height:240px;overflow-y:auto;"></div>
+      </div>
+      <button id="dev-return-btn" onclick="devReturnToSelf()" style="display:none;width:100%;margin-top:0.45rem;background:rgba(245,166,35,0.25);border:1px solid rgba(245,166,35,0.5);border-radius:5px;color:#ffd9a0;font-size:0.74rem;font-weight:700;padding:0.35rem 0.4rem;font-family:'Inter',sans-serif;cursor:pointer;">↩ Return to my account</button>
     </div>
 
     <nav class="sidebar-nav">
@@ -1149,6 +1151,9 @@
       <button class="nav-item nav-pinned" id="nav-notifications" onclick="showTab('notifications')" style="display:flex;">
         <span class="nav-icon">🔔</span> Notifications
         <span id="notif-badge" class="notif-badge" style="display:none;margin-left:auto;"></span>
+      </button>
+      <button class="nav-item nav-pinned" id="nav-tasks" onclick="showTab('tasks')" style="display:flex;">
+        <span class="nav-icon">✅</span> My Tasks
       </button>
       <button class="nav-item" id="nav-staff-status" style="display:none;" onclick="showTab('staff-status')">
         <span class="nav-icon">📋</span> Staff Status
@@ -1171,6 +1176,9 @@
       <button class="nav-item" id="nav-tutor-review" style="display:none;" onclick="showTab('tutor-review')">
         <span class="nav-icon">📝</span> Tutor Review
       </button>
+      <button class="nav-item" id="nav-tutor-onboarding" style="display:none;" onclick="showTab('tutor-onboarding')">
+        <span class="nav-icon">🚀</span> Tutor Onboarding
+      </button>
       <button class="nav-item" id="nav-student-support" style="display:none;" onclick="showTab('student-support')">
         <span class="nav-icon">🤝</span> Student Support
       </button>
@@ -1190,9 +1198,6 @@
         <span class="nav-icon">📊</span> Analytics
       </button>
       <!-- Board-level nav items -->
-      <button class="nav-item" id="nav-tasks" style="display:none;" onclick="showTab('tasks')">
-        <span class="nav-icon">✅</span> My Tasks
-      </button>
       <button class="nav-item" id="nav-board-meetings" style="display:none;" onclick="showTab('board-meetings')">
         <span class="nav-icon">📅</span> Board Meetings
       </button>
@@ -1555,12 +1560,55 @@
         <div class="page-title">Tutor Review</div>
         <p class="page-sub" id="tutor-review-sub">Review tutor applications and manage interviews.</p>
       </div>
+      <!-- Job openings management -->
+      <div class="card" id="tutor-openings-manage" style="display:none;margin-bottom:1.5rem;">
+        <div class="card-label">Tutor Job Openings</div>
+        <p style="font-size:0.8rem;color:var(--muted);margin:0 0 0.85rem;">Post the positions applicants can apply to. Closed openings stop accepting new applications.</p>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Chapter</label>
+            <select class="form-input" id="opening-chapter"></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Title</label>
+            <input class="form-input" id="opening-title" placeholder="e.g. Math & Science Tutors" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Subjects / Needs</label>
+            <input class="form-input" id="opening-subjects" placeholder="e.g. Algebra, Biology, SAT Prep" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Description <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
+          <textarea class="form-input" id="opening-desc" rows="2" placeholder="What this role involves..." style="resize:vertical;"></textarea>
+        </div>
+        <button onclick="createOpening()" style="background:var(--navy);color:#fff;border:none;border-radius:20px;padding:0.55rem 1.25rem;font-size:0.82rem;font-weight:600;cursor:pointer;margin-top:0.4rem;">Post Opening</button>
+        <span id="opening-msg" style="display:none;font-size:0.8rem;font-weight:600;margin-left:0.75rem;"></span>
+        <div id="openings-list" style="margin-top:1rem;"></div>
+      </div>
       <div id="tutor-inquiry-section" style="display:none;margin-bottom:1.5rem;">
         <div class="card-label" style="margin-bottom:0.65rem;">Interview Requests</div>
         <div id="tutor-inquiry-feed"></div>
       </div>
+      <div id="tutor-applications-section" style="display:none;margin-bottom:1.5rem;">
+        <div class="card-label" style="margin-bottom:0.65rem;">Tutor Applications</div>
+        <div id="tutor-applications-feed"></div>
+      </div>
       <div id="tutor-review-feed">
         <div class="empty-state"><span class="empty-icon">📝</span>Loading...</div>
+      </div>
+    </div>
+
+    <!-- ── Tutor Onboarding (applicant-facing) ──────────────────────────────── -->
+    <div class="tab-content" id="tab-tutor-onboarding">
+      <div class="page-header">
+        <div class="page-title">Tutor Onboarding</div>
+        <p class="page-sub">Track your application and complete the steps to become an Edutine tutor.</p>
+      </div>
+      <div id="tutor-onboarding-feed">
+        <div class="empty-state"><span class="empty-icon">⏳</span>Loading...</div>
       </div>
     </div>
 
@@ -1803,12 +1851,12 @@
           <label class="form-label">Role</label>
           <select class="form-input" id="task-assignee-role"></select>
         </div>
-        <!-- Person picker (mode = individual) -->
+        <!-- Person picker (mode = individual) — supports multiple people -->
         <div class="form-group" id="task-person-wrap" style="display:none;position:relative;">
-          <label class="form-label">Person</label>
-          <input class="form-input" id="task-person-search" oninput="taskPersonSearch()" placeholder="Search by name or email..." autocomplete="off" />
+          <label class="form-label">People <span style="font-weight:400;color:var(--muted);">(add one or more)</span></label>
+          <input class="form-input" id="task-person-search" oninput="taskPersonSearch()" placeholder="Search by name or email, then click to add..." autocomplete="off" />
           <div id="task-person-results" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--white);border:1px solid var(--border);border-radius:var(--r-sm);box-shadow:var(--shadow-md);z-index:50;max-height:260px;overflow-y:auto;"></div>
-          <div id="task-person-selected" style="display:none;margin-top:0.45rem;font-size:0.84rem;font-weight:600;color:#1a6e3c;"></div>
+          <div id="task-person-selected" style="display:none;flex-wrap:wrap;gap:0.4rem;margin-top:0.5rem;"></div>
         </div>
         <div class="form-row">
           <div class="form-group">
@@ -2766,7 +2814,7 @@
     officer:3, chapter_social_media:3, chapter_grants:3,
     tutor_director:4, student_support_director:4, chapter_vp:4,
     chapter_director:5, chapter_president:5,
-    executive_vp:6, executive:6, director_finance:6,
+    executive_vp:6, executive:6, director_finance:6, director_grants:6,
     vp_student_tutor:7, vp_chapter_dev:7, vp_eduhub:7, vp_community:7,
     vp_technology:7, vp_marketing:7, vp_website:7, vp_finance:7, ceo:7,
     board_president:8,
@@ -2786,6 +2834,7 @@
     chapter_grants:'Chapter Grants Director',
     executive_vp:'Executive VP', executive:'Executive',
     director_finance:'Director of Finance',
+    director_grants:'Director of Grants',
     vp_student_tutor:'VP of Student & Tutor Relations',
     vp_chapter_dev:'VP of Chapter Development',
     vp_eduhub:'VP of EduHub',
@@ -2804,13 +2853,18 @@
     'Alameda',
     'Contra Costa',
     'San Joaquin County',
+    'Southern California',
     'Texas'
   ];
+
+  // Tutor portal orientation video — paste the YouTube/Vimeo/Drive embed URL here
+  // once the orientation is recorded. Leave '' to show a "coming soon" placeholder.
+  const TUTOR_ORIENTATION_VIDEO_URL = '';
 
   const BOARD_ROLES = new Set([
     'board_president','vp_student_tutor','vp_chapter_dev','vp_eduhub','vp_community',
     'vp_technology','vp_marketing','vp_website','vp_finance',
-    'director_finance','ceo','super_admin'
+    'director_finance','director_grants','ceo','super_admin'
   ]);
 
   const ROLE_TO_CHANNEL = {
@@ -2820,7 +2874,7 @@
     chapter_vp:'Officers', chapter_social_media:'Officers', chapter_grants:'Officers',
     chapter_director:'Chapter Directors', chapter_president:'Chapter Directors',
     executive_vp:'Executives', executive:'Executives',
-    director_finance:'Executives',
+    director_finance:'Executives', director_grants:'Executives',
     vp_student_tutor:'Executives', vp_chapter_dev:'Executives', vp_eduhub:'Executives',
     vp_community:'Executives', vp_technology:'Executives', vp_marketing:'Executives',
     vp_website:'Executives', vp_finance:'Executives',
@@ -2840,7 +2894,7 @@
     tutor_director:'chapter_president', student_support_director:'chapter_president',
     chapter_director:'chapter_president', chapter_president:'vp_student_tutor',
     executive_vp:'ceo', executive:'ceo',
-    director_finance:'vp_finance',
+    director_finance:'vp_finance', director_grants:'vp_finance',
     vp_student_tutor:'board_president', vp_chapter_dev:'board_president', vp_eduhub:'board_president',
     vp_community:'board_president', vp_technology:'board_president', vp_marketing:'board_president',
     vp_website:'board_president', vp_finance:'board_president',
@@ -2850,6 +2904,8 @@
   let me = null, myRole = null, myRoles = [];
   let unsubAnnouncements = null, unsubRequests = null, unsubSelf = null;
   let _devViewActive = false, _devRealRole = null;
+  // Person impersonation (developer "view as <account>")
+  let _devPersonView = false, _devRealUser = null, _devRealRoles = null, _devRealChapter = '';
   let _studentEnrolled = false;
   let _onboardingUser = null;
   const readCache = new Set();
@@ -2968,6 +3024,7 @@
       'staff-status':      () => loadStaffStatus(),
       'notifications':     () => loadNotificationsTab(),
       'tutor-review':      () => loadTutorReview(),
+      'tutor-onboarding':  () => loadTutorOnboarding(),
       'student-support':   () => loadStudentSupport(),
       'hours':             () => loadHours(),
       'members':           () => loadMembers(),
@@ -3057,9 +3114,10 @@
     // Notification badge count is handled later in boot() via startNotificationListener()
     // Show emergency section for non-students, non-board (tutors, officers, leads, etc.)
     document.getElementById('emergency-section').style.display = (!isStudent && !isBoard) ? 'block' : 'none';
-    document.getElementById('nav-approvals').style.display = (lv >= LEVELS['tutor_director'] || _devRealRole === 'super_admin') ? 'flex' : 'none';
-    document.getElementById('nav-tutor-review').style.display = (hasRole('tutor_support_lead') || hasRole('tutor_director') || hasRole('super_admin') || hasRole('ceo')) ? 'flex' : 'none';
+    document.getElementById('nav-approvals').style.display = (lv >= LEVELS['tutor_director'] || (_devRealRole === 'super_admin' && !_devPersonView)) ? 'flex' : 'none';
+    document.getElementById('nav-tutor-review').style.display = (hasRole('tutor_support_lead') || hasRole('tutor_director') || hasRole('super_admin') || hasRole('ceo') || hasRole('chapter_president') || hasRole('chapter_director')) ? 'flex' : 'none';
     document.getElementById('nav-student-support').style.display = (hasRole('student_support_lead') || hasRole('student_support_director')) ? 'flex' : 'none';
+    checkTutorOnboarding();
     document.getElementById('nav-hours').style.display = (role !== 'student') ? 'flex' : 'none';
     document.getElementById('nav-requests').style.display = (lv >= 2 && !isBoard) ? 'flex' : 'none';
     document.getElementById('nav-analytics').style.display = (lv >= LEVELS['ceo']) ? 'flex' : 'none';
@@ -3208,6 +3266,7 @@
       }).join('');
 
       visible.forEach(d => {
+        if (_devViewActive) return; // don't write read-receipts while impersonating
         if (readCache.has(d.id)) return;
         readCache.add(d.id);
         const ref = doc(db, 'reads', `${me.uid}_${d.id}`);
@@ -3218,13 +3277,21 @@
     });
   }
 
-  // ── Dev role switcher (super_admin only) ────────────────────────────────
+  // ── Dev view switcher (super_admin only) ────────────────────────────────
+  // Capture the developer's real identity the first time they enter a dev view,
+  // so we can always restore it (and so role/person views boot from the real user).
+  function captureDevReal() {
+    if (_devRealUser) return;
+    _devRealUser = me;
+    _devRealRole = myRole;
+    _devRealRoles = myRoles.slice();
+    _devRealChapter = document.getElementById('sb-chapter').textContent || '';
+  }
+
   window.applyDevRole = function() {
-    // On first call, save the real role. On subsequent calls, guard by saved real role.
-    if (!_devRealRole) {
-      if (myRole !== 'super_admin') return;
-      _devRealRole = myRole;
-    }
+    // Guard: only the real developer account may use this.
+    if (!_devRealUser && myRole !== 'super_admin') return;
+    captureDevReal();
 
     const role = document.getElementById('dev-role-select').value;
     const chapter = document.getElementById('dev-chapter-select').value;
@@ -3232,14 +3299,80 @@
 
     const isViewingSelf = (role === 'super_admin' && !chapter);
     _devViewActive = !isViewingSelf;
+    _devPersonView = false;
 
-    boot(me, role, chapter);
+    // Always boot from the real developer user (not an impersonated identity)
+    boot(_devRealUser, role, chapter);
 
     // Restore dev switcher after boot() hides it for non-super_admin views
     document.getElementById('dev-switcher').style.display = 'block';
     document.getElementById('dev-role-select').value = role;
     document.getElementById('dev-chapter-select').value = chapter;
-    document.getElementById('sb-role').textContent = '⚙ Viewing as: ' + (LABELS[role] || role) + (chapter ? ' · ' + chapter : '');
+    document.getElementById('dev-return-btn').style.display = isViewingSelf ? 'none' : 'block';
+    document.getElementById('sb-role').textContent = isViewingSelf
+      ? (LABELS[role] || role)
+      : '⚙ Viewing as: ' + (LABELS[role] || role) + (chapter ? ' · ' + chapter : '');
+  };
+
+  // View the portal exactly as a specific person's account sees it
+  window.devPersonSearch = async () => {
+    if (!_devRealUser && myRole !== 'super_admin') return;
+    await loadAllMembersForCeo();
+    const q = document.getElementById('dev-person-search').value.toLowerCase();
+    const results = document.getElementById('dev-person-results');
+    if (!q) { results.style.display = 'none'; return; }
+    const matches = _allMembersCache.filter(u =>
+      (u.displayName || '').toLowerCase().includes(q) || (u.email || '').toLowerCase().includes(q)
+    ).slice(0, 10);
+    if (!matches.length) { results.style.display = 'none'; return; }
+    results.style.display = 'block';
+    results.innerHTML = matches.map(u =>
+      `<div onclick="devViewAsPerson('${u.id}')"
+        style="padding:0.45rem 0.6rem;cursor:pointer;font-size:0.76rem;color:#fff;border-bottom:1px solid rgba(255,255,255,0.08);"
+        onmouseover="this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.background=''">
+        <div style="font-weight:600;">${esc(u.displayName || u.email)}</div>
+        <div style="color:rgba(255,255,255,0.5);font-size:0.68rem;">${esc(u.email)} · ${esc(LABELS[u.role]||u.role||'—')}${u.chapter ? ' · '+esc(u.chapter) : ''}</div>
+      </div>`
+    ).join('');
+  };
+
+  window.devViewAsPerson = async (personId) => {
+    if (!_devRealUser && myRole !== 'super_admin') return;
+    captureDevReal();
+    let person = _allMembersCache.find(u => u.id === personId);
+    if (!person) {
+      const snap = await getDoc(doc(db, 'users', personId));
+      if (!snap.exists()) return;
+      person = { id: snap.id, ...snap.data() };
+    }
+    _devViewActive = true;
+    _devPersonView = true;
+
+    const synthetic = { uid: person.id, displayName: person.displayName || person.email, email: person.email };
+    boot(synthetic, person.role || 'student', person.chapter || '', person);
+
+    // boot() hides the dev switcher for non-super_admin views — restore it
+    document.getElementById('dev-switcher').style.display = 'block';
+    document.getElementById('dev-person-search').value = '';
+    document.getElementById('dev-person-results').style.display = 'none';
+    document.getElementById('dev-return-btn').style.display = 'block';
+    document.getElementById('sb-role').textContent = '⚙ Viewing as: ' + (person.displayName || person.email);
+  };
+
+  window.devReturnToSelf = () => {
+    if (!_devRealUser) return;
+    _devViewActive = false;
+    _devPersonView = false;
+    const realUser = _devRealUser;
+    const realRole = _devRealRole;
+    const realChapter = _devRealChapter;
+    const realRoles = _devRealRoles || [];
+    boot(realUser, realRole, realChapter, { roles: [realRole, ...realRoles] });
+    document.getElementById('dev-switcher').style.display = 'block';
+    document.getElementById('dev-return-btn').style.display = 'none';
+    document.getElementById('dev-role-select').value = realRole;
+    document.getElementById('dev-chapter-select').value = '';
+    document.getElementById('sb-role').textContent = LABELS[realRole] || realRole;
   };
 
   // ── Notifications tab ────────────────────────────────────────────────────
@@ -4045,9 +4178,9 @@
     const color = ROLE_COLORS[u.role] || '#6d6d6d';
     const canManage = myRole === 'super_admin' || myRole === 'ceo';
     const extraRoles = (u.roles || []).filter(r => r && r !== u.role);
-    const roleOptions = ['student','tutor','lead','officer','tutor_director','chapter_director','executive','ceo','vp_student_tutor','vp_chapter_dev','vp_marketing','vp_website','vp_finance','vp_eduhub','board_president']
+    const roleOptions = ['student','tutor','lead','officer','tutor_director','chapter_director','executive','ceo','vp_student_tutor','vp_chapter_dev','vp_marketing','vp_website','vp_finance','vp_eduhub','director_finance','director_grants','board_president']
       .map(r => `<option value="${r}"${u.role===r?' selected':''}>${esc(LABELS[r]||r)}</option>`).join('');
-    const addRoleOptions = ['tutor','lead','officer','tutor_director','student_support_director','chapter_director','chapter_president','vp_student_tutor','vp_chapter_dev','vp_marketing','vp_website','vp_finance','vp_eduhub','executive','ceo']
+    const addRoleOptions = ['tutor','lead','officer','tutor_support_lead','student_support_lead','tutor_director','student_support_director','chapter_director','chapter_president','chapter_vp','chapter_grants','vp_student_tutor','vp_chapter_dev','vp_marketing','vp_website','vp_finance','vp_eduhub','director_finance','director_grants','executive','ceo']
       .filter(r => r !== u.role && !extraRoles.includes(r))
       .map(r => `<option value="${r}">${esc(LABELS[r]||r)}</option>`).join('');
     const changeBtn = canManage ? `
@@ -4431,6 +4564,10 @@
 
     feed.innerHTML = '<div class="empty-state"><span class="empty-icon">⏳</span>Loading...</div>';
 
+    // New tutor application flow: job openings + walk-in applications
+    loadTutorOpenings();
+    loadTutorApplications();
+
     const statusColor = { pending:'#f5a623', interview_offered:'#2d7aac', rejected:'#c0392b', verified:'#1a6e3c' };
     const statusLabel = { pending:'Pending', interview_offered:'Interview Scheduled', rejected:'Rejected', verified:'Approved' };
     const order = { pending:0, interview_offered:1, rejected:2, verified:3 };
@@ -4649,6 +4786,269 @@
       btn.disabled = false; btn.textContent = 'Mark Contacted';
       alert('Failed: ' + (e.message || e.code));
     }
+  };
+
+  // ── Tutor job openings (staff) ──────────────────────────────────────────
+  function canManageOpenings() {
+    return hasRole('ceo') || hasRole('super_admin') || hasRole('tutor_director') ||
+           hasRole('tutor_support_lead') || hasRole('chapter_president') || hasRole('chapter_director');
+  }
+
+  async function loadTutorOpenings() {
+    const wrap = document.getElementById('tutor-openings-manage');
+    if (!wrap) return;
+    if (!canManageOpenings()) { wrap.style.display = 'none'; return; }
+    wrap.style.display = 'block';
+    const chapSel = document.getElementById('opening-chapter');
+    if (chapSel && chapSel.options.length === 0) {
+      chapSel.innerHTML = CHAPTERS.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join('');
+    }
+    const list = document.getElementById('openings-list');
+    list.innerHTML = '<div style="font-size:0.8rem;color:var(--muted);">Loading openings…</div>';
+    try {
+      const snap = await getDocs(query(collection(db, 'tutor_openings'), orderBy('createdAt', 'desc')));
+      const isCeoLevel = myRole === 'ceo' || myRole === 'super_admin';
+      const myChapter = document.getElementById('sb-chapter')?.textContent || '';
+      let docs = snap.docs;
+      if (!isCeoLevel && myChapter) docs = docs.filter(d => d.data().chapter === myChapter);
+      if (!docs.length) { list.innerHTML = '<div style="font-size:0.8rem;color:var(--muted);">No openings posted yet.</div>'; return; }
+      list.innerHTML = docs.map(d => {
+        const o = d.data(); const open = o.status === 'open';
+        return `<div class="card" style="display:flex;align-items:center;justify-content:space-between;gap:0.75rem;flex-wrap:wrap;${open ? '' : 'opacity:0.7;'}">
+          <div>
+            <div style="font-weight:600;">${esc(o.title)} <span style="font-size:0.74rem;font-weight:600;color:${open ? '#1a6e3c' : 'var(--muted)'};">· ${open ? 'Open' : 'Closed'}</span></div>
+            <div style="font-size:0.78rem;color:var(--muted);margin-top:0.15rem;">${esc(o.chapter)}${o.subjects ? ' · ' + esc(o.subjects) : ''}</div>
+          </div>
+          <div style="display:flex;gap:0.45rem;">
+            <button onclick="${open ? `closeOpening('${d.id}')` : `reopenOpening('${d.id}')`}" class="btn-sm" style="font-size:0.74rem;padding:0.3rem 0.8rem;">${open ? 'Close' : 'Reopen'}</button>
+            <button onclick="deleteOpening('${d.id}')" style="background:none;border:1px solid #f0c7c7;border-radius:20px;color:#c0392b;font-size:0.74rem;font-weight:600;padding:0.3rem 0.7rem;cursor:pointer;">Delete</button>
+          </div>
+        </div>`;
+      }).join('');
+    } catch(e) {
+      list.innerHTML = `<div style="font-size:0.8rem;color:var(--muted);">Could not load openings. ${esc(e.message || e.code)}</div>`;
+    }
+  }
+
+  window.createOpening = async () => {
+    const chapter = document.getElementById('opening-chapter').value;
+    const title = document.getElementById('opening-title').value.trim();
+    const subjects = document.getElementById('opening-subjects').value.trim();
+    const description = document.getElementById('opening-desc').value.trim();
+    const msg = document.getElementById('opening-msg');
+    const show = (t, ok) => { msg.textContent = t; msg.style.color = ok ? '#1a6e3c' : '#c0392b'; msg.style.display = 'inline'; };
+    if (!chapter || !title) return show('Chapter and title are required.', false);
+    try {
+      await addDoc(collection(db, 'tutor_openings'), {
+        chapter, title, subjects, description, status: 'open',
+        createdBy: me.uid, createdByName: me.displayName || me.email, createdAt: serverTimestamp()
+      });
+      ['opening-title','opening-subjects','opening-desc'].forEach(id => document.getElementById(id).value = '');
+      show('Opening posted.', true);
+      loadTutorOpenings();
+    } catch(e) { show('Failed: ' + (e.message || e.code), false); }
+  };
+
+  window.closeOpening = async (id) => { try { await updateDoc(doc(db,'tutor_openings',id), { status:'closed' }); loadTutorOpenings(); } catch(e){ alert('Failed: '+(e.message||e.code)); } };
+  window.reopenOpening = async (id) => { try { await updateDoc(doc(db,'tutor_openings',id), { status:'open' }); loadTutorOpenings(); } catch(e){ alert('Failed: '+(e.message||e.code)); } };
+  window.deleteOpening = async (id) => { if (!confirm('Delete this opening?')) return; try { await deleteDoc(doc(db,'tutor_openings',id)); loadTutorOpenings(); } catch(e){ alert('Failed: '+(e.message||e.code)); } };
+
+  // ── Tutor applications review (staff) ───────────────────────────────────
+  const APP_STATUS_META = {
+    pending:          { label:'Pending Review',                color:'#b36b00', bg:'#fff4e5' },
+    approved:         { label:'Approved · Interview',          color:'#2d7aac', bg:'#e6f1f8' },
+    interview_passed: { label:'Interview Passed · Orientation',color:'#7a5cc4', bg:'#efe9fb' },
+    tutor_approved:   { label:'Fully Approved ✓',              color:'#1a6e3c', bg:'#e6f4ee' },
+    denied:           { label:'Denied',                        color:'#c0392b', bg:'#fbeaea' }
+  };
+
+  async function loadTutorApplications() {
+    const section = document.getElementById('tutor-applications-section');
+    const feed = document.getElementById('tutor-applications-feed');
+    if (!section || !feed) return;
+    try {
+      const snap = await getDocs(query(collection(db, 'tutor_applications'), orderBy('createdAt', 'desc')));
+      const isCeoLevel = myRole === 'ceo' || myRole === 'super_admin';
+      const myChapter = document.getElementById('sb-chapter')?.textContent || '';
+      let docs = snap.docs.map(d => ({ id: d.id, data: d.data() }));
+      if (!isCeoLevel) docs = docs.filter(x => x.data.chapter === myChapter);
+      if (!docs.length) { section.style.display = 'none'; return; }
+      section.style.display = 'block';
+      const order = { pending:0, approved:1, interview_passed:2, tutor_approved:3, denied:4 };
+      docs.sort((a, b) => (order[a.data.status] ?? 9) - (order[b.data.status] ?? 9));
+      feed.innerHTML = docs.map(renderApplicationCard).join('');
+    } catch(e) {
+      section.style.display = 'block';
+      feed.innerHTML = `<div style="font-size:0.82rem;color:var(--muted);padding:0.5rem 0;">Could not load applications. ${esc(e.message || e.code)}</div>`;
+    }
+  }
+
+  function renderApplicationCard(x) {
+    const a = x.data, id = x.id;
+    const m = APP_STATUS_META[a.status] || APP_STATUS_META.pending;
+    const dateStr = a.createdAt?.toDate ? a.createdAt.toDate().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '';
+    const detail = (label, val) => val ? `<div style="font-size:0.8rem;color:var(--text-soft);margin-top:0.2rem;"><span style="color:var(--muted);">${label}:</span> ${esc(val)}</div>` : '';
+    let actions = '';
+    if (a.status === 'pending') {
+      actions = `<div style="display:flex;gap:0.5rem;margin-top:0.75rem;">
+        <button onclick="approveTutorApplication('${id}')" class="btn-sm" style="background:var(--navy);color:#fff;border:none;font-size:0.78rem;">Approve &amp; Offer Interview</button>
+        <button onclick="denyTutorApplication('${id}')" style="background:none;border:1px solid #f0c7c7;border-radius:20px;color:#c0392b;font-size:0.78rem;font-weight:600;padding:0.4rem 0.9rem;cursor:pointer;">Deny</button>
+      </div>`;
+    } else if (a.status !== 'denied') {
+      const orient = a.orientationWatched ? '✓ watched' : 'not yet';
+      actions = `<div style="margin-top:0.7rem;font-size:0.78rem;color:var(--muted);">
+        Interview with <strong>${esc(a.approverName || '—')}</strong>${a.approverBookingLink ? ` · <a href="${esc(a.approverBookingLink)}" target="_blank" style="color:var(--blue);">booking link</a>` : ''} · Orientation: ${orient}
+        <div style="margin-top:0.5rem;display:flex;gap:0.5rem;flex-wrap:wrap;">
+          <button onclick="updateApplicantEmail('${id}')" class="btn-sm" style="font-size:0.74rem;padding:0.28rem 0.75rem;">Update login email</button>
+          ${a.status !== 'tutor_approved' ? `<button onclick="denyTutorApplication('${id}')" style="background:none;border:1px solid #f0c7c7;border-radius:20px;color:#c0392b;font-size:0.74rem;font-weight:600;padding:0.28rem 0.75rem;cursor:pointer;">Deny</button>` : ''}
+        </div>
+      </div>`;
+    }
+    return `<div class="card" style="margin-bottom:0.75rem;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:0.75rem;flex-wrap:wrap;">
+        <div style="font-weight:700;">${esc(a.name)} <span style="font-weight:400;color:var(--muted);font-size:0.8rem;">· ${esc(a.chapter)}</span></div>
+        <span style="background:${m.bg};color:${m.color};padding:0.2rem 0.65rem;border-radius:20px;font-size:0.72rem;font-weight:700;white-space:nowrap;">${m.label}</span>
+      </div>
+      <div style="font-size:0.78rem;color:var(--muted);margin-top:0.15rem;">${esc(a.openingTitle || 'General application')}${dateStr ? ' · ' + dateStr : ''}</div>
+      ${detail('Email', a.email)}${detail('Phone', a.phone)}${detail('Grade', a.grade)}${detail('Subjects', a.subjects)}${detail('About', a.experience)}
+      ${actions}
+    </div>`;
+  }
+
+  window.approveTutorApplication = async (id) => {
+    const link = prompt('Paste your interview booking link (Calendly, Google Calendar appt page, etc.) so the applicant can schedule the interview with you.\n\nLeave blank if you\'ll reach out another way.');
+    if (link === null) return; // cancelled
+    try {
+      await updateDoc(doc(db, 'tutor_applications', id), {
+        status: 'approved',
+        approverUid: me.uid, approverName: me.displayName || me.email,
+        approverBookingLink: link.trim(),
+        reviewedAt: serverTimestamp()
+      });
+      loadTutorApplications();
+    } catch(e) { alert('Approve failed: ' + (e.message || e.code)); }
+  };
+
+  window.denyTutorApplication = async (id) => {
+    if (!confirm('Deny this application?')) return;
+    try {
+      await updateDoc(doc(db, 'tutor_applications', id), { status: 'denied', reviewedAt: serverTimestamp() });
+      loadTutorApplications();
+    } catch(e) { alert('Deny failed: ' + (e.message || e.code)); }
+  };
+
+  window.updateApplicantEmail = async (id) => {
+    const email = prompt('Set the email this applicant will log in with (e.g. their new Edutine email). Onboarding will link to this address.');
+    if (!email) return;
+    const clean = email.trim().toLowerCase();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clean)) { alert('That doesn\'t look like a valid email.'); return; }
+    try {
+      await updateDoc(doc(db, 'tutor_applications', id), { email: clean });
+      loadTutorApplications();
+    } catch(e) { alert('Update failed: ' + (e.message || e.code)); }
+  };
+
+  // ── Tutor onboarding (applicant-facing) ─────────────────────────────────
+  async function checkTutorOnboarding() {
+    const nav = document.getElementById('nav-tutor-onboarding');
+    if (!nav) return;
+    try {
+      const snap = await getDocs(query(collection(db, 'tutor_applications'), where('email', '==', (me.email || '').toLowerCase())));
+      nav.style.display = snap.empty ? 'none' : 'flex';
+    } catch(e) { nav.style.display = 'none'; }
+  }
+
+  async function loadTutorOnboarding() {
+    const feed = document.getElementById('tutor-onboarding-feed');
+    feed.innerHTML = '<div class="empty-state"><span class="empty-icon">⏳</span>Loading...</div>';
+    try {
+      const snap = await getDocs(query(collection(db, 'tutor_applications'), where('email', '==', (me.email || '').toLowerCase())));
+      if (snap.empty) {
+        feed.innerHTML = '<div class="empty-state"><span class="empty-icon">📭</span>No tutor application found for your email.<br><span style="font-size:0.8rem;color:var(--muted);margin-top:0.35rem;display:block;">Apply from the sign-in page to get started.</span></div>';
+        return;
+      }
+      const docs = snap.docs.map(d => ({ id: d.id, data: d.data() }))
+        .sort((a, b) => (b.data.createdAt?.seconds || 0) - (a.data.createdAt?.seconds || 0));
+      feed.innerHTML = renderOnboardingStage(docs[0].id, docs[0].data);
+    } catch(e) {
+      feed.innerHTML = `<div class="empty-state"><span class="empty-icon">⚠️</span>Could not load your onboarding.<br><span style="font-size:0.78rem;color:var(--muted);">${esc(e.message || e.code)}</span></div>`;
+    }
+  }
+
+  function onboardingStepper(activeIdx, denied) {
+    const steps = ['Applied', 'Interview', 'Orientation', 'Approved'];
+    return `<div style="display:flex;align-items:center;gap:0.4rem;margin-bottom:1.25rem;flex-wrap:wrap;">
+      ${steps.map((s, i) => {
+        const done = !denied && i < activeIdx, active = !denied && i === activeIdx;
+        const color = done ? '#1a6e3c' : active ? 'var(--navy)' : 'var(--muted)';
+        const bg = done ? '#e6f4ee' : active ? 'var(--selected-bg)' : 'transparent';
+        return `<div style="display:flex;align-items:center;gap:0.4rem;">
+          <span style="display:inline-flex;align-items:center;justify-content:center;width:1.5rem;height:1.5rem;border-radius:50%;background:${bg};border:1.5px solid ${color};color:${color};font-size:0.74rem;font-weight:700;">${done ? '✓' : i + 1}</span>
+          <span style="font-size:0.8rem;font-weight:${active ? '700' : '500'};color:${color};">${s}</span>
+          ${i < steps.length - 1 ? '<span style="color:var(--border);">—</span>' : ''}
+        </div>`;
+      }).join('')}
+    </div>`;
+  }
+
+  function renderOnboardingStage(id, a) {
+    const card = (inner) => `<div class="card" style="max-width:640px;">${inner}</div>`;
+    if (a.status === 'denied') {
+      return onboardingStepper(0, true) + card(`<div style="font-weight:700;font-size:1rem;margin-bottom:0.35rem;">Application closed</div>
+        <p style="font-size:0.85rem;color:var(--muted);margin:0;">Thank you for your interest in tutoring with Edutine. We're not able to move forward with this application right now.</p>`);
+    }
+    if (a.status === 'pending') {
+      return onboardingStepper(0) + card(`<div style="font-weight:700;font-size:1rem;margin-bottom:0.35rem;">Application under review 📋</div>
+        <p style="font-size:0.85rem;color:var(--muted);margin:0;">Your application for <strong>${esc(a.openingTitle)}</strong> (${esc(a.chapter)}) is being reviewed by our team. You'll see your next step here once it's approved.</p>`);
+    }
+    if (a.status === 'approved') {
+      const linkBtn = a.approverBookingLink
+        ? `<a href="${esc(a.approverBookingLink)}" target="_blank" style="display:inline-block;background:var(--navy);color:#fff;text-decoration:none;border-radius:20px;padding:0.55rem 1.25rem;font-size:0.85rem;font-weight:600;margin:0.5rem 0;">Schedule your interview ↗</a>`
+        : `<p style="font-size:0.84rem;color:var(--muted);">${esc(a.approverName || 'Your reviewer')} will reach out to schedule your interview.</p>`;
+      return onboardingStepper(1) + card(`<div style="font-weight:700;font-size:1rem;margin-bottom:0.35rem;">You're approved — let's interview! 🎉</div>
+        <p style="font-size:0.85rem;color:var(--text-soft);margin:0 0 0.25rem;">Schedule your interview with <strong>${esc(a.approverName || 'your reviewer')}</strong>.</p>
+        ${linkBtn}
+        <div style="margin-top:0.85rem;border-top:1px solid var(--border-light);padding-top:0.85rem;">
+          <p style="font-size:0.82rem;color:var(--muted);margin:0 0 0.5rem;">Already completed your interview?</p>
+          <button onclick="markInterviewPassed('${id}')" class="btn-sm" style="background:#1a6e3c;color:#fff;border:none;font-size:0.82rem;">I passed my interview ✓</button>
+        </div>`);
+    }
+    if (a.status === 'interview_passed') {
+      const video = TUTOR_ORIENTATION_VIDEO_URL
+        ? `<div style="position:relative;padding-bottom:56.25%;height:0;border-radius:var(--r-sm);overflow:hidden;margin:0.5rem 0 0.85rem;background:#000;">
+             <iframe src="${esc(TUTOR_ORIENTATION_VIDEO_URL)}" style="position:absolute;inset:0;width:100%;height:100%;border:0;" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe>
+           </div>`
+        : `<div style="background:var(--selected-bg);border-radius:var(--r-sm);padding:1.5rem;text-align:center;color:var(--muted);font-size:0.85rem;margin:0.5rem 0 0.85rem;">🎬 Orientation video coming soon — check back shortly.</div>`;
+      return onboardingStepper(2) + card(`<div style="font-weight:700;font-size:1rem;margin-bottom:0.35rem;">Watch your tutor orientation 🎬</div>
+        <p style="font-size:0.85rem;color:var(--text-soft);margin:0 0 0.25rem;">Almost there! Watch the full orientation below, then confirm to finish onboarding.</p>
+        ${video}
+        <button onclick="markOrientationWatched('${id}')" ${TUTOR_ORIENTATION_VIDEO_URL ? '' : 'disabled'} class="btn-sm" style="background:#1a6e3c;color:#fff;border:none;font-size:0.82rem;${TUTOR_ORIENTATION_VIDEO_URL ? '' : 'opacity:0.5;cursor:not-allowed;'}">I've finished watching ✓</button>`);
+    }
+    if (a.status === 'tutor_approved') {
+      return onboardingStepper(4) + card(`<div style="text-align:center;padding:0.5rem 0;">
+        <div style="font-size:2.4rem;">🎉</div>
+        <div style="font-weight:700;font-size:1.15rem;color:#1a6e3c;margin:0.35rem 0;">You're fully approved to tutor!</div>
+        <p style="font-size:0.85rem;color:var(--muted);margin:0;">Welcome to the Edutine tutoring team. You can now be matched with students.</p>
+      </div>`);
+    }
+    return card('<p style="font-size:0.85rem;color:var(--muted);margin:0;">Your application status is being updated.</p>');
+  }
+
+  window.markInterviewPassed = async (id) => {
+    if (!confirm('Confirm that you completed and passed your interview?')) return;
+    try {
+      await updateDoc(doc(db, 'tutor_applications', id), { status: 'interview_passed', interviewPassedAt: serverTimestamp() });
+      loadTutorOnboarding();
+    } catch(e) { alert('Could not update: ' + (e.message || e.code)); }
+  };
+
+  window.markOrientationWatched = async (id) => {
+    try {
+      await updateDoc(doc(db, 'tutor_applications', id), {
+        orientationWatched: true, orientationWatchedAt: serverTimestamp(), status: 'tutor_approved'
+      });
+      loadTutorOnboarding();
+    } catch(e) { alert('Could not update: ' + (e.message || e.code)); }
   };
 
   window.toggleTrDetails = (id) => {
@@ -6082,14 +6482,14 @@
     'ceo','board_president',
     'vp_student_tutor','vp_chapter_dev','vp_eduhub','vp_community',
     'vp_technology','vp_marketing','vp_website','vp_finance',
-    'director_finance','executive','executive_vp',
+    'director_finance','director_grants','executive','executive_vp',
     'chapter_president','chapter_director','chapter_vp','chapter_social_media','chapter_grants',
     'tutor_director','student_support_director',
     'officer','tutor_support_lead','student_support_lead','lead',
     'tutor','student'
   ];
 
-  let _taskPersonTarget = null;
+  let _taskPersonTargets = [];
 
   // CEO, Board President, VPs and Developer can assign tasks to anyone
   function canAssignTasks() { return roleLevel() >= LEVELS['ceo']; }
@@ -6128,13 +6528,28 @@
   };
 
   window.selectTaskPerson = (id, name) => {
-    _taskPersonTarget = { id, name };
+    if (!_taskPersonTargets.some(p => p.id === id)) _taskPersonTargets.push({ id, name });
     document.getElementById('task-person-search').value = '';
     document.getElementById('task-person-results').style.display = 'none';
-    const sel = document.getElementById('task-person-selected');
-    sel.style.display = 'block';
-    sel.textContent = '✓ ' + name;
+    renderTaskPersonChips();
   };
+
+  window.removeTaskPerson = (id) => {
+    _taskPersonTargets = _taskPersonTargets.filter(p => p.id !== id);
+    renderTaskPersonChips();
+  };
+
+  function renderTaskPersonChips() {
+    const box = document.getElementById('task-person-selected');
+    if (!_taskPersonTargets.length) { box.style.display = 'none'; box.innerHTML = ''; return; }
+    box.style.display = 'flex';
+    box.innerHTML = _taskPersonTargets.map(p =>
+      `<span style="display:inline-flex;align-items:center;gap:0.35rem;background:#e6f4ee;color:#1a6e3c;border:1px solid #b9e0cd;border-radius:20px;padding:0.2rem 0.65rem;font-size:0.8rem;font-weight:600;">
+        ${esc(p.name)}
+        <span onclick="removeTaskPerson('${p.id}')" style="cursor:pointer;font-weight:700;color:#1a6e3c;opacity:0.7;">×</span>
+      </span>`
+    ).join('');
+  }
 
   async function loadTasks() {
     initTaskAssigneeDropdown();
@@ -6148,7 +6563,7 @@
     try {
       // Tasks assigned to me: directly, by my role, or broadcast to everyone
       const queries = [
-        getDocs(query(collection(db, 'tasks'), where('assigneeUid', '==', me.uid))),
+        getDocs(query(collection(db, 'tasks'), where('assigneeUids', 'array-contains', me.uid))),
         getDocs(query(collection(db, 'tasks'), where('assigneeRole', '==', myRole))),
         getDocs(query(collection(db, 'tasks'), where('assigneeType', '==', 'everyone')))
       ];
@@ -6191,7 +6606,12 @@
 
   function taskTargetLabel(t) {
     if (t.assigneeType === 'everyone') return 'Everyone';
-    if (t.assigneeType === 'individual') return t.assigneeName || 'A team member';
+    if (t.assigneeType === 'individual') {
+      const names = t.assigneeNames || (t.assigneeName ? [t.assigneeName] : []);
+      if (!names.length) return 'Selected people';
+      if (names.length <= 2) return names.join(' & ');
+      return `${names[0]}, ${names[1]} +${names.length - 2} more`;
+    }
     return LABELS[t.assigneeRole] || t.assigneeRole || 'A role';
   }
 
@@ -6209,11 +6629,13 @@
       const done = vals.filter(v => v === 'completed').length;
       const inProg = vals.filter(v => v === 'in_progress').length;
       let rollup;
-      if (t.assigneeType === 'individual') {
+      const targetCount = (t.assigneeUids || []).length;
+      if (t.assigneeType === 'individual' && targetCount <= 1) {
         const s = vals[0] || 'pending';
         rollup = s === 'completed' ? '✓ Completed' : s === 'in_progress' ? 'In Progress' : 'Pending';
       } else {
-        rollup = (done || inProg) ? `${done} completed · ${inProg} in progress` : 'No updates yet';
+        const total = targetCount ? ` / ${targetCount}` : '';
+        rollup = (done || inProg) ? `${done} completed${total} · ${inProg} in progress` : 'No updates yet';
       }
       footer = `<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;">
         <div style="font-size:0.75rem;color:var(--muted);">To: <strong>${esc(taskTargetLabel(t))}</strong></div>
@@ -6269,9 +6691,9 @@
       if (!role) return show('Please choose a role.', false);
       data.assigneeRole = role;
     } else if (mode === 'individual') {
-      if (!_taskPersonTarget) return show('Please select a person.', false);
-      data.assigneeUid = _taskPersonTarget.id;
-      data.assigneeName = _taskPersonTarget.name;
+      if (!_taskPersonTargets.length) return show('Please add at least one person.', false);
+      data.assigneeUids = _taskPersonTargets.map(p => p.id);
+      data.assigneeNames = _taskPersonTargets.map(p => p.name);
     }
     // mode === 'everyone' needs no extra fields
 
@@ -6279,8 +6701,8 @@
       await addDoc(collection(db, 'tasks'), data);
       ['task-title','task-description','task-due'].forEach(id => document.getElementById(id).value = '');
       document.getElementById('task-assign-mode').value = 'everyone';
-      _taskPersonTarget = null;
-      document.getElementById('task-person-selected').style.display = 'none';
+      _taskPersonTargets = [];
+      renderTaskPersonChips();
       onTaskAssignModeChange();
       show('Task assigned to ' + taskTargetLabel(data) + '.', true);
       loadTasks();
@@ -6743,34 +7165,69 @@
 
   // ── Apply as Tutor modal (public, no auth required) ─────────────────────
 
-  window.showTutorInquiryModal = function showTutorInquiryModal() {
+  let _publicOpenings = [];
+
+  window.showTutorInquiryModal = async function showTutorInquiryModal() {
+    // Load currently-open job openings (public read)
+    try {
+      const snap = await getDocs(query(collection(db, 'tutor_openings'), where('status', '==', 'open')));
+      _publicOpenings = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    } catch(e) { _publicOpenings = []; }
+
+    const inp = 'padding:0.6rem 0.85rem;border:1px solid var(--input-border);border-radius:var(--r-sm);font-family:\'Inter\',sans-serif;font-size:0.88rem;background:var(--white);color:var(--text);width:100%;box-sizing:border-box;';
     const overlay = document.createElement('div');
     overlay.id = 'tutor-inquiry-overlay';
-    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(28,24,20,0.55);z-index:9000;display:flex;align-items:center;justify-content:center;padding:1rem;';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(28,24,20,0.55);z-index:9000;display:flex;align-items:center;justify-content:center;padding:1rem;overflow-y:auto;';
     overlay.innerHTML = `
-      <div style="background:var(--panel);border-radius:var(--r);padding:2rem 1.75rem;width:100%;max-width:420px;box-shadow:var(--shadow-md);position:relative;">
+      <div style="background:var(--panel);border-radius:var(--r);padding:2rem 1.75rem;width:100%;max-width:460px;box-shadow:var(--shadow-md);position:relative;margin:auto;">
         <button onclick="document.getElementById('tutor-inquiry-overlay').remove()" style="position:absolute;top:0.9rem;right:1rem;background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--muted);">×</button>
         <div style="font-family:'Lora',serif;font-size:1.3rem;font-weight:700;color:var(--navy);margin-bottom:0.25rem;">Apply as a Tutor</div>
-        <p style="font-size:0.82rem;color:var(--muted);margin:0 0 1.25rem;">Fill out the form below and our team will reach out to schedule an interview.</p>
-        <div style="display:flex;flex-direction:column;gap:0.75rem;">
-          <input id="tiq-name" placeholder="Full Name" style="padding:0.6rem 0.85rem;border:1px solid var(--input-border);border-radius:var(--r-sm);font-family:'Inter',sans-serif;font-size:0.88rem;background:var(--white);color:var(--text);">
-          <input id="tiq-email" type="email" placeholder="Email Address" style="padding:0.6rem 0.85rem;border:1px solid var(--input-border);border-radius:var(--r-sm);font-family:'Inter',sans-serif;font-size:0.88rem;background:var(--white);color:var(--text);">
-          <input id="tiq-phone" type="tel" placeholder="Phone Number" style="padding:0.6rem 0.85rem;border:1px solid var(--input-border);border-radius:var(--r-sm);font-family:'Inter',sans-serif;font-size:0.88rem;background:var(--white);color:var(--text);">
+        <p style="font-size:0.82rem;color:var(--muted);margin:0 0 1.25rem;">Pick a chapter and opening, then tell us about yourself. We'll review and reach out about an interview.</p>
+        <div style="display:flex;flex-direction:column;gap:0.7rem;">
+          <div>
+            <label style="font-size:0.74rem;font-weight:600;color:var(--text-soft);display:block;margin-bottom:0.25rem;">Chapter</label>
+            <select id="tiq-chapter" onchange="tiqChapterChange()" style="${inp}"></select>
+          </div>
+          <div>
+            <label style="font-size:0.74rem;font-weight:600;color:var(--text-soft);display:block;margin-bottom:0.25rem;">Opening</label>
+            <select id="tiq-opening" style="${inp}"></select>
+          </div>
+          <input id="tiq-name" placeholder="Full Name" style="${inp}">
+          <input id="tiq-email" type="email" placeholder="Email Address (you'll log in with this)" style="${inp}">
+          <input id="tiq-phone" type="tel" placeholder="Phone Number" style="${inp}">
+          <input id="tiq-grade" placeholder="Grade / Year (e.g. 11th grade)" style="${inp}">
+          <input id="tiq-subjects" placeholder="Subjects you can tutor" style="${inp}">
+          <textarea id="tiq-experience" rows="2" placeholder="Briefly: why do you want to tutor / any experience?" style="${inp}resize:vertical;"></textarea>
           <div id="tiq-err" style="font-size:0.78rem;color:#c0392b;display:none;"></div>
           <button id="tiq-submit" onclick="submitTutorInquiry()" style="background:var(--navy);color:#fff;border:none;border-radius:20px;padding:0.65rem 1.25rem;font-family:'Inter',sans-serif;font-size:0.88rem;font-weight:600;cursor:pointer;margin-top:0.25rem;">Submit Application</button>
         </div>
       </div>`;
     document.body.appendChild(overlay);
     overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
-  }
+    // Populate chapter dropdown then openings
+    document.getElementById('tiq-chapter').innerHTML = CHAPTERS.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join('');
+    tiqChapterChange();
+  };
+
+  window.tiqChapterChange = function() {
+    const chapter = document.getElementById('tiq-chapter').value;
+    const sel = document.getElementById('tiq-opening');
+    const openings = _publicOpenings.filter(o => o.chapter === chapter);
+    sel.innerHTML = openings.length
+      ? openings.map(o => `<option value="${o.id}">${esc(o.title)}${o.subjects ? ' — ' + esc(o.subjects) : ''}</option>`).join('')
+      : '<option value="">General application (no specific opening yet)</option>';
+  };
 
   window.submitTutorInquiry = async function() {
-    const name = document.getElementById('tiq-name')?.value.trim();
-    const email = document.getElementById('tiq-email')?.value.trim();
-    const phone = document.getElementById('tiq-phone')?.value.trim();
+    const v = id => (document.getElementById(id)?.value || '').trim();
+    const name = v('tiq-name'), email = v('tiq-email').toLowerCase(), phone = v('tiq-phone');
+    const grade = v('tiq-grade'), subjects = v('tiq-subjects'), experience = v('tiq-experience');
+    const chapter = v('tiq-chapter');
+    const openingId = v('tiq-opening') || null;
+    const opening = _publicOpenings.find(o => o.id === openingId);
     const err = document.getElementById('tiq-err');
-    if (!name || !email || !phone) {
-      err.textContent = 'Please fill in all fields.'; err.style.display = 'block'; return;
+    if (!name || !email || !phone || !chapter) {
+      err.textContent = 'Name, email, phone, and chapter are required.'; err.style.display = 'block'; return;
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       err.textContent = 'Please enter a valid email address.'; err.style.display = 'block'; return;
@@ -6778,19 +7235,21 @@
     const btn = document.getElementById('tiq-submit');
     btn.textContent = 'Submitting…'; btn.disabled = true; err.style.display = 'none';
     try {
-      await addDoc(collection(db, 'tutor_inquiries'), {
-        name, email, phone,
-        status: 'new',
-        submittedAt: serverTimestamp()
+      await addDoc(collection(db, 'tutor_applications'), {
+        openingId, openingTitle: opening ? opening.title : 'General application',
+        chapter, name, email, phone, grade, subjects, experience,
+        status: 'pending',
+        orientationWatched: false,
+        createdAt: serverTimestamp()
       });
       document.getElementById('tutor-inquiry-overlay').remove();
       const thanks = document.createElement('div');
       thanks.style.cssText = 'position:fixed;inset:0;background:rgba(28,24,20,0.55);z-index:9000;display:flex;align-items:center;justify-content:center;padding:1rem;';
-      thanks.innerHTML = `<div style="background:var(--panel);border-radius:var(--r);padding:2rem 1.75rem;max-width:360px;text-align:center;box-shadow:var(--shadow-md);">
+      thanks.innerHTML = `<div style="background:var(--panel);border-radius:var(--r);padding:2rem 1.75rem;max-width:380px;text-align:center;box-shadow:var(--shadow-md);">
         <div style="font-size:2rem;margin-bottom:0.5rem;">✅</div>
         <div style="font-family:'Lora',serif;font-size:1.15rem;font-weight:700;color:var(--navy);margin-bottom:0.5rem;">Application Received!</div>
-        <p style="font-size:0.85rem;color:var(--muted);margin:0 0 1.25rem;">We'll be in touch at <strong>${esc(email)}</strong> to schedule your interview.</p>
-        <button onclick="this.closest('div[style]').remove()" style="background:var(--navy);color:#fff;border:none;border-radius:20px;padding:0.6rem 1.4rem;font-size:0.88rem;font-weight:600;cursor:pointer;">Close</button>
+        <p style="font-size:0.85rem;color:var(--muted);margin:0 0 0.75rem;">Sign in with Google using <strong>${esc(email)}</strong> to track your application and complete onboarding.</p>
+        <button onclick="this.closest('div[style]').remove()" style="background:var(--navy);color:#fff;border:none;border-radius:20px;padding:0.6rem 1.4rem;font-size:0.88rem;font-weight:600;cursor:pointer;">Got it</button>
       </div>`;
       document.body.appendChild(thanks);
       thanks.addEventListener('click', e => { if (e.target === thanks) thanks.remove(); });
@@ -7965,7 +8424,11 @@
     _allMembersCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
   }
 
-  function ceoSearchDropdown(inputId, resultsId, onSelect) {
+  // Renders matching members into a results box. `handlerName` is the NAME of a
+  // window function called on click — this is required so the selection reaches
+  // module scope (a stringified inline closure would run in global scope and the
+  // assignment would silently miss the module variable).
+  function ceoSearchDropdown(inputId, resultsId, handlerName) {
     const q = document.getElementById(inputId).value.toLowerCase();
     const results = document.getElementById(resultsId);
     if (!q) { results.style.display = 'none'; return; }
@@ -7981,7 +8444,7 @@
     if (!matches.length) { results.style.display = 'none'; return; }
     results.style.display = 'block';
     results.innerHTML = matches.map(u =>
-      `<div onclick="(${onSelect.toString()})('${u.id}','${esc(u.displayName||u.email)}')"
+      `<div onclick="${handlerName}('${u.id}','${esc(u.displayName||u.email).replace(/'/g,"\\'")}')"
         style="padding:0.55rem 0.85rem;cursor:pointer;font-size:0.85rem;border-bottom:1px solid var(--border-light);"
         onmouseover="this.style.background='var(--panel)'" onmouseout="this.style.background=''">
         ${esc(u.displayName || u.email)}
@@ -7992,35 +8455,38 @@
 
   window.ceoHoursSearch = async () => {
     await loadAllMembersForCeo();
-    ceoSearchDropdown('ceo-hours-search', 'ceo-hours-results', (id, name) => {
-      _ceoHoursTarget = id;
-      document.getElementById('ceo-hours-search').value = '';
-      document.getElementById('ceo-hours-results').style.display = 'none';
-      document.getElementById('ceo-hours-selected').style.display = 'block';
-      document.getElementById('ceo-hours-selected').textContent = '✓ ' + name;
-    });
+    ceoSearchDropdown('ceo-hours-search', 'ceo-hours-results', 'selectCeoHoursTarget');
+  };
+  window.selectCeoHoursTarget = (id, name) => {
+    _ceoHoursTarget = id;
+    document.getElementById('ceo-hours-search').value = '';
+    document.getElementById('ceo-hours-results').style.display = 'none';
+    document.getElementById('ceo-hours-selected').style.display = 'block';
+    document.getElementById('ceo-hours-selected').textContent = '✓ ' + name;
   };
 
   window.ceoApproverSearch = async () => {
     await loadAllMembersForCeo();
-    ceoSearchDropdown('ceo-approver-search', 'ceo-approver-results', (id, name) => {
-      _ceoApproverTarget = id;
-      document.getElementById('ceo-approver-search').value = '';
-      document.getElementById('ceo-approver-results').style.display = 'none';
-      document.getElementById('ceo-approver-selected').style.display = 'block';
-      document.getElementById('ceo-approver-selected').textContent = '✓ ' + name;
-    });
+    ceoSearchDropdown('ceo-approver-search', 'ceo-approver-results', 'selectCeoApproverTarget');
+  };
+  window.selectCeoApproverTarget = (id, name) => {
+    _ceoApproverTarget = id;
+    document.getElementById('ceo-approver-search').value = '';
+    document.getElementById('ceo-approver-results').style.display = 'none';
+    document.getElementById('ceo-approver-selected').style.display = 'block';
+    document.getElementById('ceo-approver-selected').textContent = '✓ ' + name;
   };
 
   window.ceoNewApproverSearch = async () => {
     await loadAllMembersForCeo();
-    ceoSearchDropdown('ceo-new-approver-search', 'ceo-new-approver-results', (id, name) => {
-      _ceoNewApprover = { id, name };
-      document.getElementById('ceo-new-approver-search').value = '';
-      document.getElementById('ceo-new-approver-results').style.display = 'none';
-      document.getElementById('ceo-new-approver-selected').style.display = 'block';
-      document.getElementById('ceo-new-approver-selected').textContent = '✓ ' + name;
-    });
+    ceoSearchDropdown('ceo-new-approver-search', 'ceo-new-approver-results', 'selectCeoNewApprover');
+  };
+  window.selectCeoNewApprover = (id, name) => {
+    _ceoNewApprover = { id, name };
+    document.getElementById('ceo-new-approver-search').value = '';
+    document.getElementById('ceo-new-approver-results').style.display = 'none';
+    document.getElementById('ceo-new-approver-selected').style.display = 'block';
+    document.getElementById('ceo-new-approver-selected').textContent = '✓ ' + name;
   };
 
   window.ceoSetHours = async () => {
@@ -8238,7 +8704,8 @@
   function saveNavOrder() {
     const nav = document.querySelector('.sidebar-nav');
     if (!nav) return;
-    const ids = [...nav.querySelectorAll('.nav-item')].map(el => el.id);
+    // Pinned items keep a fixed position and are never part of the saved order
+    const ids = [...nav.querySelectorAll('.nav-item:not(.nav-pinned)')].map(el => el.id);
     try { localStorage.setItem(navOrderKey(), JSON.stringify(ids)); } catch(e) {}
   }
 
@@ -8251,7 +8718,8 @@
       if (!nav) return;
       order.forEach(id => {
         const el = document.getElementById(id);
-        if (el && el.parentNode === nav) nav.appendChild(el);
+        // Never reposition pinned items (they stay anchored at the top)
+        if (el && !el.classList.contains('nav-pinned') && el.parentNode === nav) nav.appendChild(el);
       });
       // Any items not in saved list stay at end
     } catch(e) {}
