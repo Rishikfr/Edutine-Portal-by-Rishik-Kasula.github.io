@@ -147,7 +147,7 @@
     .bento-inline { display: flex; align-items: baseline; gap: 0.55rem; flex-wrap: wrap; }
     .bento-inline .bento-name { margin: 0; }
 
-    /* the hero stat card — tinted glass */
+    /* the hero stat card - tinted glass */
     .bento-card.feature {
       padding: 1.5rem 1.6rem;
       background: linear-gradient(150deg, rgba(126,206,244,0.20) 0%, rgba(255,255,255,0.045) 100%);
@@ -286,7 +286,7 @@
       position: sticky; top: 0; height: 100vh; overflow-y: auto;
     }
 
-    /* ── Sidebar resize handle (desktop only — mobile sidebar is an off-canvas drawer) ── */
+    /* ── Sidebar resize handle (desktop only - mobile sidebar is an off-canvas drawer) ── */
     .sidebar-resize-handle {
       width: 6px; flex-shrink: 0; cursor: col-resize;
       background: transparent; position: relative; z-index: 50;
@@ -529,7 +529,7 @@
     .dash-pill { font-size: 0.62rem; font-weight: 700; padding: 0.16rem 0.55rem; border-radius: 20px; white-space: nowrap; display: inline-flex; align-items: center; gap: 0.25rem; }
     .dash-empty { font-size: 0.76rem; color: var(--muted); font-style: italic; }
 
-    /* Tutor-application checklist rows — clickable to expand interview/notes detail */
+    /* Tutor-application checklist rows - clickable to expand interview/notes detail */
     .app-check-row { border-radius: 6px; padding: 0.25rem 0.35rem; margin: 0.05rem -0.35rem; transition: background 0.12s; cursor: pointer; }
     .app-check-row:hover { background: var(--panel); }
     .app-check-chevron { margin-left: auto; color: var(--light); font-size: 0.7rem; transition: transform 0.15s; flex-shrink: 0; }
@@ -560,7 +560,7 @@
     .dash-widget.size-big .dash-pill           { font-size: 0.68rem; padding: 0.22rem 0.65rem; }
     .dash-widget.size-big .dash-w-link         { font-size: 0.8rem; }
 
-    /* on the smallest footprint, keep only the arrow — the label competes for room with the title */
+    /* on the smallest footprint, keep only the arrow - the label competes for room with the title */
     .dash-widget.size-sm .dash-w-link-text { display: none; }
 
     /* visual building blocks */
@@ -823,7 +823,7 @@
       /* Analytics tables scroll */
       .analytics-table { font-size: 0.75rem; }
 
-      /* On mobile, show ONLY the login / apply panel — hide the hero + bento */
+      /* On mobile, show ONLY the login / apply panel - hide the hero + bento */
       #pre-login { flex-direction: column; height: 100vh; min-height: 100vh; overflow: hidden; }
       .left-panel { display: none; }
       .right-panel {
@@ -951,7 +951,7 @@
     .nav-item.nav-pinned { font-weight: 700; }
     .nav-item.nav-pinned .nav-drag-handle { display: none !important; }
 
-    /* ── Nav drag-and-drop (pointer-based — works reliably on every browser/OS,
+    /* ── Nav drag-and-drop (pointer-based - works reliably on every browser/OS,
        unlike native HTML5 drag-and-drop on <button> elements) ── */
     .nav-drag-handle {
       opacity: 0.35; flex-shrink: 0;
@@ -1018,7 +1018,7 @@
       <div class="bento-card feature" style="--accent:#7ecef4; grid-area:students;">
         <div class="bento-stat">1,000+</div>
         <div class="bento-name">Students Served</div>
-        <div class="bento-desc">From elementary through high school — personalized support to build confidence and reach their goals.</div>
+        <div class="bento-desc">From elementary through high school - personalized support to build confidence and reach their goals.</div>
       </div>
       <div class="bento-card" style="--accent:#8fd8a0; grid-area:global;">
         <div class="bento-stat sm">6+</div>
@@ -1028,7 +1028,7 @@
       <div class="bento-card" style="--accent:#f5c76b; grid-area:academic;">
         <div class="bento-stat">95%</div>
         <div class="bento-name">Academic Growth</div>
-        <div class="bento-desc">of students report improved understanding — across 30+ subjects from Algebra to AP Sciences.</div>
+        <div class="bento-desc">of students report improved understanding - across 30+ subjects from Algebra to AP Sciences.</div>
       </div>
       <div class="bento-card" style="--accent:#b79cf0; grid-area:chapters;">
         <div class="bento-stat sm">10</div>
@@ -1102,7 +1102,6 @@
           <label class="role-option"><input type="radio" name="role" value="student_support_director" /><div class="role-option-content"><span class="role-option-icon">🎯</span><div><div class="role-option-title">Dir. of Student Support</div><div class="role-option-desc">Assign student support leads and manage pairings</div></div></div></label>
           <label class="role-option"><input type="radio" name="role" value="chapter_director" /><div class="role-option-content"><span class="role-option-icon">🏛️</span><div><div class="role-option-title">Chapter Director</div><div class="role-option-desc">Lead and oversee a full chapter</div></div></div></label>
           <label class="role-option"><input type="radio" name="role" value="chapter_president" /><div class="role-option-content"><span class="role-option-icon">👑</span><div><div class="role-option-title">Chapter President</div><div class="role-option-desc">Head of chapter operations and leadership</div></div></div></label>
-          <label class="role-option"><input type="radio" name="role" value="executive_vp" /><div class="role-option-content"><span class="role-option-icon">⭐</span><div><div class="role-option-title">Executive VP</div><div class="role-option-desc">Vice President of the executive team</div></div></div></label>
           <label class="role-option"><input type="radio" name="role" value="executive" /><div class="role-option-content"><span class="role-option-icon">🌐</span><div><div class="role-option-title">Executive</div><div class="role-option-desc">Organization-wide leadership</div></div></div></label>
         </div>
         <button class="btn-primary" onclick="submitRole()">Continue to Portal</button>
@@ -1137,13 +1136,19 @@
             <input class="input-field" id="app-parent-phone" placeholder="Parent/Guardian Phone Number *" />
             <input class="input-field" id="app-parent-email" placeholder="Parent/Guardian Email *" />
             <input class="input-field" id="app-school" placeholder="School Name *" />
+            <div id="app-chapter-wrap">
+              <div style="font-size:0.78rem;color:rgba(180,210,255,0.6);margin-bottom:0.5rem;">Edutine Chapter *</div>
+              <select class="input-field" id="app-chapter">
+                <option value="">Select chapter...</option>
+              </select>
+            </div>
             <div style="font-size:0.78rem;color:rgba(180,210,255,0.6);margin-bottom:0.5rem;">Pronouns *</div>
             <select class="input-field" id="app-pronouns">
               <option value="">Select pronouns...</option>
-              <option>she/her</option><option>he/his</option><option>they/them</option>
-              <option>she/they</option><option>he/them</option><option>Prefer not to say</option>
+              <option>she/her</option><option>he/him</option><option>they/them</option>
+              <option>she/they</option><option>he/they</option><option>Prefer not to say</option>
             </select>
-            <div style="font-size:0.78rem;color:rgba(180,210,255,0.6);margin-bottom:0.5rem;">Grade (2025-2026 School Year) *</div>
+            <div style="font-size:0.78rem;color:rgba(180,210,255,0.6);margin-bottom:0.5rem;">Grade (2026-2027 School Year) *</div>
             <select class="input-field" id="app-grade">
               <option value="">Select grade...</option>
               <option>9th</option><option>10th</option><option>11th</option><option>12th</option>
@@ -1211,7 +1216,6 @@
               By submitting, you agree to: use Zoom/Google Meet for all sessions, handle student/parent contact info responsibly, use appropriate language, and be punctual. Please write your full name below to confirm.
             </div>
             <input class="input-field" id="app-signature" placeholder="Full name (electronic signature) *" />
-            <div style="font-size:0.75rem;color:rgba(180,210,255,0.5);margin-top:0.25rem;">Tutor Support Director: Ritika Prakash - (408)-507-9383<br>Student Support Director: Aarya Godse - (925)-319-3812</div>
           </div>
 
           <div id="app-step-5" style="display:none;">
@@ -1253,7 +1257,7 @@
             <option>she/her</option><option>he/him</option><option>they/them</option><option>prefer not to say</option>
           </select>
           <select class="input-field" id="ss-grade">
-            <option value="">Student's Grade (2025-2026) *</option>
+            <option value="">Student's Grade (2026-2027) *</option>
             <option>K</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
             <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option>
             <option>12</option><option>College/Adult</option>
@@ -1312,7 +1316,7 @@
               <option>she/her</option><option>he/him</option><option>they/them</option><option>prefer not to say</option>
             </select>
             <select class="input-field" id="ob-grade">
-              <option value="">Your Grade (2025-2026) *</option>
+              <option value="">Your Grade (2026-2027) *</option>
               <option>K</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
               <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option>
               <option>12</option><option>College/Adult</option>
@@ -1408,7 +1412,7 @@
         <div id="sb-chapter" style="font-size:0.58rem;color:rgba(255,255,255,0.3);margin-top:0.1rem;letter-spacing:0.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px;"></div>
       </div>
     </div>
-    <!-- Developer role switcher (super_admin only) — collapsed by default so it
+    <!-- Developer role switcher (super_admin only) - collapsed by default so it
          doesn't eat sidebar space on every visit; expands only when needed. -->
     <div id="dev-switcher" style="display:none;margin-bottom:0.6rem;">
       <button id="dev-switcher-toggle" onclick="toggleDevSwitcher()" style="display:flex;align-items:center;justify-content:space-between;width:100%;background:rgba(245,166,35,0.12);border:1px solid rgba(245,166,35,0.35);border-radius:var(--r-sm);padding:0.4rem 0.65rem;color:rgba(245,166,35,0.9);font-size:0.68rem;font-weight:700;letter-spacing:0.06em;cursor:pointer;font-family:'Inter',sans-serif;">
@@ -1516,9 +1520,6 @@
       <button class="nav-item" id="nav-tutor-homework" style="display:none;" onclick="showTab('tutor-homework')">
         <span class="nav-icon">📝</span> Assign Homework
       </button>
-      <button class="nav-item" id="nav-contact-parents" style="display:none;" onclick="showTab('contact-parents')">
-        <span class="nav-icon">📞</span> Contact Parents
-      </button>
       <button class="nav-item" id="nav-awards" style="display:none;" onclick="showTab('awards')">
         <span class="nav-icon">🏅</span> Awards
       </button>
@@ -1535,11 +1536,8 @@
       <button class="nav-item" id="nav-homework" style="display:none;" onclick="showTab('homework')">
         <span class="nav-icon">📚</span> Homework
       </button>
-      <button class="nav-item" id="nav-certificates" style="display:none;" onclick="showTab('certificates')">
-        <span class="nav-icon">🏆</span> Certificates
-      </button>
       <button class="nav-item" id="nav-progress" style="display:none;" onclick="showTab('progress')">
-        <span class="nav-icon">📈</span> My Progress
+        <span class="nav-icon">📈</span> Progress &amp; Awards
       </button>
       <button class="nav-item" id="nav-messages" style="display:none;" onclick="showTab('messages')">
         <span class="nav-icon">💬</span> Messages
@@ -1557,7 +1555,7 @@
     <div style="background:#fff;border-radius:16px;padding:2.5rem 2.75rem;max-width:420px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.35);">
       <div style="font-size:2.5rem;margin-bottom:0.75rem;">⏳</div>
       <div style="font-family:'Lora',serif;font-size:1.4rem;font-weight:700;color:var(--navy);margin-bottom:0.5rem;">Application Received!</div>
-      <div style="font-size:0.875rem;color:var(--muted);line-height:1.7;margin-bottom:1.25rem;">Thank you — your application has been received and is under review by our team. Here's what to expect:</div>
+      <div style="font-size:0.875rem;color:var(--muted);line-height:1.7;margin-bottom:1.25rem;">Thank you - your application has been received and is under review by our team. Here's what to expect:</div>
       <div style="text-align:left;background:#f4f7ff;border-radius:10px;padding:1rem 1.1rem;margin-bottom:1.25rem;font-size:0.84rem;color:var(--text-soft);line-height:1.75;">
         <div>📧 <strong>Check your email</strong> - you'll be contacted directly once a decision has been made.</div>
         <div>📅 <strong>Check back in a few days</strong> - reviews typically take 2–5 business days.</div>
@@ -1661,7 +1659,7 @@
         <div id="announce-welcome-title" style="font-family:'Lora',serif;font-size:1.1rem;font-weight:700;margin-bottom:0.35rem;">Welcome to the Edutine Portal</div>
         <div id="announce-welcome-body" style="font-size:0.82rem;color:rgba(255,255,255,0.65);line-height:1.6;max-width:480px;">Announcements will appear here. Check back regularly for updates.</div>
         <div style="display:flex;gap:1.5rem;margin-top:1rem;flex-wrap:wrap;">
-          <div style="font-size:0.78rem;color:rgba(255,255,255,0.55);"><span style="font-weight:700;color:#7ecef4;">📍 Chapters</span><br/>Alameda · Contra Costa · San Joaquin County · Texas</div>
+          <div style="font-size:0.78rem;color:rgba(255,255,255,0.55);"><span style="font-weight:700;color:#7ecef4;">📍 Chapters</span><br/>Alameda · Contra Costa · San Joaquin County · Southern California · Texas</div>
           <div style="font-size:0.78rem;color:rgba(255,255,255,0.55);"><span style="font-weight:700;color:#7ecef4;">📧 Contact</span><br/>tutor@edutinereachout.com</div>
         </div>
       </div>
@@ -1739,7 +1737,7 @@
         </div>
       </div>
 
-      <!-- Staff Status (merged in) — officers+ see everyone's status below their own -->
+      <!-- Staff Status (merged in) - officers+ see everyone's status below their own -->
       <div id="staff-status-section" style="display:none;margin-top:1.75rem;border-top:1px solid var(--border-light);padding-top:1.5rem;">
         <div class="card-label" style="margin-bottom:0.35rem;">Staff Status</div>
         <p style="font-size:0.8rem;color:var(--muted);margin:0 0 1rem;">Live status of all staff members. Overdue absences are flagged automatically after 24 hours.</p>
@@ -2041,7 +2039,7 @@
       </div>
     </div>
 
-    <!-- ── Accounts (CEO / super_admin — create & manage accounts) ──────────── -->
+    <!-- ── Accounts (CEO / super_admin - create & manage accounts) ──────────── -->
     <div class="tab-content" id="tab-accounts">
       <div class="page-header">
         <div class="page-title">Accounts</div>
@@ -2067,7 +2065,7 @@
             <select class="form-input" id="acct-role"></select>
           </div>
           <div class="form-group">
-            <label class="form-label">Chapter <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
+            <label class="form-label" id="acct-chapter-label">Chapter</label>
             <select class="form-input" id="acct-chapter"></select>
           </div>
         </div>
@@ -2193,7 +2191,7 @@
           <label class="form-label">Role</label>
           <select class="form-input" id="task-assignee-role"></select>
         </div>
-        <!-- Person picker (mode = individual) — supports multiple people -->
+        <!-- Person picker (mode = individual) - supports multiple people -->
         <div class="form-group" id="task-person-wrap" style="display:none;position:relative;">
           <label class="form-label">People <span style="font-weight:400;color:var(--muted);">(add one or more)</span></label>
           <input class="form-input" id="task-person-search" oninput="taskPersonSearch()" placeholder="Search by name or email, then click to add..." autocomplete="off" />
@@ -2460,6 +2458,7 @@
           <div style="display:flex;align-items:center;justify-content:space-between;padding:0.65rem 0;border-bottom:1px solid var(--border-light);font-size:0.88rem;font-weight:600;">Alameda <span class="badge green">Active</span></div>
           <div style="display:flex;align-items:center;justify-content:space-between;padding:0.65rem 0;border-bottom:1px solid var(--border-light);font-size:0.88rem;font-weight:600;">Contra Costa <span class="badge green">Active</span></div>
           <div style="display:flex;align-items:center;justify-content:space-between;padding:0.65rem 0;border-bottom:1px solid var(--border-light);font-size:0.88rem;font-weight:600;">San Joaquin County <span class="badge green">Active</span></div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:0.65rem 0;border-bottom:1px solid var(--border-light);font-size:0.88rem;font-weight:600;">Southern California <span class="badge green">Active</span></div>
           <div style="display:flex;align-items:center;justify-content:space-between;padding:0.65rem 0;font-size:0.88rem;font-weight:600;">Texas <span class="badge green">Active</span></div>
         </div>
         <div style="border-top:1px solid var(--border-light);padding-top:0.85rem;">
@@ -2499,6 +2498,7 @@
               <option value="Alameda">Alameda</option>
               <option value="Contra Costa">Contra Costa</option>
               <option value="San Joaquin County">San Joaquin County</option>
+              <option value="Southern California">Southern California</option>
               <option value="Texas">Texas</option>
             </select>
           </div>
@@ -2560,7 +2560,7 @@
         <div class="page-title">Request a Tutor</div>
         <p class="page-sub">Fill out this form to be matched with a volunteer tutor.</p>
       </div>
-      <div id="signup-tutoring-pending" style="display:none;" class="card" style="text-align:center;">
+      <div id="signup-tutoring-pending" class="card" style="display:none;text-align:center;">
         <div style="font-size:2rem;margin-bottom:0.5rem;">⏳</div>
         <div style="font-family:'Lora',serif;font-weight:700;font-size:1.1rem;color:var(--navy);margin-bottom:0.4rem;">Application Submitted</div>
         <p style="font-size:0.88rem;color:var(--muted);">Your tutoring request is pending review. Our team will reach out to you soon. Check your email for updates.</p>
@@ -2591,7 +2591,7 @@
             <label class="form-label">Chapter *</label>
             <select class="form-input" id="ist-chapter">
               <option value="">Select chapter...</option>
-              <option>Alameda</option><option>Contra Costa</option><option>San Joaquin County</option><option>Texas</option>
+              <option>Alameda</option><option>Contra Costa</option><option>San Joaquin County</option><option>Southern California</option><option>Texas</option>
             </select>
           </div>
         </div>
@@ -2644,13 +2644,17 @@
       </div>
     </div>
 
-    <!-- ── Certificates & Badges (student) ─────────────────────────────── -->
-    <div class="tab-content" id="tab-certificates">
+    <!-- ── Progress & Awards (student) - progress notes + certificates + badges ── -->
+    <div class="tab-content" id="tab-progress">
       <div class="page-header">
-        <div class="page-title">Certificates &amp; Badges</div>
-        <p class="page-sub">Awards earned during your tutoring journey.</p>
+        <div class="page-title">Progress &amp; Awards</div>
+        <p class="page-sub">Progress notes from your tutor, plus certificates and badges you've earned.</p>
       </div>
-      <div class="card-label" style="margin-bottom:0.65rem;">Certificates</div>
+      <div class="card-label" style="margin-bottom:0.65rem;">Progress Notes</div>
+      <div id="progress-feed">
+        <div class="empty-state"><span class="empty-icon">📈</span>No progress notes yet.</div>
+      </div>
+      <div class="card-label" style="margin:1.25rem 0 0.65rem;">Certificates</div>
       <div id="certificates-feed">
         <div class="empty-state"><span class="empty-icon">🏆</span>No certificates yet.</div>
       </div>
@@ -2660,55 +2664,29 @@
       </div>
     </div>
 
-    <!-- ── My Progress (student) ────────────────────────────────────────── -->
-    <div class="tab-content" id="tab-progress">
-      <div class="page-header">
-        <div class="page-title">My Progress</div>
-        <p class="page-sub">Progress notes written by your tutor.</p>
-      </div>
-      <div id="progress-feed">
-        <div class="empty-state"><span class="empty-icon">📈</span>No progress notes yet.</div>
-      </div>
-    </div>
-
     <!-- ── Messages (student + tutor) ──────────────────────────────────── -->
     <div class="tab-content" id="tab-messages">
       <div class="page-header">
         <div class="page-title">Messages</div>
-        <p class="page-sub">In-portal messages with your tutor and Edutine staff — an alternative to email for quick questions.</p>
+        <p class="page-sub">In-portal messages with your tutor and Edutine staff - an alternative to email for quick questions. Conversations are automatically deleted 30 days after the last message.</p>
       </div>
-      <div style="display:grid;grid-template-columns:220px 1fr;gap:1rem;height:520px;">
-        <div style="background:var(--white);border-radius:var(--r);border:1px solid var(--border);overflow-y:auto;">
+      <div style="display:grid;grid-template-columns:220px 1fr;gap:1rem;height:520px;max-height:520px;overflow:hidden;">
+        <div style="background:var(--white);border-radius:var(--r);border:1px solid var(--border);overflow-y:auto;min-height:0;">
           <div style="padding:0.75rem;font-size:0.78rem;font-weight:700;color:var(--muted);letter-spacing:0.06em;border-bottom:1px solid var(--border);">CONVERSATIONS</div>
           <div id="msg-thread-list" style="padding:0.5rem;display:flex;flex-direction:column;gap:0.25rem;">
             <div class="empty-state" style="font-size:0.8rem;padding:1rem;">No conversations yet.</div>
           </div>
         </div>
-        <div style="background:var(--white);border-radius:var(--r);border:1px solid var(--border);display:flex;flex-direction:column;">
-          <div id="msg-header" style="padding:0.75rem 1rem;border-bottom:1px solid var(--border);font-size:0.88rem;font-weight:600;color:var(--navy);">Select a conversation</div>
-          <div id="msg-body" style="flex:1;overflow-y:auto;padding:0.75rem;display:flex;flex-direction:column;gap:0.5rem;">
+        <div style="background:var(--white);border-radius:var(--r);border:1px solid var(--border);display:flex;flex-direction:column;min-height:0;overflow:hidden;">
+          <div id="msg-header" style="padding:0.75rem 1rem;border-bottom:1px solid var(--border);font-size:0.88rem;font-weight:600;color:var(--navy);flex-shrink:0;">Select a conversation</div>
+          <div id="msg-body" style="flex:1;min-height:0;overflow-y:auto;padding:0.75rem;display:flex;flex-direction:column;">
           </div>
-          <div id="msg-compose" style="padding:0.75rem;border-top:1px solid var(--border);display:flex;gap:0.5rem;">
+          <div id="msg-compose" style="padding:0.75rem;border-top:1px solid var(--border);display:flex;gap:0.5rem;flex-shrink:0;">
             <input id="msg-input" class="form-input" placeholder="Type a message..." style="flex:1;" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage();}" />
             <button onclick="sendMessage()" class="btn-sm">Send</button>
           </div>
-          <div id="msg-new-wrap" style="padding:0.75rem;border-top:1px solid var(--border);">
+          <div id="msg-new-wrap" style="padding:0.75rem;border-top:1px solid var(--border);flex-shrink:0;">
             <button onclick="showNewMessageModal()" style="background:none;border:none;color:var(--navy);font-size:0.82rem;font-weight:600;cursor:pointer;">+ New Message</button>
-          </div>
-        </div>
-      </div>
-      <!-- new message modal -->
-      <div id="msg-modal" style="display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.4);align-items:center;justify-content:center;">
-        <div style="background:#fff;border-radius:var(--r);padding:1.5rem;width:360px;max-width:90vw;">
-          <div style="font-weight:700;font-size:1rem;color:var(--navy);margin-bottom:1rem;">New Message</div>
-          <label class="form-label">Recipient</label>
-          <span id="msg-to-wrap" style="display:block;margin-bottom:0.75rem;"><input id="msg-to-select" class="form-input" placeholder="Search or select a person..." autocomplete="off" /></span>
-          <label class="form-label">Message</label>
-          <textarea id="msg-modal-text" class="form-input" rows="3" style="resize:vertical;" placeholder="Type your message..."></textarea>
-          <div id="msg-modal-err" style="display:none;font-size:0.8rem;color:#e74c3c;margin-top:0.4rem;"></div>
-          <div style="display:flex;gap:0.5rem;margin-top:0.75rem;">
-            <button onclick="document.getElementById('msg-modal').style.display='none'" style="flex:1;padding:0.55rem;background:none;border:1px solid var(--border);border-radius:6px;font-size:0.85rem;cursor:pointer;">Cancel</button>
-            <button onclick="sendNewMessage()" class="btn-sm" style="flex:1;">Send</button>
           </div>
         </div>
       </div>
@@ -2725,13 +2703,13 @@
       </div>
     </div>
 
-    <!-- ── Sessions - tutor ─────────────────────────────────────────────── -->
+    <!-- ── Sessions - tutor (log reports) + student (view history) ───────── -->
     <div class="tab-content" id="tab-sessions">
       <div class="page-header">
         <div class="page-title">Sessions</div>
-        <p class="page-sub">Submit a required post-session report after every tutoring session.</p>
+        <p class="page-sub" id="sessions-page-sub">Submit a required post-session report after every tutoring session.</p>
       </div>
-      <div class="card" style="margin-bottom:1.25rem;">
+      <div class="card" id="sn-log-wrap" style="margin-bottom:1.25rem;">
         <div class="card-label">Log a Session</div>
         <div class="form-row">
           <div class="form-group">
@@ -2755,11 +2733,11 @@
           <label class="form-label">Student Progress (1–5) *</label>
           <select class="form-input" id="sn-rating">
             <option value="">Select rating...</option>
-            <option value="5">5 — Excellent progress</option>
-            <option value="4">4 — Good progress</option>
-            <option value="3">3 — Steady progress</option>
-            <option value="2">2 — Needs more support</option>
-            <option value="1">1 — Struggling</option>
+            <option value="5">5 - Excellent progress</option>
+            <option value="4">4 - Good progress</option>
+            <option value="3">3 - Steady progress</option>
+            <option value="2">2 - Needs more support</option>
+            <option value="1">1 - Struggling</option>
           </select>
         </div>
         <button onclick="logSession()" class="btn-sm">Submit Post-Session Report</button>
@@ -2818,17 +2796,6 @@
       <div class="card-label" style="margin-bottom:0.65rem;">Assigned Homework</div>
       <div id="tutor-homework-feed">
         <div class="empty-state"><span class="empty-icon">📝</span>No homework assigned yet.</div>
-      </div>
-    </div>
-
-    <!-- ── Contact Parents - tutor ──────────────────────────────────────── -->
-    <div class="tab-content" id="tab-contact-parents">
-      <div class="page-header">
-        <div class="page-title">Contact Parents</div>
-        <p class="page-sub">Parent contact information for your students.</p>
-      </div>
-      <div id="contact-parents-feed">
-        <div class="empty-state"><span class="empty-icon">📞</span>No students assigned yet.</div>
       </div>
     </div>
 
@@ -2895,7 +2862,7 @@
       </div>
 
       <!-- Stats row (shown for president/director/vp) -->
-      <div id="cdash-stats-row" style="display:none;display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem;margin-bottom:1.25rem;">
+      <div id="cdash-stats-row" style="display:none;grid-template-columns:repeat(3,1fr);gap:0.75rem;margin-bottom:1.25rem;">
         <div class="card" style="padding:1rem;text-align:center;">
           <div style="font-size:1.6rem;font-weight:700;color:var(--navy);" id="cdash-student-count">-</div>
           <div style="font-size:0.75rem;color:var(--muted);margin-top:0.2rem;">Students</div>
@@ -3059,7 +3026,7 @@
     'niti.jain@edutinereachout.com':             'vp_website',
     'sanju.vinodh@edutinereachout.com':          'vp_finance',
     'riona.vora@edutinereachout.com':            'director_finance',
-    // Org team — loaded from SCM roster
+    // Org team - loaded from SCM roster
     'dhoon.patel@edutinereachout.com':           'ceo',
     'ahaana.varadharaj@edutinereachout.com':     'vp_student_tutor',
     'vihaan.giri@edutinereachout.com':           'vp_finance',
@@ -3115,7 +3082,7 @@
     // Rishik → Aarushi signs off
     'rishik.kasula@edutinereachout.com':         'aarushi.gupta@edutinereachout.com',
     // Everyone else (including the former Alameda → Dhoon override) now routes to
-    // the CEO by default via HOURS_APPROVER — see "aarushi approves everyone's
+    // the CEO by default via HOURS_APPROVER - see "aarushi approves everyone's
     // volunteer hours" policy change.
   };
 
@@ -3153,6 +3120,14 @@
     super_admin:9
   };
 
+  // Org-wide roles (director/executive level and above - the same cutoff used
+  // for the "Executives" announcement channel) operate across every chapter and
+  // don't belong to one. Everyone below that, including students, must have a
+  // chapter on file.
+  function roleNeedsChapter(role) {
+    return (LEVELS[role] || 0) < LEVELS['executive'];
+  }
+
   const LABELS = {
     student:'Student', tutor:'Tutor', lead:'Lead', officer:'Officer',
     tutor_support_lead:'Tutor Support Lead',
@@ -3176,8 +3151,7 @@
     vp_website:'VP of Website Management',
     vp_finance:'VP of Finance',
     board_president:'Board President',
-    ceo:'CEO', super_admin:'Developer',
-    external:'External', alumni:'Alumni', volunteer:'Volunteer'
+    ceo:'CEO', super_admin:'Developer'
   };
 
   // Helper: is this role a board-level position?
@@ -3189,7 +3163,7 @@
     'Texas'
   ];
 
-  // Tutor portal orientation video — paste the YouTube/Vimeo/Drive embed URL here
+  // Tutor portal orientation video - paste the YouTube/Vimeo/Drive embed URL here
   // once the orientation is recorded. Leave '' to show a "coming soon" placeholder.
   const TUTOR_ORIENTATION_VIDEO_URL = '';
 
@@ -3219,7 +3193,7 @@
     'chapter_vp','chapter_social_media','chapter_grants','executive_vp','executive'
   ];
 
-  // Aarushi (CEO) approves everyone's volunteer hours — no multi-tier chain.
+  // Aarushi (CEO) approves everyone's volunteer hours - no multi-tier chain.
   // The CEO's own hours still go up to the Board President, and the Board
   // President's go to the developer/super_admin, since neither can sign off on
   // themselves.
@@ -3243,6 +3217,7 @@
   // Person impersonation (developer "view as <account>")
   let _devPersonView = false, _devRealUser = null, _devRealRoles = null, _devRealChapter = '';
   let _studentEnrolled = false;
+  let _studentTutorStatus = 'none';
   let _onboardingUser = null;
   const readCache = new Set();
 
@@ -3341,6 +3316,8 @@
       document.querySelector('.sidebar')?.classList.remove('sidebar-open');
       document.getElementById('sidebar-overlay')?.classList.remove('visible');
     }
+    // Stop the Messages periodic refresh when navigating away from it
+    if (tab !== 'messages' && typeof stopMsgPolling === 'function') stopMsgPolling();
     document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
     document.getElementById('tab-' + tab).classList.add('active');
@@ -3372,13 +3349,11 @@
       'all-students':      () => loadAllStudents(),
       'signup-tutoring':   () => loadSignupTutoring(),
       'homework':          () => loadHomework(),
-      'certificates':      () => loadCertificates(),
       'progress':          () => loadProgress(),
       'messages':          () => loadMessages(),
       'events':            () => loadEvents(),
       'sessions':          () => loadSessions(),
       'tutor-homework':    () => loadTutorHomework(),
-      'contact-parents':   () => loadContactParents(),
       'awards':            () => loadAwards(),
       'chapter-trainings': () => loadChapterTrainings(),
       'chapter-dash':      () => loadChapterDash(),
@@ -3421,7 +3396,7 @@
     document.getElementById('tos-modal-backdrop').style.display = 'none';
     document.getElementById('tos-modal').style.display = 'none';
   };
-  // Reading and closing the modal counts as reviewing it — check the box for them
+  // Reading and closing the modal counts as reviewing it - check the box for them
   window.acceptTosFromModal = () => {
     const cb = document.getElementById('tos-agree');
     cb.checked = true;
@@ -3444,6 +3419,11 @@
 
   function boot(user, role, chapter = '', userData = {}) {
     me = user; myRole = role;
+    // Expose identity for the non-module helper script (nav order key, devtools
+    // exemption) - module-scoped variables aren't visible from that scope.
+    window.__edutineUid = user.uid;
+    window.__edutineRole = role;
+    if (role === 'super_admin' || _devRealRole === 'super_admin') window.__edutineDev = true;
     myRoles = Array.isArray(userData.roles) ? userData.roles.filter(r => r && r !== role) : [];
     const name = user.displayName || user.email.split('@')[0];
     const initials = name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
@@ -3463,7 +3443,7 @@
 
     document.getElementById('nav-my-tutor').style.display = (role === 'student') ? 'flex' : 'none';
     document.getElementById('nav-students').style.display = (role === 'tutor') ? 'flex' : 'none';
-    // Staff Status is now merged into the Status tab — shown below the personal status section
+    // Staff Status is now merged into the Status tab - shown below the personal status section
     const canSeeStaffStatus = (lv >= LEVELS['officer'] || role === 'super_admin');
     const staffStatusSection = document.getElementById('staff-status-section');
     if (staffStatusSection) staffStatusSection.style.display = canSeeStaffStatus ? 'block' : 'none';
@@ -3521,17 +3501,23 @@
     document.getElementById('nav-chapter-dash').style.display = allMyRoles().some(r => CHAPTER_ROLES.has(r)) ? 'flex' : 'none';
 
     // Tutor-specific tabs
+    // Students get Sessions too (read-only history) once enrolled - see updateStudentNavTabs()
     document.getElementById('nav-sessions').style.display = (role === 'tutor') ? 'flex' : 'none';
     document.getElementById('nav-tutor-homework').style.display = (role === 'tutor') ? 'flex' : 'none';
-    document.getElementById('nav-contact-parents').style.display = (role === 'tutor') ? 'flex' : 'none';
     document.getElementById('nav-awards').style.display = (role === 'tutor') ? 'flex' : 'none';
     document.getElementById('nav-chapter-trainings').style.display = (role === 'tutor') ? 'flex' : 'none';
-    document.getElementById('nav-messages').style.display = (role === 'student' || role === 'tutor') ? 'flex' : 'none';
+    // Messages is available to everyone now that you can message anyone in the portal.
+    document.getElementById('nav-messages').style.display = 'flex';
 
     // Student-specific tabs - shown/hidden based on enrollment after user data loads
     const isStudentRole = (role === 'student');
     document.getElementById('nav-events').style.display = isStudentRole ? 'flex' : 'none';
-    // Pre/post enrollment tabs set after checking assignedTutor below
+    // Seed enrollment state from the data we already have, then hide/show the
+    // student-only tabs. For non-students this hard-hides them (prevents the
+    // "Request a Tutor as a tutor" leak); the getDoc below refines for students.
+    _studentEnrolled = isStudentRole ? !!userData.assignedTutor : false;
+    _studentTutorStatus = isStudentRole ? (userData.tutorStatus || 'none') : 'none';
+    updateStudentNavTabs();
 
     document.getElementById('announce-compose-wrap').style.display = (lv >= LEVELS['executive']) ? 'block' : 'none';
     document.getElementById('break-compose-wrap').style.display = (role === 'super_admin') ? 'block' : 'none';
@@ -3561,7 +3547,12 @@
     goPostLogin();
     showTab('dashboard');
     // Nav order: init drag-drop (idempotent) then restore saved order for this user+role
-    setTimeout(() => { initNavDragDrop(); restoreNavOrder(); initSidebarResize(); }, 0);
+    setTimeout(() => {
+      // These live in the non-module script below and are exposed with _ prefixes
+      if (window._initNavDragDrop) window._initNavDragDrop();
+      if (window._restoreNavOrder) window._restoreNavOrder();
+      if (window._initSidebarResize) window._initSidebarResize();
+    }, 0);
 
     // First login: create the welcome notification (join your chapter Slack!),
     // then show the tour for any new user who hasn't seen it yet
@@ -3583,6 +3574,7 @@
       // Update student enrollment nav state
       if (myRole === 'student') {
         _studentEnrolled = !!data.assignedTutor;
+        _studentTutorStatus = data.tutorStatus || 'none';
         updateStudentNavTabs();
         // If My Tutor is open, reflect match/pairing changes instantly
         const myTutorTab = document.getElementById('tab-my-tutor');
@@ -3598,6 +3590,7 @@
       getDoc(doc(db, 'users', user.uid)).then(snap => {
         if (snap.exists()) {
           _studentEnrolled = !!snap.data().assignedTutor;
+          _studentTutorStatus = snap.data().tutorStatus || 'none';
           updateStudentNavTabs();
         }
       });
@@ -3692,7 +3685,7 @@
   const DASH_TONES={ green:['#e2f0e8','#1a6e3c'], blue:['#e3eef7','#2d7aac'], amber:['#fbeacb','#9a6a12'], red:['#fbeaea','#c0392b'], light:['rgba(255,255,255,0.16)','#fff'] };
   function dashPill(text, tone){ const [bg,fg]=DASH_TONES[tone]||DASH_TONES.blue; return `<span class="dash-pill" style="background:${bg};color:${fg};">${esc(text)}</span>`; }
 
-  // Minimal line-icon set (no emoji) — stroke uses currentColor so it inherits each card's text color
+  // Minimal line-icon set (no emoji) - stroke uses currentColor so it inherits each card's text color
   const DASH_ICON_ATTRS = 'viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"';
   const DASH_ICONS = {
     cap:       `<svg ${DASH_ICON_ATTRS}><path d="M12 3 22 8 12 13 2 8Z"/><path d="M6 10.5V16c0 1.5 3 3 6 3s6-1.5 6-3v-5.5"/><path d="M22 8v5"/></svg>`,
@@ -3719,7 +3712,7 @@
       visible:()=> myRole==='student', load: dashLoadHomework },
     { id:'progress', title:'Recent Progress', icon:'trending', link:'progress', linkLabel:'View all',
       visible:()=> myRole==='student', load: dashLoadProgress },
-    { id:'achievements', title:'Certificates & Badges', icon:'award', link:'certificates', linkLabel:'View all', tone:'amber',
+    { id:'achievements', title:'Certificates & Badges', icon:'award', link:'progress', linkLabel:'View all', tone:'amber',
       visible:()=> myRole==='student', load: dashLoadAchievements },
     { id:'my-students', title:'My Students', icon:'users', link:'students', linkLabel:'View all',
       visible:()=> hasRole('tutor'), load: dashLoadMyStudents },
@@ -4048,13 +4041,14 @@
       body.innerHTML = `<div style="color:rgba(255,255,255,0.85);">Your tutor match is <strong style="color:#fff;">${esc(String(d.tutorStatus).replace(/_/g,' '))}</strong>.</div>
         <div style="margin-top:0.7rem;">${dashPill('In progress','light')}</div>`;
     } else {
-      body.innerHTML = `<div style="color:rgba(255,255,255,0.8);">You don't have a tutor yet — get matched to start learning.</div>
+      body.innerHTML = `<div style="color:rgba(255,255,255,0.8);">You don't have a tutor yet - get matched to start learning.</div>
         <div style="margin-top:0.8rem;"><button class="dash-w-link" style="opacity:1;color:#cfe6f5;" onclick="showTab('my-tutor')">Request a tutor →</button></div>`;
     }
   }
   async function dashLoadHomework(body) {
-    const snap = await getDocs(query(collection(db,'homework'), where('studentUid','==',me.uid), orderBy('createdAt','desc')));
-    const rows = snap.docs.map(d=>d.data());
+    // No orderBy here (avoids a studentUid+createdAt composite index) - sort after fetch
+    const snap = await getDocs(query(collection(db,'homework'), where('studentUid','==',me.uid)));
+    const rows = snap.docs.map(d=>d.data()).sort((a,b) => (b.createdAt?.seconds||0) - (a.createdAt?.seconds||0));
     if (!rows.length) { body.innerHTML = `<span class="dash-empty">No homework assigned yet.</span>`; return; }
     const done = rows.filter(h => (h.status||'pending') === 'graded').length;
     const pending = rows.filter(h => (h.status||'pending') !== 'graded');
@@ -4065,9 +4059,11 @@
       ${list?`<div style="margin-top:0.5rem;">${list}</div>`:''}`;
   }
   async function dashLoadProgress(body) {
-    const snap = await getDocs(query(collection(db,'progress_notes'), where('studentUid','==',me.uid), orderBy('createdAt','desc')));
+    // No orderBy here (avoids a studentUid+createdAt composite index) - sort after fetch
+    const snap = await getDocs(query(collection(db,'progress_notes'), where('studentUid','==',me.uid)));
     if (!snap.docs.length) { body.innerHTML = `<span class="dash-empty">No progress notes yet.</span>`; return; }
-    const p = snap.docs[0].data();
+    const pRows = snap.docs.map(d=>d.data()).sort((a,b) => (b.createdAt?.seconds||0) - (a.createdAt?.seconds||0));
+    const p = pRows[0];
     const rating = p.rating ? Math.min(5,Math.max(1,p.rating)) : 0;
     const dots = rating ? `<div style="display:flex;gap:4px;margin-bottom:0.4rem;">${Array.from({length:5},(_,i)=>`<span style="width:7px;height:7px;border-radius:50%;background:${i<rating?'#f5a623':'var(--border-light)'};display:inline-block;"></span>`).join('')}</div>` : '';
     body.innerHTML = `${dots}<div style="line-height:1.5;">${esc((p.note||'').slice(0,140))}${(p.note||'').length>140?'…':''}</div><div class="dash-metric-sub" style="margin-top:auto;">${p.createdAt?fmtDate(p.createdAt):''}</div>`;
@@ -4214,7 +4210,7 @@
   };
 
   // Guard against the modal ever appearing "stuck open" on a fresh view of the
-  // page — e.g. the browser restoring a cached page state (back/forward) from
+  // page - e.g. the browser restoring a cached page state (back/forward) from
   // a moment when it was open. It should only ever open via the Customize button.
   window.addEventListener('pageshow', () => {
     if (!me) { try { window.closeDashCustomize && window.closeDashCustomize(); } catch(e) {} }
@@ -4288,7 +4284,7 @@
         style="padding:0.45rem 0.6rem;cursor:pointer;font-size:0.76rem;color:#fff;border-bottom:1px solid rgba(255,255,255,0.08);"
         onmouseover="this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.background=''">
         <div style="font-weight:600;">${esc(u.displayName || u.email)}</div>
-        <div style="color:rgba(255,255,255,0.5);font-size:0.68rem;">${esc(u.email)} · ${esc(LABELS[u.role]||u.role||'—')}${u.chapter ? ' · '+esc(u.chapter) : ''}</div>
+        <div style="color:rgba(255,255,255,0.5);font-size:0.68rem;">${esc(u.email)} · ${esc(LABELS[u.role]||u.role||'-')}${u.chapter ? ' · '+esc(u.chapter) : ''}</div>
       </div>`
     ).join('');
   };
@@ -4308,7 +4304,7 @@
     const synthetic = { uid: person.id, displayName: person.displayName || person.email, email: person.email };
     boot(synthetic, person.role || 'student', person.chapter || '', person);
 
-    // boot() hides the dev switcher for non-super_admin views — restore it
+    // boot() hides the dev switcher for non-super_admin views - restore it
     document.getElementById('dev-switcher').style.display = 'block';
     document.getElementById('dev-person-search').value = '';
     document.getElementById('dev-person-results').style.display = 'none';
@@ -4548,7 +4544,15 @@
     }
   }
 
+  // Every sign-in path (signInEmail/signUpEmail/signInGoogle) calls handleUser()
+  // explicitly AND onAuthStateChanged fires it again for the same auth change.
+  // Firebase notifies all listeners whenever the SDK's own sign-in calls change
+  // auth state. Without this guard that runs the whole boot()/welcome-notification
+  // pipeline twice per login, racing two Firestore writes against each other.
+  let _lastHandledUid = null;
   async function handleUser(user) {
+    if (_lastHandledUid === user.uid) return;
+    _lastHandledUid = user.uid;
     hideErr('auth-error');
     const special = SPECIAL[user.email.toLowerCase()];
     if (special) {
@@ -4573,7 +4577,7 @@
       }
       return;
     }
-    // CEO-provisioned account grant (email-keyed) — applied on first sign-in
+    // CEO-provisioned account grant (email-keyed) - applied on first sign-in
     const grant = await getAccountGrant(user.email);
     if (grant && grant.role) {
       const gData = { email: user.email, displayName: grant.displayName || user.displayName || '', role: grant.role, updatedAt: serverTimestamp() };
@@ -4618,7 +4622,7 @@
       'auth/weak-password': 'Password must be at least 6 characters.',
       'auth/too-many-requests': 'Too many attempts. Please try again later.',
       'auth/invalid-credential': 'Invalid email or password. Don\'t have an account? Switch to Sign Up above.',
-      'auth/unauthorized-domain': 'error code Rishik Kasula 182',
+      'auth/unauthorized-domain': 'This website address isn\'t authorized for sign-in. Please contact tutor@edutinereachout.com.',
       'auth/operation-not-allowed': 'Google sign-in is not enabled. Enable it in the Firebase console under Authentication → Sign-in Method.',
       'auth/popup-blocked': 'Your browser blocked the sign-in popup. Allow popups for this site and try again.',
       'auth/popup-closed-by-user': 'Sign-in was cancelled.',
@@ -4710,6 +4714,10 @@
     document.getElementById('app-title').textContent = isTutor ? 'Tutor Application' : `${LABELS[role] || role} Application`;
     document.getElementById('application-section').style.display = 'block';
 
+    // Chapter is required for every role except org-wide (executive-level) ones.
+    populateChapterDropdowns();
+    document.getElementById('app-chapter-wrap').style.display = roleNeedsChapter(role) ? 'block' : 'none';
+
     document.getElementById('app-step-2-tutor').style.display = isTutor ? 'block' : 'none';
     document.getElementById('app-step-2-other').style.display = isTutor ? 'none' : 'block';
     document.getElementById('app-step-3-tutor').style.display = isTutor ? 'block' : 'none';
@@ -4766,6 +4774,7 @@
       if (!req('app-parent-phone')) return 'Please enter a parent/guardian phone number.';
       if (!req('app-parent-email')) return 'Please enter a parent/guardian email.';
       if (!req('app-school')) return 'Please enter your school.';
+      if (roleNeedsChapter(appRole) && !req('app-chapter')) return 'Please select your Edutine chapter.';
       if (!req('app-pronouns')) return 'Please select your pronouns.';
       if (!req('app-grade')) return 'Please select your grade.';
     }
@@ -4826,6 +4835,7 @@
       parentPhone: document.getElementById('app-parent-phone')?.value?.trim() || '',
       parentEmail: document.getElementById('app-parent-email')?.value?.trim() || '',
       school: document.getElementById('app-school')?.value?.trim() || '',
+      chapter: roleNeedsChapter(appRole) ? (document.getElementById('app-chapter')?.value || '') : '',
       pronouns: document.getElementById('app-pronouns')?.value || '',
       grade: document.getElementById('app-grade')?.value || '',
       submittedAt: serverTimestamp(),
@@ -4852,7 +4862,9 @@
     try {
       await addDoc(collection(db, 'applications'), appData);
       await setDoc(doc(db, 'users', u.uid), {
-        email: u.email, displayName: appData.name, role: appRole, pendingApproval: true, createdAt: serverTimestamp()
+        email: u.email, displayName: appData.name, role: appRole,
+        chapter: appData.chapter || '',
+        pendingApproval: true, createdAt: serverTimestamp()
       }, { merge: true });
 
       document.getElementById('application-section').style.display = 'none';
@@ -4874,7 +4886,7 @@
 
   function populateChapterDropdowns() {
     const opts = CHAPTERS.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join('');
-    ['ob-chapter','ss-chapter'].forEach(id => {
+    ['ob-chapter','ss-chapter','app-chapter'].forEach(id => {
       const el = document.getElementById(id);
       if (el && el.options.length <= 1) el.innerHTML += opts;
     });
@@ -5084,7 +5096,10 @@
     if (unsubAnnouncements) { unsubAnnouncements(); unsubAnnouncements = null; }
     if (unsubRequests) { unsubRequests(); unsubRequests = null; }
     if (unsubSelf) { unsubSelf(); unsubSelf = null; }
+    if (_unsubMessages) { _unsubMessages(); _unsubMessages = null; }
+    stopMsgPolling();
     readCache.clear(); me = null; myRole = null; myRoles = [];
+    _lastHandledUid = null;
     await fbSignOut(auth);
     document.getElementById('auth-section').style.display = 'block';
     document.getElementById('role-section').style.display = 'none';
@@ -5140,7 +5155,6 @@
   let membersCache = [];
   let allStudentsCache = [];
 
-  const ROLE_ORDER = ['super_admin','ceo','executive','chapter_director','tutor_director','officer','lead','tutor'];
   const ROLE_COLORS = {
     super_admin:'#2d3d6b', ceo:'#6a0dad', executive:'#1a6e3c',
     chapter_director:'#b45309', tutor_director:'#0e6bad', officer:'#6d6d6d',
@@ -5151,9 +5165,9 @@
     const color = ROLE_COLORS[u.role] || '#6d6d6d';
     const canManage = myRole === 'super_admin' || myRole === 'ceo';
     const extraRoles = (u.roles || []).filter(r => r && r !== u.role);
-    const roleOptions = ['student','tutor','lead','officer','tutor_director','chapter_director','executive','ceo','vp_student_tutor','vp_chapter_dev','vp_marketing','vp_website','vp_finance','vp_eduhub','director_finance','director_grants','board_president']
+    const roleOptions = ['student', ...ACCT_PRESET_ROLES]
       .map(r => `<option value="${r}"${u.role===r?' selected':''}>${esc(LABELS[r]||r)}</option>`).join('');
-    const addRoleOptions = ['tutor','lead','officer','tutor_support_lead','student_support_lead','tutor_director','student_support_director','chapter_director','chapter_president','chapter_vp','chapter_grants','vp_student_tutor','vp_chapter_dev','vp_marketing','vp_website','vp_finance','vp_eduhub','director_finance','director_grants','executive','ceo']
+    const addRoleOptions = ACCT_PRESET_ROLES
       .filter(r => r !== u.role && !extraRoles.includes(r))
       .map(r => `<option value="${r}">${esc(LABELS[r]||r)}</option>`).join('');
     const changeBtn = canManage ? `
@@ -5193,7 +5207,11 @@
     if (!list.length) { feed.innerHTML = '<div class="empty-state"><span class="empty-icon">👥</span>No results.</div>'; return; }
     const grouped = {};
     list.forEach(u => { (grouped[u.role] = grouped[u.role] || []).push(u); });
-    feed.innerHTML = ROLE_ORDER.filter(r => grouped[r]).map(r =>
+    // Show EVERY role present, highest level first (ROLE_ORDER alone hid VPs,
+    // board members, support leads, etc. from the roster)
+    const rolesPresent = Object.keys(grouped).sort((a, b) =>
+      (LEVELS[b] || 0) - (LEVELS[a] || 0) || String(LABELS[a] || a).localeCompare(String(LABELS[b] || b)));
+    feed.innerHTML = rolesPresent.map(r =>
       `<div class="card" style="margin-bottom:1rem;padding:0.75rem 1.25rem;">
         <div style="font-size:0.68rem;font-weight:700;letter-spacing:0.1em;color:${ROLE_COLORS[r]||'var(--muted)'};margin-bottom:0.25rem;text-transform:uppercase;">${esc(LABELS[r]||r)} (${grouped[r].length})</div>
         ${grouped[r].map(u => memberCard(u, false)).join('')}
@@ -5225,7 +5243,7 @@
     const canManage = myRole === 'super_admin' || myRole === 'ceo';
     feed.innerHTML = `<div class="card" style="padding:0.75rem 1.25rem;">
       ${list.map(u => {
-        const roleOptions = ['student','tutor','lead','officer','tutor_director','chapter_director','executive','ceo']
+        const roleOptions = ['student', ...ACCT_PRESET_ROLES]
           .map(r => `<option value="${r}"${u.role===r?' selected':''}>${esc(LABELS[r]||r)}</option>`).join('');
         const rightSide = canManage
           ? `<div style="display:flex;align-items:center;gap:0.5rem;">
@@ -5260,8 +5278,19 @@
       if (!confirm(`Change "${displayName}" to ${label}?`)) { selectEl.value = prevRole; return; }
     }
 
+    // Chapter-scoped roles (everything below director/executive level) must have
+    // a chapter on file - catch the case where this person doesn't have one yet.
+    const existing = membersCache.find(u => u.id === uid) || allStudentsCache.find(u => u.id === uid);
+    const update = { role: newRole, pendingApproval: false };
+    if (roleNeedsChapter(newRole) && !existing?.chapter) {
+      const picked = prompt(`"${displayName}" needs a chapter for this role. Enter one of: ${CHAPTERS.join(', ')}`, CHAPTERS[0]);
+      const chapter = CHAPTERS.find(c => c.toLowerCase() === (picked || '').trim().toLowerCase());
+      if (!chapter) { alert('No valid chapter entered. Role not changed.'); selectEl.value = prevRole; return; }
+      update.chapter = chapter;
+    }
+
     selectEl.disabled = true;
-    await updateDoc(doc(db, 'users', uid), { role: newRole, pendingApproval: false });
+    await updateDoc(doc(db, 'users', uid), update);
     selectEl.dataset.prev = newRole;
     selectEl.disabled = false;
 
@@ -5379,13 +5408,14 @@
       approveSection.style.display = 'none';
     }
 
-    const hoursType = document.getElementById('hours-type');
-    hoursType.onchange = () => {
-      const isTask = hoursType.value === 'task';
-    };
-
-    // Populate supervisor dropdown - use custom approver if CEO/president has assigned one
-    const supSel = document.getElementById('hours-supervisor');
+    // Populate supervisor dropdown - use custom approver if CEO/president has assigned one.
+    // A previous load may have swapped the select for a free-text input (no approver
+    // mapping / lookup failure) - restore the select first so this stays idempotent.
+    let supSel = document.getElementById('hours-supervisor');
+    if (supSel && supSel.tagName === 'INPUT') {
+      supSel.outerHTML = '<select class="form-input" id="hours-supervisor"></select>';
+      supSel = document.getElementById('hours-supervisor');
+    }
     supSel.innerHTML = '<option value="">Select supervisor...</option>';
     try {
       let myUserDoc = null;
@@ -5465,7 +5495,7 @@
     }).join('');
   }
 
-  // Aarushi is the one and only default hours approver — resolve her uid once and
+  // Aarushi is the one and only default hours approver - resolve her uid once and
   // cache it, since more than one account can hold the 'ceo' role (e.g. Dhoon).
   let _aarushiUid = null;
   async function resolveAarushiUid() {
@@ -5492,7 +5522,7 @@
     // Use custom approver if CEO has set one, otherwise default
     const myDoc = await getDoc(doc(db, 'users', me.uid));
     const defaultTarget = HOURS_APPROVER[myRole] || 'ceo';
-    // "ceo" here specifically means Aarushi — resolve to her uid rather than the
+    // "ceo" here specifically means Aarushi - resolve to her uid rather than the
     // role string, since more than one account can hold the 'ceo' role (e.g. Dhoon).
     const approverRole = myDoc.data()?.customApproverUid
       ? myDoc.data().customApproverUid
@@ -5518,28 +5548,6 @@
   window.resolveHours = async (id, decision) => {
     await updateDoc(doc(db, 'volunteer_hours', id), { status: decision, resolvedBy: me.uid, resolvedAt: serverTimestamp() });
     loadHoursApproval();
-  };
-
-  let viewedSections = {};
-  window.toggleSection = (appId, key) => {
-    const content = document.getElementById('sec-' + appId + '-' + key);
-    const arrow = document.getElementById('arrow-' + appId + '-' + key);
-    const isOpen = content.style.display !== 'none';
-    content.style.display = isOpen ? 'none' : 'block';
-    arrow.textContent = isOpen ? '▸ Expand' : '▾ Collapse';
-    if (!isOpen) {
-      if (!viewedSections[appId]) viewedSections[appId] = new Set();
-      viewedSections[appId].add(key);
-      const card = content.closest('[data-sections]');
-      const required = card ? card.dataset.sections.split(',') : [];
-      const allDone = required.every(s => viewedSections[appId].has(s));
-      const actionsEl = document.getElementById('actions-' + appId);
-      if (actionsEl && allDone) {
-        actionsEl.style.display = 'flex';
-        const notice = document.getElementById('view-notice-' + appId);
-        if (notice) notice.style.display = 'none';
-      }
-    }
   };
 
   async function loadTutorReview() {
@@ -5630,7 +5638,7 @@
       const tutorDocs = sortApps(tutorSnap.docs);
       if (!tutorDocs.length && !staffItems.length) {
         feed.innerHTML = staffLoadError
-          ? `<div class="empty-state"><span class="empty-icon">🔒</span>Could not load officer/lead applications.<br><span style="font-size:0.78rem;color:var(--muted);margin-top:0.35rem;display:block;">${esc(staffLoadError)} — you may need to update Firebase rules.</span></div>`
+          ? `<div class="empty-state"><span class="empty-icon">🔒</span>Could not load officer/lead applications.<br><span style="font-size:0.78rem;color:var(--muted);margin-top:0.35rem;display:block;">${esc(staffLoadError)} - you may need to update Firebase rules.</span></div>`
           : '<div class="empty-state"><span class="empty-icon">📝</span>No applications to review.</div>';
         return;
       }
@@ -5678,7 +5686,7 @@
       const status = a.reviewStatus || 'pending';
       const isDone = status === 'rejected' || status === 'verified';
       const roleLabel = LABELS[a.role] || a.role;
-      const snippet = a.staffWhy || a.roleWhy || (isUserOnly ? 'Pending account — full application may be blocked by Firebase rules.' : '');
+      const snippet = a.staffWhy || a.roleWhy || (isUserOnly ? 'Pending account - full application may be blocked by Firebase rules.' : '');
       return `<div class="card" style="margin-bottom:0.85rem;" id="tr-card-${id}">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:0.6rem;">
           <div>
@@ -5711,7 +5719,7 @@
 
     let html = '';
     if (staffLoadError && staffItems.length) {
-      html += `<div style="background:#fff8e6;border:1px solid #f5d78e;border-radius:8px;padding:0.65rem 0.85rem;font-size:0.78rem;color:#8a6d00;margin-bottom:0.85rem;">Some application details could not be loaded (${esc(staffLoadError)}). Showing pending accounts where available — update Firebase rules to see full applications.</div>`;
+      html += `<div style="background:#fff8e6;border:1px solid #f5d78e;border-radius:8px;padding:0.65rem 0.85rem;font-size:0.78rem;color:#8a6d00;margin-bottom:0.85rem;">Some application details could not be loaded (${esc(staffLoadError)}). Showing pending accounts where available - update Firebase rules to see full applications.</div>`;
     }
     if (staffItems.length) {
       html += `<div class="card-label" style="margin-bottom:0.65rem;">Officer &amp; Lead Applications</div>`;
@@ -5741,8 +5749,8 @@
               <div>
                 <div style="font-weight:600;color:var(--text);">${esc(r.name||'Unknown')}</div>
                 <div style="font-size:0.8rem;color:var(--muted);margin-top:0.15rem;">
-                  <a href="mailto:${esc(r.email||'')}" style="color:var(--blue);text-decoration:none;">${esc(r.email||'—')}</a>
-                  &nbsp;·&nbsp; ${esc(r.phone||'—')} &nbsp;·&nbsp; ${dateStr}
+                  <a href="mailto:${esc(r.email||'')}" style="color:var(--blue);text-decoration:none;">${esc(r.email||'-')}</a>
+                  &nbsp;·&nbsp; ${esc(r.phone||'-')} &nbsp;·&nbsp; ${dateStr}
                 </div>
               </div>
               <div style="display:flex;align-items:center;gap:0.6rem;">
@@ -5875,14 +5883,14 @@
     const signoff = `\n\nBest,\nThe Edutine Tutor Support Team\ntutor@edutinereachout.com`;
     if (a.status === 'interview_link_sent' || a.status === 'orientation_sent' || a.status === 'tutor_approved') {
       return {
-        subject: 'Welcome to Edutine — Next Steps',
-        body: `Hi ${first},\n\nCongratulations on completing your interview — we're excited to welcome you to the Edutine tutoring team!\n\nTo get you set up, please:\n1. Set up your @edutinereachout.com email (we'll send credentials separately).\n2. Watch the tutor orientation video in your portal under "Tutor Onboarding."\n3. Log in to the portal to review your dashboard.\n\nLet us know if you have any questions.` + signoff
+        subject: 'Welcome to Edutine - Next Steps',
+        body: `Hi ${first},\n\nCongratulations on completing your interview - we're excited to welcome you to the Edutine tutoring team!\n\nTo get you set up, please:\n1. Set up your @edutinereachout.com email (we'll send credentials separately).\n2. Watch the tutor orientation video in your portal under "Tutor Onboarding."\n3. Log in to the portal to review your dashboard.\n\nLet us know if you have any questions.` + signoff
       };
     }
     // pending / approved (default) → interview booking-link invite
     return {
-      subject: 'Your Edutine Tutor Interview — Booking Link',
-      body: `Hi ${first},\n\nThank you for applying to tutor with Edutine — we were impressed with your application and would love to move you forward to a short interview (Round 2).\n\nPlease book a time that works for you using the link below:\n\n[PASTE BOOKING LINK HERE]\n\n${a.interviewDate ? `We currently have you noted for ${a.interviewDate}${a.interviewTime ? ' at ' + a.interviewTime : ''}${a.interviewerName ? ' with ' + a.interviewerName : ''}.\n\n` : ''}Looking forward to speaking with you!` + signoff
+      subject: 'Your Edutine Tutor Interview - Booking Link',
+      body: `Hi ${first},\n\nThank you for applying to tutor with Edutine - we were impressed with your application and would love to move you forward to a short interview (Round 2).\n\nPlease book a time that works for you using the link below:\n\n[PASTE BOOKING LINK HERE]\n\n${a.interviewDate ? `We currently have you noted for ${a.interviewDate}${a.interviewTime ? ' at ' + a.interviewTime : ''}${a.interviewerName ? ' with ' + a.interviewerName : ''}.\n\n` : ''}Looking forward to speaking with you!` + signoff
     };
   }
 
@@ -5930,7 +5938,7 @@
     const dateStr = a.createdAt?.toDate ? a.createdAt.toDate().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '';
     const detail = (label, val) => val ? `<div style="font-size:0.8rem;color:var(--text-soft);margin-top:0.2rem;"><span style="color:var(--muted);">${label}:</span> ${esc(val)}</div>` : '';
 
-    // Self-tracking checklist — each row is clickable and expands a shared details
+    // Self-tracking checklist - each row is clickable and expands a shared details
     // panel below (interview date/time + tutor notes + orientation confirmation).
     const isExpanded = _appExpandedIds.has(id);
     const checkRow = (done, label, note) => `<div class="app-check-row" onclick="toggleAppExpand('${id}')" style="display:flex;align-items:flex-start;gap:0.5rem;font-size:0.8rem;margin-top:0.15rem;">
@@ -5973,7 +5981,7 @@
         ${checkRow(a.orientationWatched, 'Applicant watched orientation', orientationNote)}
       </div>
       ${expandPanel}`;
-      // Contextual primary action button — advances the pipeline one step
+      // Contextual primary action button - advances the pipeline one step
       if (a.status === 'pending') {
         primary = `<button onclick="approveTutorApplication('${id}')" class="btn-sm" style="background:var(--navy);color:#fff;border:none;font-size:0.78rem;">Approve</button>`;
       } else if (a.status === 'approved') {
@@ -6010,7 +6018,7 @@
     </div>`;
   }
 
-  // Approving a tutor requires scheduling their interview first — opens a modal
+  // Approving a tutor requires scheduling their interview first - opens a modal
   // that captures the date/time and interviewer, then records it to the shared calendar.
   let _schedulingAppId = null;
   window.approveTutorApplication = (id) => {
@@ -6173,7 +6181,7 @@
   };
 
   // Staff can confirm orientation was watched on the applicant's behalf (e.g. they
-  // confirmed by phone) — this records which staff member signed off on it.
+  // confirmed by phone) - this records which staff member signed off on it.
   window.staffConfirmOrientationWatched = async (id) => {
     try {
       await updateDoc(doc(db, 'tutor_applications', id), {
@@ -6205,31 +6213,31 @@
     'vp_technology', 'vp_marketing', 'vp_website', 'vp_finance', 'board_president', 'ceo'
   ];
   const ROLE_PRESET_DESC = {
-    tutor: 'Standard tutor access — sessions, homework, students, awards, hours.',
-    lead: 'Team lead — chapter dashboard plus lead-level tools.',
-    officer: 'Chapter officer — operations, events, and staff status.',
+    tutor: 'Standard tutor access - sessions, homework, students, awards, hours.',
+    lead: 'Team lead - chapter dashboard plus lead-level tools.',
+    officer: 'Chapter officer - operations, events, and staff status.',
     tutor_support_lead: 'Reviews tutor applications, schedules & runs interviews (Tutor Review + Interviews).',
     student_support_lead: 'Pairs students with tutors and provides student support.',
-    tutor_director: 'Directs tutor relations — application review and interviews.',
+    tutor_director: 'Directs tutor relations - application review and interviews.',
     student_support_director: 'Directs student support and manages pairings.',
-    chapter_president: 'Head of a chapter — full chapter leadership access.',
-    chapter_director: 'Chapter director — chapter-wide oversight.',
+    chapter_president: 'Head of a chapter - full chapter leadership access.',
+    chapter_director: 'Chapter director - chapter-wide oversight.',
     chapter_vp: 'Chapter vice president.',
     chapter_social_media: 'Chapter social media director.',
     chapter_grants: 'Chapter grants director.',
-    director_finance: 'Director of Finance — grants and finance tools.',
+    director_finance: 'Director of Finance - grants and finance tools.',
     director_grants: 'Director of Grants.',
     executive: 'Organization-wide executive access.',
-    vp_student_tutor: 'VP of Student & Tutor Relations — roster, students, reassignments.',
-    vp_chapter_dev: 'VP of Chapter Development — chapter management.',
+    vp_student_tutor: 'VP of Student & Tutor Relations - roster, students, reassignments.',
+    vp_chapter_dev: 'VP of Chapter Development - chapter management.',
     vp_eduhub: 'VP of EduHub.',
     vp_community: 'VP of Community Engagement.',
     vp_technology: 'VP of Technology.',
-    vp_marketing: 'VP of Marketing — content calendar.',
-    vp_website: 'VP of Website Management — website requests.',
-    vp_finance: 'VP of Finance — grants and finance.',
-    board_president: 'Board President — board-level access.',
-    ceo: 'CEO — full leadership access.'
+    vp_marketing: 'VP of Marketing - content calendar.',
+    vp_website: 'VP of Website Management - website requests.',
+    vp_finance: 'VP of Finance - grants and finance.',
+    board_president: 'Board President - board-level access.',
+    ceo: 'CEO - full leadership access.'
   };
 
   function accountGrantDocId(email) { return (email || '').trim().toLowerCase(); }
@@ -6246,9 +6254,16 @@
     const roleSel = document.getElementById('acct-role');
     roleSel.innerHTML = ACCT_PRESET_ROLES.map(r => `<option value="${r}">${esc(LABELS[r] || r)}</option>`).join('');
     const chapSel = document.getElementById('acct-chapter');
-    chapSel.innerHTML = '<option value="">— No chapter —</option>' + CHAPTERS.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join('');
+    const chapLabel = document.getElementById('acct-chapter-label');
     const descEl = document.getElementById('acct-role-desc');
-    const updateDesc = () => { descEl.textContent = ROLE_PRESET_DESC[roleSel.value] || ''; };
+    // Chapter is required for every role except org-wide (executive-level) ones.
+    const updateChapterReq = () => {
+      const needsChapter = roleNeedsChapter(roleSel.value);
+      chapSel.innerHTML = (needsChapter ? '<option value="">Select chapter...</option>' : '<option value="">No chapter (org-wide role)</option>')
+        + CHAPTERS.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join('');
+      chapLabel.innerHTML = needsChapter ? 'Chapter *' : 'Chapter <span style="font-weight:400;color:var(--muted);">(optional - org-wide role)</span>';
+    };
+    const updateDesc = () => { descEl.textContent = ROLE_PRESET_DESC[roleSel.value] || ''; updateChapterReq(); };
     roleSel.addEventListener('change', updateDesc);
     updateDesc();
     _acctInit = true;
@@ -6275,7 +6290,7 @@
             <div style="font-size:0.76rem;color:var(--text-soft);margin-top:0.2rem;">
               <span style="background:#e6f1f8;color:#2d7aac;padding:0.1rem 0.5rem;border-radius:12px;font-weight:600;">${esc(LABELS[d.role] || d.role)}</span>${d.chapter ? ' · ' + esc(d.chapter) : ''}
             </div>
-            <div style="font-size:0.7rem;color:var(--muted);margin-top:0.25rem;">Created by ${esc(d.createdByName || '—')}${when ? ' · ' + when : ''}${d.activated ? ' · ✓ signed in' : ' · pending first sign-in'}</div>
+            <div style="font-size:0.7rem;color:var(--muted);margin-top:0.25rem;">Created by ${esc(d.createdByName || '-')}${when ? ' · ' + when : ''}${d.activated ? ' · ✓ signed in' : ' · pending first sign-in'}</div>
           </div>
           <button onclick="revokeAccountGrant('${r.id.replace(/'/g,"\\'")}')" style="background:none;border:1px solid #f0c7c7;border-radius:20px;color:#c0392b;font-size:0.74rem;font-weight:600;padding:0.3rem 0.8rem;cursor:pointer;white-space:nowrap;">Revoke</button>
         </div>`;
@@ -6295,6 +6310,7 @@
     const showMsg = (t, ok) => { msg.textContent = t; msg.style.color = ok ? '#1a6e3c' : '#c0392b'; msg.style.display = 'inline'; };
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showMsg('Enter a valid email address.', false); return; }
     if (!role) { showMsg('Choose a role preset.', false); return; }
+    if (roleNeedsChapter(role) && !chapter) { showMsg('This role is chapter-scoped - please pick a chapter.', false); return; }
     btn.disabled = true; btn.textContent = 'Creating…';
     try {
       // Store the email-keyed grant that handleUser() applies on next sign-in
@@ -6313,7 +6329,7 @@
           await updateDoc(doc(db, 'users', ud.id), upd);
         }
         if (!uSnap.empty) await updateDoc(doc(db, 'account_grants', accountGrantDocId(email)), { activated: true });
-      } catch(e) { /* best effort — grant is still saved */ }
+      } catch(e) { /* best effort - grant is still saved */ }
       document.getElementById('acct-email').value = '';
       document.getElementById('acct-name').value = '';
       showMsg('Account created for ' + email + '.', true);
@@ -6371,7 +6387,7 @@
         return `<div style="display:flex;align-items:center;gap:0.4rem;">
           <span style="display:inline-flex;align-items:center;justify-content:center;width:1.5rem;height:1.5rem;border-radius:50%;background:${bg};border:1.5px solid ${color};color:${color};font-size:0.74rem;font-weight:700;">${done ? '✓' : i + 1}</span>
           <span style="font-size:0.8rem;font-weight:${active ? '700' : '500'};color:${color};">${s}</span>
-          ${i < steps.length - 1 ? '<span style="color:var(--border);">—</span>' : ''}
+          ${i < steps.length - 1 ? '<span style="color:var(--border);">-</span>' : ''}
         </div>`;
       }).join('')}
     </div>`;
@@ -6393,14 +6409,14 @@
     }
     if (a.status === 'interview_link_sent') {
       return onboardingStepper(1) + card(`<div style="font-weight:700;font-size:1rem;margin-bottom:0.35rem;">Check your email 📨</div>
-        <p style="font-size:0.85rem;color:var(--text-soft);margin:0;">We've emailed you a link to schedule your interview with <strong>${esc(a.approverName || 'your reviewer')}</strong>. Book a time that works for you — see you there!</p>`);
+        <p style="font-size:0.85rem;color:var(--text-soft);margin:0;">We've emailed you a link to schedule your interview with <strong>${esc(a.approverName || 'your reviewer')}</strong>. Book a time that works for you - see you there!</p>`);
     }
     if (a.status === 'orientation_sent') {
       const video = TUTOR_ORIENTATION_VIDEO_URL
         ? `<div style="position:relative;padding-bottom:56.25%;height:0;border-radius:var(--r-sm);overflow:hidden;margin:0.5rem 0 0.85rem;background:#000;">
              <iframe src="${esc(TUTOR_ORIENTATION_VIDEO_URL)}" style="position:absolute;inset:0;width:100%;height:100%;border:0;" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe>
            </div>`
-        : `<div style="background:var(--selected-bg);border-radius:var(--r-sm);padding:1.5rem;text-align:center;color:var(--muted);font-size:0.85rem;margin:0.5rem 0 0.85rem;">🎬 Orientation video coming soon — check back shortly.</div>`;
+        : `<div style="background:var(--selected-bg);border-radius:var(--r-sm);padding:1.5rem;text-align:center;color:var(--muted);font-size:0.85rem;margin:0.5rem 0 0.85rem;">🎬 Orientation video coming soon - check back shortly.</div>`;
       return onboardingStepper(2) + card(`<div style="font-weight:700;font-size:1rem;margin-bottom:0.35rem;">Welcome to Edutine! Watch your orientation 🎬</div>
         <p style="font-size:0.85rem;color:var(--text-soft);margin:0 0 0.25rem;">Last step! Watch the full orientation below, then confirm to be fully approved to tutor.</p>
         ${video}
@@ -6454,7 +6470,7 @@
         await addDoc(collection(db, 'notifications'), {
           type: 'approval',
           targetUid: uid,
-          title: 'Application approved — next step: Edutine email',
+          title: 'Application approved - next step: Edutine email',
           body: 'Congratulations! Your application has been approved. To access the full Edutine portal, please email tutor@edutinereachout.com to request your @edutinereachout.com account. Include your full name and the role you were approved for.',
           createdAt: serverTimestamp(),
           readBy: []
@@ -6464,7 +6480,7 @@
       const card = document.getElementById('tr-card-' + cardId);
       if (card) card.innerHTML =
         `<div style="display:flex;align-items:center;gap:0.6rem;color:#1a6e3c;font-size:0.88rem;font-weight:600;padding:0.25rem 0;">
-          <span style="font-size:1.1rem;">✓</span> Approved${needsOrgEmail ? ' — applicant needs @edutinereachout.com account' : ' and account activated'}
+          <span style="font-size:1.1rem;">✓</span> Approved${needsOrgEmail ? ' - applicant needs @edutinereachout.com account' : ' and account activated'}
         </div>`;
     } catch (e) {
       console.error('approveTutor failed:', e);
@@ -6480,63 +6496,6 @@
       await updateDoc(doc(db, 'users', uid), { pendingApproval: false, rejectedBy: me.uid, rejectedAt: serverTimestamp(), accountStatus: 'rejected' });
     }
     loadTutorReview();
-  };
-
-
-  window.submitInterview = async (appId, applicantEmail, applicantName) => {
-    const date    = document.getElementById('iv-date-' + appId).value;
-    const time    = document.getElementById('iv-time-' + appId).value;
-    const link    = document.getElementById('iv-link-' + appId).value.trim();
-    const note    = document.getElementById('iv-note-' + appId).value.trim();
-    const msgEl   = document.getElementById('iv-msg-' + appId);
-
-    if (!date) { msgEl.textContent = 'Please select a date.'; msgEl.style.color = '#c0392b'; msgEl.style.display = 'inline'; return; }
-    if (!time) { msgEl.textContent = 'Please select a time.'; msgEl.style.color = '#c0392b'; msgEl.style.display = 'inline'; return; }
-    if (!link) { msgEl.textContent = 'Please add a meeting link.'; msgEl.style.color = '#c0392b'; msgEl.style.display = 'inline'; return; }
-
-    const reviewerName = me.displayName || me.email;
-    const formattedDate = new Date(date + 'T' + time).toLocaleString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric', hour:'numeric', minute:'2-digit' });
-
-    // Save interview invite to Firestore
-    await addDoc(collection(db, 'interview_invites'), {
-      appId,
-      applicantEmail,
-      applicantName,
-      date, time,
-      meetingLink: link,
-      note: note || '',
-      scheduledBy: reviewerName,
-      scheduledByUid: me.uid,
-      createdAt: serverTimestamp()
-    });
-
-    // Mark application as interview_offered
-    await updateDoc(doc(db, 'applications', appId), {
-      reviewStatus: 'interview_offered',
-      reviewedBy: me.uid,
-      reviewedAt: serverTimestamp(),
-      interviewDate: date,
-      interviewTime: time,
-      interviewLink: link
-    });
-
-    msgEl.textContent = `✅ Invite sent to ${applicantEmail} for ${formattedDate}`;
-    msgEl.style.color = '#1a6e3c';
-    msgEl.style.display = 'inline';
-
-    // Show a dismissible preview of the message
-    const formEl = document.getElementById('interview-form-' + appId);
-    formEl.innerHTML = `
-      <div style="font-size:0.75rem;font-weight:700;color:#1a6e3c;letter-spacing:0.07em;margin-bottom:0.6rem;">✅ INTERVIEW SCHEDULED</div>
-      <div style="font-size:0.82rem;color:var(--text-soft);line-height:1.7;margin-bottom:0.75rem;">
-        <strong>To:</strong> ${esc(applicantEmail)}<br/>
-        <strong>Date:</strong> ${esc(formattedDate)}<br/>
-        <strong>Link:</strong> <a href="${esc(link)}" target="_blank" style="color:var(--navy);">${esc(link)}</a><br/>
-        ${note ? `<strong>Note:</strong> ${esc(note)}<br/>` : ''}
-        <strong>Scheduled by:</strong> ${esc(reviewerName)}
-      </div>
-      <button onclick="loadTutorReview()" style="background:var(--navy);color:#fff;border:none;border-radius:6px;padding:0.4rem 0.85rem;font-size:0.82rem;font-weight:600;cursor:pointer;">Done</button>
-    `;
   };
 
 
@@ -6723,10 +6682,9 @@
     const appSubjects = {};
     appSnap.docs.forEach(d => { appSubjects[d.data().uid] = d.data().subjects || []; });
 
-    // Show all unassigned students (regardless of tutorStatus — admins can assign directly)
-    assignCache.students = sSnap.docs
-      .map(d => ({ id: d.id, ...d.data() }))
-      .filter(s => !s.assignedTutor);
+    // Keep ALL students in the cache - the unassigned column filters them itself,
+    // and the assignments table + tutor capacity counts need the assigned ones too.
+    assignCache.students = sSnap.docs.map(d => ({ id: d.id, ...d.data() }));
     // Include tutors who are approved (pendingApproval is false, null, or missing)
     assignCache.tutors   = tSnap.docs
       .filter(d => !d.data().pendingApproval)
@@ -6821,6 +6779,38 @@
     renderAssignTable();
   }
 
+  // "All Assignments" table on the Approvals tab, respecting the search box and
+  // tutor filter above it. Also exposed as filterAssignPanels for those inputs.
+  function renderAssignTable() {
+    const tbody = document.getElementById('assign-table-body');
+    if (!tbody) return;
+    const q = (document.getElementById('filter-assigned')?.value || '').trim().toLowerCase();
+    const tutorFilter = document.getElementById('filter-assigned-tutor')?.value || '';
+    const tutorsById = Object.fromEntries(assignCache.tutors.map(t => [t.id, t]));
+    let rows = assignCache.students.filter(s => s.assignedTutor);
+    if (tutorFilter) rows = rows.filter(s => s.assignedTutor === tutorFilter);
+    if (q) rows = rows.filter(s => {
+      const t = tutorsById[s.assignedTutor] || {};
+      return [s.displayName, s.email, s.assignedTutorName, t.displayName, t.email]
+        .some(v => (v || '').toLowerCase().includes(q));
+    });
+    const countEl = document.getElementById('assigned-count');
+    if (countEl) countEl.textContent = `(${rows.length})`;
+    tbody.innerHTML = !rows.length
+      ? `<tr><td colspan="5" style="text-align:center;color:var(--light);padding:1.5rem;">${q || tutorFilter ? 'No assignments match your filters.' : 'No assignments yet.'}</td></tr>`
+      : rows.map(s => {
+          const t = tutorsById[s.assignedTutor] || {};
+          return `<tr>
+            <td style="font-weight:600;">${esc(s.displayName || s.email)}</td>
+            <td style="color:var(--muted);">${esc(s.email || '')}</td>
+            <td style="font-weight:600;">${esc(t.displayName || s.assignedTutorName || t.email || '-')}</td>
+            <td style="color:var(--muted);">${esc(t.email || s.assignedTutorEmail || '')}</td>
+            <td><button onclick="unassignStudent('${s.id}')" style="background:none;border:1px solid #f5c6c6;border-radius:6px;color:#c0392b;cursor:pointer;font-size:0.72rem;padding:0.25rem 0.6rem;font-weight:600;">Unassign</button></td>
+          </tr>`;
+        }).join('');
+  }
+  window.filterAssignPanels = renderAssignTable;
+
   function updateMatchActionBar() {
     const bar   = document.getElementById('match-action-bar');
     const label = document.getElementById('match-action-label');
@@ -6835,10 +6825,10 @@
       btn.style.display = 'inline-block';
     } else if (s) {
       const matchCount = assignCache.tutors.filter(t => subjectsMatch(s.subjects, t.subjects)).length;
-      label.textContent = `${s.displayName || s.email} selected — now pick a tutor (${matchCount} subject match${matchCount !== 1 ? 'es' : ''})`;
+      label.textContent = `${s.displayName || s.email} selected - now pick a tutor (${matchCount} subject match${matchCount !== 1 ? 'es' : ''})`;
       btn.style.display = 'none';
     } else {
-      label.textContent = `${t.displayName || t.email} selected — now pick a student`;
+      label.textContent = `${t.displayName || t.email} selected - now pick a student`;
       btn.style.display = 'none';
     }
   }
@@ -6990,7 +6980,9 @@
         });
       } catch(_) { /* notification is best-effort */ }
       // Update local cache so UI reflects change without reload
-      assignCache.students = assignCache.students.filter(s => s.id !== student.id);
+      assignCache.students = assignCache.students.map(s => s.id === student.id
+        ? { ...s, assignedTutor: tutor.id, assignedTutorName: tutor.displayName || tutor.email, assignedTutorEmail: tutor.email || '', tutorStatus: 'assigned', matchPending: false }
+        : s);
       _selectedStudentId = null;
       _selectedTutorId = null;
       updateMatchActionBar();
@@ -7007,7 +6999,9 @@
 
   window.unassignStudent = async (studentId) => {
     if (!confirm('Remove this student assignment?')) return;
-    await updateDoc(doc(db, 'users', studentId), { assignedTutor: null });
+    // Clear the scheduled slot too so the student doesn't keep a session time
+    // with a tutor they're no longer assigned to (matches resolveRetutorRequest).
+    await updateDoc(doc(db, 'users', studentId), { assignedTutor: null, scheduledSlot: null, scheduledTutorUid: null });
     assignCache.students = assignCache.students.map(u => u.id === studentId ? { ...u, assignedTutor: null } : u);
     renderAssignPanels();
   };
@@ -7137,11 +7131,14 @@
 
   function loadRequests() {
     if (unsubRequests) { unsubRequests(); unsubRequests = null; }
-    const q = query(collection(db, 'leave_requests'), where('status','==','pending'), orderBy('requestedAt','asc'));
+    // No orderBy here (avoids a status+requestedAt composite index) - sort after fetch
+    const q = query(collection(db, 'leave_requests'), where('status','==','pending'));
     unsubRequests = onSnapshot(q, snap => {
       const feed = document.getElementById('requests-feed');
       const myLevel = LEVELS[myRole] || 0;
-      const eligible = snap.docs.filter(d => (LEVELS[d.data().role] || 0) < myLevel);
+      const eligible = snap.docs
+        .filter(d => (LEVELS[d.data().role] || 0) < myLevel)
+        .sort((a, b) => (a.data().requestedAt?.seconds||0) - (b.data().requestedAt?.seconds||0));
       if (!eligible.length) {
         feed.innerHTML = '<div class="empty-state"><span class="empty-icon">✅</span>No pending requests.</div>';
         return;
@@ -7242,15 +7239,15 @@
         suspSection.innerHTML = `<div class="card" style="margin-bottom:1.25rem;border-color:#f5a623;">
           <div style="font-size:0.7rem;font-weight:700;color:#f5a623;letter-spacing:0.08em;margin-bottom:0.75rem;">⚠️ SUSPICIOUS HOUR SUBMISSIONS (${suspHours.length})</div>
           <table class="analytics-table" style="width:100%;">
-            <thead><tr><th>Name</th><th>Role</th><th>Date</th><th>Hours</th><th>Description</th><th>Status</th></tr></thead>
-            <tbody>${suspHours.map(h => `<tr>
+            <thead><tr><th>Name</th><th>Role</th><th>Date</th><th>Duration</th><th>Description</th><th>Status</th></tr></thead>
+            <tbody>${suspHours.map(h => { const m = parseInt(h.duration)||0; const dur = m >= 60 ? `${Math.floor(m/60)}h${m%60 ? ' '+(m%60)+'m' : ''}` : `${m}m`; return `<tr>
               <td style="font-weight:600;">${esc(h.submittedBy||h.uid)}</td>
               <td>${esc(LABELS[h.role]||h.role||'')}</td>
               <td>${esc(h.date||'')}</td>
-              <td style="font-weight:700;color:#f5a623;">${h.duration}h</td>
+              <td style="font-weight:700;color:#f5a623;">${dur}</td>
               <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(h.description||'')}</td>
               <td style="font-weight:600;color:${h.status==='approved'?'#1a6e3c':'#f5a623'};">${(h.status||'pending').toUpperCase()}</td>
-            </tr>`).join('')}</tbody>
+            </tr>`; }).join('')}</tbody>
           </table>
         </div>`;
       }
@@ -7516,6 +7513,13 @@
         const u = d.data();
         const slot = u.scheduledSlot;
         const sid = d.id;
+        const parentInfo = (u.parentName || u.parentPhone || u.parentEmail) ? `
+          <div style="background:var(--panel);border-radius:8px;padding:0.5rem 0.75rem;margin-bottom:0.5rem;font-size:0.78rem;color:var(--text-soft);">
+            <strong>Parent:</strong> ${esc(u.parentName || '-')}
+            ${u.parentPhone ? ` &middot; <a href="tel:${esc(u.parentPhone)}" style="color:var(--navy);">${esc(u.parentPhone)}</a>` : ''}
+            ${u.parentEmail ? ` &middot; <a href="mailto:${esc(u.parentEmail)}" style="color:var(--navy);">${esc(u.parentEmail)}</a>` : ''}
+          </div>` : `
+          <div style="font-size:0.75rem;color:var(--muted);font-style:italic;margin-bottom:0.5rem;">No parent contact info on file.</div>`;
         return `<div class="card" style="margin-bottom:0.75rem;">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.4rem;">
             <div>
@@ -7535,6 +7539,7 @@
               <button onclick="document.getElementById('reassign-form-${sid}').style.display='none'" style="background:none;border:1px solid #c0c8d8;border-radius:6px;padding:0.3rem 0.65rem;font-size:0.78rem;color:var(--muted);cursor:pointer;">Cancel</button>
             </div>
           </div>
+          ${parentInfo}
           ${slot ? `
             <div style="background:#f0f4ff;border-radius:8px;padding:0.6rem 0.85rem;font-size:0.82rem;">
               <div style="font-weight:700;color:var(--navy);margin-bottom:0.25rem;">📅 Scheduled: ${esc(availKeyLabel(slot))}</div>
@@ -7590,8 +7595,8 @@
     const mySubjects = myData.subjects || [];
     const subjectManagerHtml = `
       <div class="card" style="margin-bottom:1rem;">
-        <div class="card-label">My Tutoring Subjects</div>
-        <div style="font-size:0.8rem;color:var(--muted);margin-bottom:0.65rem;">These are the subjects you've signed up to be tutored in. You can add more at any time.</div>
+        <div class="card-label">Subjects You Want Help With</div>
+        <div style="font-size:0.8rem;color:var(--muted);margin-bottom:0.65rem;">These are the subjects you'll get tutoring help in. You can add more at any time.</div>
         <div id="student-subjects-list" style="display:flex;flex-wrap:wrap;gap:0.35rem;margin-bottom:0.65rem;">
           ${mySubjects.length
             ? mySubjects.map(s => `<span style="display:inline-flex;align-items:center;gap:4px;background:#f0f4ff;color:var(--navy);border-radius:20px;padding:0.2rem 0.6rem;font-size:0.78rem;font-weight:500;">
@@ -7679,7 +7684,7 @@
       const tutorDoc = await getDoc(doc(db, 'users', tutorUid));
       tutor = tutorDoc.data() || {};
     } catch(_) {
-      // Firestore rules may block cross-user reads — fall back to data stored at assignment time
+      // Firestore rules may block cross-user reads - fall back to data stored at assignment time
       tutor = {
         displayName: myData.assignedTutorName,
         email: myData.assignedTutorEmail || '',
@@ -7704,8 +7709,10 @@
     let meetingLink = myData.latestMeetingLink || '';
     if (!meetingLink) {
       try {
-        const sessSnap = await getDocs(query(collection(db, 'session_notes'), where('studentUid', '==', me.uid), orderBy('createdAt', 'desc')));
-        meetingLink = sessSnap.docs[0]?.data()?.link || '';
+        // No orderBy here (avoids a studentUid+createdAt composite index) - sort after fetch
+        const sessSnap = await getDocs(query(collection(db, 'session_notes'), where('studentUid', '==', me.uid)));
+        const sessRows = sessSnap.docs.map(d=>d.data()).sort((a,b) => (b.createdAt?.seconds||0) - (a.createdAt?.seconds||0));
+        meetingLink = sessRows[0]?.link || '';
       } catch(_) {}
     }
     const meetingLinkSection = meetingLink ? `
@@ -7851,7 +7858,7 @@
     'ceo','board_president',
     'vp_student_tutor','vp_chapter_dev','vp_eduhub','vp_community',
     'vp_technology','vp_marketing','vp_website','vp_finance',
-    'director_finance','director_grants','executive','executive_vp',
+    'director_finance','director_grants','executive',
     'chapter_president','chapter_director','chapter_vp','chapter_social_media','chapter_grants',
     'tutor_director','student_support_director',
     'officer','tutor_support_lead','student_support_lead','lead',
@@ -8015,7 +8022,7 @@
           <button onclick="deleteTask('${d.id}')" style="background:none;border:none;color:#c0392b;font-size:0.74rem;font-weight:600;cursor:pointer;padding:0;">Delete</button>
         </div>
       </div>`;
-      // Who has signed off — shows exactly whose name marked which status, and when
+      // Who has signed off - shows exactly whose name marked which status, and when
       const uids = Object.keys(progress);
       if (uids.length) {
         const statusColor = { completed:'#1a6e3c', in_progress:'#b36b00', pending:'var(--muted)' };
@@ -8033,7 +8040,7 @@
         </div>`;
       }
     } else {
-      // Assignee view — personal status dropdown
+      // Assignee view - personal status dropdown
       footer = `<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;">
         <div style="font-size:0.75rem;color:var(--muted);">From: ${esc(t.createdByName || 'Leadership')}</div>
         <select onchange="updateTaskStatus('${d.id}',this.value)" style="font-size:0.78rem;border:1px solid var(--input-border);border-radius:8px;padding:0.25rem 0.5rem;background:var(--white);color:var(--navy);font-weight:600;">
@@ -8105,7 +8112,7 @@
   window.updateTaskStatus = async (taskId, status) => {
     try {
       // Record who signed off (and when) alongside the status itself, so anyone
-      // viewing the task — manager or teammate — can see exactly who marked it.
+      // viewing the task - manager or teammate - can see exactly who marked it.
       await updateDoc(doc(db, 'tasks', taskId), {
         ['progress.' + me.uid]: status,
         ['progressNames.' + me.uid]: me.displayName || me.email,
@@ -8255,7 +8262,7 @@
   // A single text input backed by a <datalist>: type to filter (search) or
   // click the native dropdown arrow to browse everyone (autofill). Used for
   // every "assign this to a person" control in the app.
-  function personComboKey(u) { return (u.displayName || u.email || '(no name)') + ' — ' + (u.email || ''); }
+  function personComboKey(u) { return (u.displayName || u.email || '(no name)') + ' - ' + (u.email || ''); }
   function personComboOptionsHtml(members) {
     return members.map(u => `<option value="${esc(personComboKey(u))}"></option>`).join('');
   }
@@ -8289,7 +8296,7 @@
       getDocs(query(collection(db, 'grants'), orderBy('createdAt', 'desc'))),
       grantAssignableMembers()
     ]);
-    // Populate the create-form assignee combo (idempotent — safe to re-run)
+    // Populate the create-form assignee combo (idempotent - safe to re-run)
     const createWrap = document.getElementById('grant-assignee-wrap');
     if (createWrap) createWrap.innerHTML = personComboHtml('grant-assignee', 'grant-assignee-list', members, '', 'Search or select a person...');
     if (snap.empty) { feed.innerHTML = '<div class="empty-state"><span class="empty-icon">💰</span>No grant entries yet.</div>'; return; }
@@ -8689,7 +8696,7 @@
     const sel = document.getElementById('tiq-opening');
     const openings = _publicOpenings.filter(o => o.chapter === chapter);
     sel.innerHTML = openings.length
-      ? openings.map(o => `<option value="${o.id}">${esc(o.title)}${o.subjects ? ' — ' + esc(o.subjects) : ''}</option>`).join('')
+      ? openings.map(o => `<option value="${o.id}">${esc(o.title)}${o.subjects ? ' - ' + esc(o.subjects) : ''}</option>`).join('')
       : '<option value="">General application (no specific opening yet)</option>';
   };
 
@@ -8812,10 +8819,9 @@
     const type = document.getElementById('fb-type').value;
     const subject = document.getElementById('fb-subject').value.trim();
     const message = document.getElementById('fb-message').value.trim();
-    const okEl = null; // success handled by toast + modal close
     const errEl = document.getElementById('fb-error');
     const btn = document.getElementById('fb-submit-btn');
-    okEl.style.display = 'none'; errEl.style.display = 'none';
+    errEl.style.display = 'none';
 
     if (!subject) { errEl.textContent = 'Please add a short subject.'; errEl.style.display = 'block'; return; }
     if (!message) { errEl.textContent = 'Please describe your feedback in the details box.'; errEl.style.display = 'block'; return; }
@@ -8921,14 +8927,29 @@
 
   // ── Student enrollment nav helper ────────────────────────────────────────
   function updateStudentNavTabs() {
+    const ids = ['nav-how-it-works','nav-signup-tutoring','nav-homework','nav-progress','nav-sessions'];
+    // These tabs belong to students only. Hard-hide them for anyone else so they
+    // can never leak across a role change or a developer "view as" switch - this
+    // is what let a tutor still see "Request a Tutor". (nav-sessions is shared
+    // with tutors - boot() already shows it for role==='tutor', so only clear it
+    // here when the CURRENT viewer is a student who isn't enrolled yet; never
+    // touch it for non-students, since that would hide it from tutors.)
+    if (myRole !== 'student') {
+      ['nav-how-it-works','nav-signup-tutoring','nav-homework','nav-progress'].forEach(id => {
+        const el = document.getElementById(id); if (el) el.style.display = 'none';
+      });
+      return;
+    }
     const enrolled = _studentEnrolled;
-    // Pre-enrollment tabs
+    // Once a student has a tutor OR already has a request in flight, they can't
+    // start another one - hide "Request a Tutor" (the flow lives in My Tutor).
+    const canRequest = !enrolled && _studentTutorStatus === 'none';
     document.getElementById('nav-how-it-works').style.display = !enrolled ? 'flex' : 'none';
-    document.getElementById('nav-signup-tutoring').style.display = !enrolled ? 'flex' : 'none';
-    // Post-enrollment tabs
+    document.getElementById('nav-signup-tutoring').style.display = canRequest ? 'flex' : 'none';
     document.getElementById('nav-homework').style.display = enrolled ? 'flex' : 'none';
-    document.getElementById('nav-certificates').style.display = enrolled ? 'flex' : 'none';
     document.getElementById('nav-progress').style.display = enrolled ? 'flex' : 'none';
+    // Read-only session history becomes available once matched with a tutor.
+    document.getElementById('nav-sessions').style.display = enrolled ? 'flex' : 'none';
   }
 
   // ── In-portal student signup ──────────────────────────────────────────────
@@ -8980,15 +9001,15 @@
   async function loadHomework() {
     const feed = document.getElementById('homework-feed');
     feed.innerHTML = '<div class="empty-state">Loading...</div>';
-    const snap = await getDocs(query(collection(db, 'homework'),
-      where('studentUid', '==', me.uid), orderBy('createdAt', 'desc')));
-    if (!snap.docs.length) {
+    // No orderBy here (avoids a studentUid+createdAt composite index) - sort after fetch
+    const snap = await getDocs(query(collection(db, 'homework'), where('studentUid', '==', me.uid)));
+    const hwRows = snap.docs.map(d=>d.data()).sort((a,b) => (b.createdAt?.seconds||0) - (a.createdAt?.seconds||0));
+    if (!hwRows.length) {
       feed.innerHTML = '<div class="empty-state"><span class="empty-icon">📚</span>No homework assigned yet.</div>';
       return;
     }
     const statusColor = { pending:'var(--muted)', submitted:'#2980b9', graded:'#27ae60' };
-    feed.innerHTML = snap.docs.map(d => {
-      const h = d.data();
+    feed.innerHTML = hwRows.map(h => {
       const sc = statusColor[h.status] || 'var(--muted)';
       return `<div class="card" style="margin-bottom:0.75rem;">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:0.5rem;margin-bottom:0.3rem;">
@@ -9007,12 +9028,12 @@
     const badgeFeed = document.getElementById('badges-feed');
     certFeed.innerHTML = '<div class="empty-state">Loading...</div>';
     badgeFeed.innerHTML = '';
-    const snap = await getDocs(query(collection(db, 'certificates'),
-      where('studentUid', '==', me.uid), orderBy('createdAt', 'desc')));
-    const certs = snap.docs.filter(d => d.data().type === 'certificate');
-    const badges = snap.docs.filter(d => d.data().type === 'badge');
-    certFeed.innerHTML = certs.length ? certs.map(d => {
-      const c = d.data();
+    // No orderBy here (avoids a studentUid+createdAt composite index) - sort after fetch
+    const snap = await getDocs(query(collection(db, 'certificates'), where('studentUid', '==', me.uid)));
+    const certRows = snap.docs.map(d=>d.data()).sort((a,b) => (b.createdAt?.seconds||0) - (a.createdAt?.seconds||0));
+    const certs = certRows.filter(c => c.type === 'certificate');
+    const badges = certRows.filter(c => c.type === 'badge');
+    certFeed.innerHTML = certs.length ? certs.map(c => {
       return `<div class="card" style="margin-bottom:0.75rem;">
         <div style="font-size:1.2rem;margin-bottom:0.3rem;">🏆</div>
         <div style="font-weight:700;font-size:0.95rem;color:var(--navy);">${esc(c.title)}</div>
@@ -9020,8 +9041,7 @@
         ${c.message ? `<div style="font-size:0.84rem;color:var(--text-soft);font-style:italic;">"${esc(c.message)}"</div>` : ''}
       </div>`;
     }).join('') : '<div class="empty-state"><span class="empty-icon">🏆</span>No certificates yet.</div>';
-    badgeFeed.innerHTML = badges.length ? `<div style="display:flex;flex-wrap:wrap;gap:0.75rem;">` + badges.map(d => {
-      const b = d.data();
+    badgeFeed.innerHTML = badges.length ? `<div style="display:flex;flex-wrap:wrap;gap:0.75rem;">` + badges.map(b => {
       return `<div class="card" style="padding:0.75rem 1rem;display:flex;align-items:center;gap:0.5rem;min-width:160px;">
         <span style="font-size:1.4rem;">🏅</span>
         <div><div style="font-weight:700;font-size:0.88rem;color:var(--navy);">${esc(b.title)}</div>
@@ -9030,18 +9050,19 @@
     }).join('') + '</div>' : '<div class="empty-state"><span class="empty-icon">🏅</span>No badges yet.</div>';
   }
 
-  // ── Student: Progress ─────────────────────────────────────────────────────
+  // ── Student: Progress & Awards (progress notes + certificates + badges) ──
   async function loadProgress() {
+    loadCertificates(); // certificates + badges sections share this tab
     const feed = document.getElementById('progress-feed');
     feed.innerHTML = '<div class="empty-state">Loading...</div>';
-    const snap = await getDocs(query(collection(db, 'progress_notes'),
-      where('studentUid', '==', me.uid), orderBy('createdAt', 'desc')));
-    if (!snap.docs.length) {
+    // No orderBy here (avoids a studentUid+createdAt composite index) - sort after fetch
+    const snap = await getDocs(query(collection(db, 'progress_notes'), where('studentUid', '==', me.uid)));
+    const progRows = snap.docs.map(d=>d.data()).sort((a,b) => (b.createdAt?.seconds||0) - (a.createdAt?.seconds||0));
+    if (!progRows.length) {
       feed.innerHTML = '<div class="empty-state"><span class="empty-icon">📈</span>No progress notes yet.</div>';
       return;
     }
-    feed.innerHTML = snap.docs.map(d => {
-      const p = d.data();
+    feed.innerHTML = progRows.map(p => {
       const stars = '⭐'.repeat(Math.min(5, Math.max(1, p.rating || 0)));
       return `<div class="card" style="margin-bottom:0.75rem;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.3rem;">
@@ -9056,110 +9077,292 @@
   // ── Messages ──────────────────────────────────────────────────────────────
   let _currentThreadId = null;
   let _unsubMessages = null;
+  let _msgCurrentList = [];   // messages in the currently open thread (kept in sync by the listener/poll/optimistic send)
+  let _msgOtherName = '';     // display name of the other participant in the open thread
+  let _msgPollTimer = null;   // periodic safety-net refresh, in addition to the real-time onSnapshot listener
+
+  // Stops the periodic refresh - called whenever the user navigates away from
+  // the Messages tab so it doesn't keep polling Firestore in the background.
+  function stopMsgPolling() {
+    if (_msgPollTimer) { clearInterval(_msgPollTimer); _msgPollTimer = null; }
+  }
+
+  // onSnapshot is real-time and is the primary update path, but as a safety net
+  // (e.g. a listener that silently drops after a tab was backgrounded, or a
+  // transient permission hiccup) this re-fetches the thread list and the open
+  // conversation on a fixed interval so messages never require a manual reload.
+  function startMsgPolling() {
+    stopMsgPolling();
+    _msgPollTimer = setInterval(() => {
+      loadMessages().catch(() => {});
+      if (_currentThreadId) refreshCurrentThread().catch(() => {});
+    }, 8000);
+  }
+
+  async function refreshCurrentThread() {
+    if (!_currentThreadId) return;
+    const snap = await getDocs(query(collection(db, 'messages'), where('threadId', '==', _currentThreadId)));
+    renderThreadMessages(snap.docs.map(d => d.data()));
+  }
+
+  // Messages auto-expire 30 days after they're sent. There's no backend here, so
+  // we (a) stamp each message with expireAt on send, and (b) prune anything past
+  // that whenever a signed-in user opens their inbox. Enable a Firestore TTL
+  // policy on the `expireAt` field to also have the server sweep them server-side.
+  const MSG_TTL_DAYS = 30;
+  const MSG_TTL_MS = MSG_TTL_DAYS * 24 * 60 * 60 * 1000;
+  function msgExpireAt() { return new Date(Date.now() + MSG_TTL_MS); }
+
+  // sentAt is a serverTimestamp() sentinel - it reads back as null in the local
+  // optimistic snapshot until the write round-trips to the server (~100-300ms).
+  // Sorting by sentAt.seconds alone treats a just-sent message as epoch 0, so it
+  // renders at the wrong end of the list - out of the auto-scrolled view - until
+  // the ack arrives and it jumps into place. clientSentAtMs is stamped at send
+  // time and used as the sort key until the real timestamp resolves, so a new
+  // message appears in the right spot immediately.
+  function msgSortMs(m) {
+    return m.sentAt?.seconds ? m.sentAt.seconds * 1000 : (m.clientSentAtMs || 0);
+  }
+
+  async function pruneExpiredMessages(docs) {
+    const cutoff = Date.now() - MSG_TTL_MS;
+    const stale = docs.filter(d => {
+      const ts = d.data().sentAt;
+      const ms = ts?.toMillis ? ts.toMillis() : (ts?.seconds ? ts.seconds * 1000 : null);
+      return ms != null && ms < cutoff;
+    });
+    // Best-effort: a failed delete (e.g. rules) shouldn't break the inbox
+    await Promise.all(stale.map(d => deleteDoc(doc(db, 'messages', d.id)).catch(() => {})));
+    return new Set(stale.map(d => d.id));
+  }
 
   async function loadMessages() {
-    // Load thread list
+    // Sort client-side so we don't need a participants+sentAt composite index
     const snap = await getDocs(query(collection(db, 'messages'),
-      where('participants', 'array-contains', me.uid), orderBy('sentAt', 'desc')));
+      where('participants', 'array-contains', me.uid)));
+    const expiredIds = await pruneExpiredMessages(snap.docs);
+    const msgs = snap.docs
+      .filter(d => !expiredIds.has(d.id))
+      .map(d => d.data())
+      .sort((a, b) => msgSortMs(b) - msgSortMs(a));
     const threads = {};
-    snap.docs.forEach(d => {
-      const m = d.data();
-      if (!threads[m.threadId]) threads[m.threadId] = m;
-    });
+    msgs.forEach(m => { if (!threads[m.threadId]) threads[m.threadId] = m; });
     const threadList = document.getElementById('msg-thread-list');
     const threadArr = Object.values(threads);
     if (!threadArr.length) {
       threadList.innerHTML = '<div class="empty-state" style="font-size:0.8rem;padding:1rem;">No conversations yet.</div>';
+      startMsgPolling(); // keep watching for an incoming first message even with nothing open yet
       return;
     }
     threadList.innerHTML = threadArr.map(m => {
       const otherName = m.fromUid === me.uid ? m.toName : m.fromName;
-      return `<div onclick="openThread('${esc(m.threadId)}','${esc(otherName)}')" style="padding:0.6rem 0.5rem;border-radius:6px;cursor:pointer;font-size:0.83rem;font-weight:500;color:var(--text);transition:background 0.15s;" onmouseover="this.style.background='var(--selected-bg)'" onmouseout="this.style.background='none'">
+      return `<div data-thread-id="${esc(m.threadId)}" onclick="openThread('${esc(m.threadId)}','${esc(otherName)}')" style="padding:0.6rem 0.5rem;border-radius:6px;cursor:pointer;font-size:0.83rem;font-weight:500;color:var(--text);transition:background 0.15s;background:${m.threadId === _currentThreadId ? 'var(--selected-bg)' : 'none'};" onmouseover="this.style.background='var(--selected-bg)'" onmouseout="this.style.background=(this.dataset.threadId===_currentThreadId)?'var(--selected-bg)':'none'">
         <div style="font-weight:600;color:var(--navy);">${esc(otherName)}</div>
-        <div style="color:var(--muted);font-size:0.76rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc((m.text||'').slice(0,50))}</div>
+        <div style="color:var(--muted);font-size:0.76rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${m.fromUid === me.uid ? 'You: ' : ''}${esc((m.text||'').slice(0,50))}</div>
       </div>`;
     }).join('');
     // Load contacts for new message modal
     await loadMessageContacts();
+    // A conversation exists but nothing is open yet (e.g. first visit to the tab),
+    // so open the most recent one instead of leaving the reply box silently dead.
+    const stillExists = _currentThreadId && threadArr.some(m => m.threadId === _currentThreadId);
+    if (!stillExists) {
+      const top = threadArr[0];
+      const otherName = top.fromUid === me.uid ? top.toName : top.fromName;
+      openThread(top.threadId, otherName);
+    }
+    startMsgPolling();
   }
 
   let _msgContacts = [];
   async function loadMessageContacts() {
-    _msgContacts = [];
-    if (myRole === 'student') {
-      // students can message their tutor and any officer
-      const snap = await getDocs(query(collection(db, 'users'), where('role', 'in', ['tutor','officer','student_support_lead','student_support_director'])));
-      _msgContacts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    } else if (myRole === 'tutor') {
-      // tutors can message their students
-      const snap = await getDocs(query(collection(db, 'users'), where('assignedTutor', '==', me.uid)));
-      _msgContacts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    }
-    const wrap = document.getElementById('msg-to-wrap');
-    if (wrap) wrap.innerHTML = personComboHtml('msg-to-select', 'msg-to-list', _msgContacts, '', 'Search or select a person...');
+    // Anyone in the portal can be messaged - load every user except yourself.
+    const snap = await getDocs(collection(db, 'users'));
+    _msgContacts = snap.docs
+      .map(d => ({ id: d.id, ...d.data() }))
+      .filter(u => u.id !== me.uid && (u.displayName || u.email))
+      .sort((a, b) => (a.displayName || a.email || '').localeCompare(b.displayName || b.email || ''));
+  }
+
+  // Messenger-style rendering: my messages right in navy, theirs left in a light
+  // bubble with an avatar; consecutive messages from the same sender are grouped
+  // tightly, with the sender name above and the time below each group. Shared by
+  // the real-time listener, the periodic poll, and optimistic sends so all three
+  // paths draw an identical thread.
+  function renderThreadMessages(rawMsgs) {
+    const msgs = rawMsgs.slice().sort((a, b) => msgSortMs(a) - msgSortMs(b));
+    _msgCurrentList = msgs;
+    const body = document.getElementById('msg-body');
+    if (!body) return;
+    body.innerHTML = '<div style="margin-top:auto;flex-shrink:0;"></div>' + msgs.map((m, i) => {
+      const mine = m.fromUid === me.uid;
+      const firstOfGroup = !msgs[i - 1] || msgs[i - 1].fromUid !== m.fromUid;
+      const lastOfGroup  = !msgs[i + 1] || msgs[i + 1].fromUid !== m.fromUid;
+      const senderName = m.fromName || _msgOtherName || 'Unknown';
+      const nameLabel = (!mine && firstOfGroup)
+        ? `<div style="font-size:0.68rem;color:var(--muted);margin:0 0 2px 40px;">${esc(senderName)}</div>` : '';
+      const timeLabel = lastOfGroup
+        ? `<div style="font-size:0.64rem;color:var(--light);margin:2px ${mine ? '2px' : '40px'} 0;text-align:${mine ? 'right' : 'left'};">${m.sentAt ? timeAgo(m.sentAt) : 'Sending...'}</div>` : '';
+      // Avatar only beside the last bubble of a received group (iMessage-style);
+      // an empty spacer keeps earlier bubbles in the group aligned.
+      const avatar = mine ? '' : (lastOfGroup
+        ? `<div style="width:28px;height:28px;border-radius:50%;flex-shrink:0;background:${dashAvColor(senderName)};color:#fff;display:flex;align-items:center;justify-content:center;font-size:0.62rem;font-weight:700;align-self:flex-end;">${esc(dashInitials(senderName))}</div>`
+        : `<div style="width:28px;flex-shrink:0;"></div>`);
+      const radius = mine
+        ? `16px ${firstOfGroup ? '16px' : '6px'} ${lastOfGroup ? '4px' : '6px'} 16px`
+        : `${firstOfGroup ? '16px' : '6px'} 16px 16px ${lastOfGroup ? '4px' : '6px'}`;
+      return `<div style="margin-top:${firstOfGroup && i > 0 ? '12px' : '2px'};flex-shrink:0;">
+        ${nameLabel}
+        <div style="display:flex;justify-content:${mine ? 'flex-end' : 'flex-start'};align-items:flex-end;gap:0.5rem;">
+          ${avatar}
+          <div style="max-width:72%;background:${mine ? 'var(--navy)' : 'var(--panel)'};color:${mine ? '#fff' : 'var(--text)'};padding:0.5rem 0.8rem;border-radius:${radius};font-size:0.85rem;line-height:1.5;word-break:break-word;">${esc(m.text || '')}</div>
+        </div>
+        ${timeLabel}
+      </div>`;
+    }).join('');
+    body.scrollTop = body.scrollHeight;
   }
 
   window.openThread = function(threadId, otherName) {
     _currentThreadId = threadId;
-    document.getElementById('msg-header').textContent = otherName;
-    if (_unsubMessages) _unsubMessages();
-    const q = query(collection(db, 'messages'), where('threadId', '==', threadId), orderBy('sentAt', 'asc'));
-    _unsubMessages = onSnapshot(q, snap => {
-      const body = document.getElementById('msg-body');
-      body.innerHTML = snap.docs.map(d => {
-        const m = d.data();
-        const mine = m.fromUid === me.uid;
-        return `<div style="display:flex;justify-content:${mine ? 'flex-end' : 'flex-start'};">
-          <div style="max-width:75%;background:${mine ? 'var(--navy)' : 'var(--panel)'};color:${mine ? '#fff' : 'var(--text)'};padding:0.5rem 0.75rem;border-radius:${mine ? '12px 12px 2px 12px' : '12px 12px 12px 2px'};font-size:0.85rem;line-height:1.5;">
-            ${esc(m.text||'')}
-            <div style="font-size:0.68rem;opacity:0.6;margin-top:0.2rem;text-align:right;">${m.sentAt ? timeAgo(m.sentAt) : ''}</div>
-          </div>
-        </div>`;
-      }).join('');
-      body.scrollTop = body.scrollHeight;
+    _msgOtherName = otherName;
+    // Header: the other person's name, plus their email/role so two accounts with
+    // the same display name (e.g. testing with your own accounts) are tellable apart.
+    const otherUid = threadId.split('_').find(id => id !== me.uid) || '';
+    const contact = _msgContacts.find(u => u.id === otherUid);
+    document.getElementById('msg-header').innerHTML =
+      `<div style="display:flex;align-items:center;gap:0.6rem;">
+        <div style="width:30px;height:30px;border-radius:50%;flex-shrink:0;background:${dashAvColor(otherName)};color:#fff;display:flex;align-items:center;justify-content:center;font-size:0.68rem;font-weight:700;">${esc(dashInitials(otherName))}</div>
+        <div style="min-width:0;">
+          <div style="font-weight:600;color:var(--navy);">${esc(otherName)}</div>
+          ${contact ? `<div style="font-size:0.7rem;color:var(--muted);font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(contact.email || '')}${contact.role ? ' · ' + esc(LABELS[contact.role] || contact.role) : ''}</div>` : ''}
+        </div>
+      </div>`;
+    // Refresh the sidebar highlight to match, without re-fetching the thread list.
+    document.querySelectorAll('#msg-thread-list [data-thread-id]').forEach(el => {
+      el.style.background = el.dataset.threadId === threadId ? 'var(--selected-bg)' : 'none';
     });
+    if (_unsubMessages) _unsubMessages();
+    // No orderBy in the query (avoids a threadId+sentAt composite index); sort here
+    const q = query(collection(db, 'messages'), where('threadId', '==', threadId));
+    _unsubMessages = onSnapshot(q, snap => {
+      renderThreadMessages(snap.docs.map(d => d.data()));
+    }, () => {
+      // Listener error (e.g. transient permission/network issue): the periodic
+      // poll (already running) will pick the conversation back up on its next tick.
+    });
+    startMsgPolling();
   };
 
   window.sendMessage = async function() {
-    if (!_currentThreadId) return;
+    if (!_currentThreadId) { showToast('Select a conversation first, or start one with "+ New Message".', 'error'); return; }
     const input = document.getElementById('msg-input');
     const text = input.value.trim();
     if (!text) return;
     input.value = '';
-    await addDoc(collection(db, 'messages'), {
+    // Carry the recipient's id/name so the thread list labels this message
+    // correctly even when it's the most recent one in the thread.
+    const participants = _currentThreadId.split('_');
+    const toUid = participants.find(id => id !== me.uid) || '';
+    const contact = _msgContacts.find(u => u.id === toUid);
+    const toName = contact ? (contact.displayName || contact.email)
+      : (document.getElementById('msg-header')?.textContent || '');
+    const msgData = {
       threadId: _currentThreadId,
       fromUid: me.uid,
       fromName: me.displayName || me.email,
-      text, sentAt: serverTimestamp(),
-      participants: _currentThreadId.split('_')
-    });
+      toUid, toName,
+      text, sentAt: serverTimestamp(), clientSentAtMs: Date.now(),
+      expireAt: msgExpireAt(),
+      participants
+    };
+    // Render immediately rather than waiting on the round trip to Firestore -
+    // this is what made a sent message not show up until the listener/poll caught
+    // up. The real-time listener replaces this with the authoritative copy moments later.
+    renderThreadMessages([..._msgCurrentList, msgData]);
+    await addDoc(collection(db, 'messages'), msgData);
   };
 
-  window.showNewMessageModal = function() {
-    document.getElementById('msg-modal').style.display = 'flex';
+  // Recipient picker: same live search-as-you-type pattern used for tasks/dev
+  // switcher, rather than a native <datalist> (which needs an exact-string match
+  // and doesn't reliably show suggestions across browsers - that was why sending
+  // a new message never worked).
+  let _msgRecipientTarget = null;
+
+  window.showNewMessageModal = async function() {
+    _msgRecipientTarget = null;
+    await loadMessageContacts(); // refresh in case new people signed up
+    document.getElementById('msg-to-search').value = '';
+    document.getElementById('msg-to-results').style.display = 'none';
+    document.getElementById('msg-to-selected').style.display = 'none';
     document.getElementById('msg-modal-text').value = '';
     document.getElementById('msg-modal-err').style.display = 'none';
+    document.getElementById('msg-modal-backdrop').style.display = 'block';
+    document.getElementById('msg-modal').style.display = 'block';
+    setTimeout(() => document.getElementById('msg-to-search').focus(), 50);
+  };
+
+  window.closeMsgModal = function() {
+    document.getElementById('msg-modal-backdrop').style.display = 'none';
+    document.getElementById('msg-modal').style.display = 'none';
+  };
+
+  window.msgRecipientSearch = function() {
+    const q = document.getElementById('msg-to-search').value.trim().toLowerCase();
+    const results = document.getElementById('msg-to-results');
+    const matches = (q ? _msgContacts.filter(u =>
+      (u.displayName || '').toLowerCase().includes(q) || (u.email || '').toLowerCase().includes(q)
+    ) : _msgContacts).slice(0, 30);
+    if (!matches.length) { results.innerHTML = `<div style="padding:0.6rem 0.85rem;font-size:0.82rem;color:var(--muted);">No matches.</div>`; results.style.display = 'block'; return; }
+    results.style.display = 'block';
+    results.innerHTML = matches.map(u =>
+      `<div onclick="selectMsgRecipient('${u.id}','${esc(u.displayName || u.email).replace(/'/g,"\\'")}')"
+        style="padding:0.55rem 0.85rem;cursor:pointer;font-size:0.85rem;border-bottom:1px solid var(--border-light);"
+        onmouseover="this.style.background='var(--panel)'" onmouseout="this.style.background=''">
+        ${esc(u.displayName || u.email)}
+        <span style="color:var(--muted);font-size:0.74rem;margin-left:0.4rem;">${esc(u.email || '')} · ${esc(LABELS[u.role]||u.role||'Student')}${u.chapter ? ' · '+esc(u.chapter) : ''}</span>
+      </div>`
+    ).join('');
+  };
+
+  window.selectMsgRecipient = function(id, name) {
+    _msgRecipientTarget = { id, name };
+    document.getElementById('msg-to-search').value = '';
+    document.getElementById('msg-to-results').style.display = 'none';
+    const sel = document.getElementById('msg-to-selected');
+    sel.style.display = 'flex';
+    sel.innerHTML = `✓ ${esc(name)} <span onclick="_msgRecipientTarget=null;document.getElementById('msg-to-selected').style.display='none';" style="cursor:pointer;color:var(--muted);font-weight:400;">✕ change</span>`;
   };
 
   window.sendNewMessage = async function() {
-    const recipientRaw = document.getElementById('msg-to-select').value;
     const text = document.getElementById('msg-modal-text').value.trim();
     const errEl = document.getElementById('msg-modal-err');
-    const recipient = personComboResolve(_msgContacts, recipientRaw);
-    if (!recipient || !text) { errEl.textContent = 'Please pick a recipient from the suggestions and type a message.'; errEl.style.display = 'block'; return; }
-    const toUid = recipient.id;
-    const toName = recipient.displayName || recipient.email;
-    const ids = [me.uid, toUid].sort();
-    const threadId = ids.join('_');
-    await addDoc(collection(db, 'messages'), {
-      threadId, fromUid: me.uid,
-      fromName: me.displayName || me.email,
-      toUid, toName, text, sentAt: serverTimestamp(),
-      participants: ids
-    });
-    document.getElementById('msg-modal').style.display = 'none';
-    loadMessages();
-    openThread(threadId, toName);
+    if (!_msgRecipientTarget || !text) { errEl.textContent = 'Please pick a recipient from the suggestions and type a message.'; errEl.style.display = 'block'; return; }
+    const btn = document.getElementById('msg-modal-send-btn');
+    btn.disabled = true; btn.textContent = 'Sending…';
+    try {
+      const toUid = _msgRecipientTarget.id;
+      const toName = _msgRecipientTarget.name;
+      const ids = [me.uid, toUid].sort();
+      const threadId = ids.join('_');
+      const msgData = {
+        threadId, fromUid: me.uid,
+        fromName: me.displayName || me.email,
+        toUid, toName, text, sentAt: serverTimestamp(), clientSentAtMs: Date.now(),
+        expireAt: msgExpireAt(),
+        participants: ids
+      };
+      closeMsgModal();
+      openThread(threadId, toName); // sets up the listener + optimistic base before we write
+      renderThreadMessages([msgData]);
+      await addDoc(collection(db, 'messages'), msgData);
+      loadMessages();
+    } catch(e) {
+      errEl.textContent = 'Failed to send: ' + (e.message || e.code);
+      errEl.style.display = 'block';
+    } finally {
+      btn.disabled = false; btn.textContent = 'Send';
+    }
   };
 
   // ── Events ────────────────────────────────────────────────────────────────
@@ -9168,19 +9371,20 @@
     feed.innerHTML = '<div class="empty-state">Loading...</div>';
     const userSnap = await getDoc(doc(db, 'users', me.uid));
     const chapter = userSnap.exists() ? userSnap.data().chapter : '';
-    let q;
-    if (chapter) {
-      q = query(collection(db, 'events'), where('chapter', '==', chapter), orderBy('date', 'desc'));
-    } else {
-      q = query(collection(db, 'events'), orderBy('date', 'desc'));
-    }
+    // Filter by chapter with a simple equality query and sort client-side - pairing
+    // where('chapter') with orderBy('date') would require a composite index that
+    // isn't provisioned, which is what made this page fail to load.
+    const q = chapter
+      ? query(collection(db, 'events'), where('chapter', '==', chapter))
+      : query(collection(db, 'events'));
     const snap = await getDocs(q);
-    if (!snap.docs.length) {
+    const rows = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+      .sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+    if (!rows.length) {
       feed.innerHTML = '<div class="empty-state"><span class="empty-icon">📅</span>No upcoming events.</div>';
       return;
     }
-    feed.innerHTML = snap.docs.map(d => {
-      const e = d.data();
+    feed.innerHTML = rows.map(e => {
       return `<div class="card" style="margin-bottom:0.75rem;">
         <div style="font-weight:700;font-size:0.95rem;color:var(--navy);margin-bottom:0.2rem;">${esc(e.title)}</div>
         <div style="font-size:0.8rem;color:var(--muted);">${esc(e.date||'')}${e.time ? ' at ' + esc(e.time) : ''}${e.location ? ' &bull; ' + esc(e.location) : ''}</div>
@@ -9191,20 +9395,34 @@
 
   // ── Tutor: Sessions ───────────────────────────────────────────────────────
   async function loadSessions() {
-    await _populateTutorStudentSelects(['sn-student']);
+    const isStudentView = myRole === 'student';
+    const logWrap = document.getElementById('sn-log-wrap');
+    const sub = document.getElementById('sessions-page-sub');
+    if (logWrap) logWrap.style.display = isStudentView ? 'none' : '';
+    if (sub) sub.textContent = isStudentView
+      ? 'Your session history with your tutor.'
+      : 'Submit a required post-session report after every tutoring session.';
+
     const feed = document.getElementById('sessions-feed');
     feed.innerHTML = '<div class="empty-state">Loading...</div>';
-    const snap = await getDocs(query(collection(db, 'session_notes'),
-      where('tutorUid', '==', me.uid), orderBy('createdAt', 'desc')));
-    if (!snap.docs.length) {
-      feed.innerHTML = '<div class="empty-state"><span class="empty-icon">📓</span>No sessions logged yet.</div>';
+
+    // No orderBy here (avoids a studentUid/tutorUid+createdAt composite index) - sort after fetch
+    let snap;
+    if (isStudentView) {
+      snap = await getDocs(query(collection(db, 'session_notes'), where('studentUid', '==', me.uid)));
+    } else {
+      await _populateTutorStudentSelects(['sn-student']);
+      snap = await getDocs(query(collection(db, 'session_notes'), where('tutorUid', '==', me.uid)));
+    }
+    const sessRows = snap.docs.map(d=>d.data()).sort((a,b) => (b.createdAt?.seconds||0) - (a.createdAt?.seconds||0));
+    if (!sessRows.length) {
+      feed.innerHTML = `<div class="empty-state"><span class="empty-icon">📓</span>${isStudentView ? 'No sessions yet - they will show up here after your tutor logs one.' : 'No sessions logged yet.'}</div>`;
       return;
     }
-    feed.innerHTML = snap.docs.map(d => {
-      const s = d.data();
+    feed.innerHTML = sessRows.map(s => {
       return `<div class="card" style="margin-bottom:0.75rem;">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:0.3rem;">
-          <div style="font-weight:700;font-size:0.9rem;color:var(--navy);">${esc(s.studentName||'')}</div>
+          <div style="font-weight:700;font-size:0.9rem;color:var(--navy);">${esc(isStudentView ? 'Session' : (s.studentName || ''))}</div>
           <div style="font-size:0.78rem;color:var(--muted);">${esc(s.sessionDate||'')}</div>
         </div>
         ${s.rating ? `<div style="font-size:0.78rem;color:var(--muted);margin-bottom:0.3rem;">Progress: ${'⭐'.repeat(s.rating)}</div>` : ''}
@@ -9251,14 +9469,14 @@
     await _populateTutorStudentSelects(['hw-student']);
     const feed = document.getElementById('tutor-homework-feed');
     feed.innerHTML = '<div class="empty-state">Loading...</div>';
-    const snap = await getDocs(query(collection(db, 'homework'),
-      where('tutorUid', '==', me.uid), orderBy('createdAt', 'desc')));
-    if (!snap.docs.length) {
+    // No orderBy here (avoids a tutorUid+createdAt composite index) - sort after fetch
+    const snap = await getDocs(query(collection(db, 'homework'), where('tutorUid', '==', me.uid)));
+    const thRows = snap.docs.map(d=>d.data()).sort((a,b) => (b.createdAt?.seconds||0) - (a.createdAt?.seconds||0));
+    if (!thRows.length) {
       feed.innerHTML = '<div class="empty-state"><span class="empty-icon">📝</span>No homework assigned yet.</div>';
       return;
     }
-    feed.innerHTML = snap.docs.map(d => {
-      const h = d.data();
+    feed.innerHTML = thRows.map(h => {
       const sc = h.status === 'graded' ? '#27ae60' : h.status === 'submitted' ? '#2980b9' : 'var(--muted)';
       return `<div class="card" style="margin-bottom:0.75rem;">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.2rem;">
@@ -9298,42 +9516,19 @@
     loadTutorHomework();
   };
 
-  // ── Tutor: Contact Parents ────────────────────────────────────────────────
-  async function loadContactParents() {
-    const feed = document.getElementById('contact-parents-feed');
-    feed.innerHTML = '<div class="empty-state">Loading...</div>';
-    const snap = await getDocs(query(collection(db, 'users'), where('assignedTutor', '==', me.uid)));
-    if (!snap.docs.length) {
-      feed.innerHTML = '<div class="empty-state"><span class="empty-icon">📞</span>No students assigned yet.</div>';
-      return;
-    }
-    feed.innerHTML = snap.docs.map(d => {
-      const u = d.data();
-      const name = u.displayName || u.email;
-      return `<div class="card" style="margin-bottom:0.75rem;">
-        <div style="font-weight:700;font-size:0.92rem;color:var(--navy);margin-bottom:0.4rem;">${esc(name)}</div>
-        <div style="font-size:0.82rem;color:var(--text-soft);display:flex;flex-direction:column;gap:0.25rem;">
-          <div><strong>Parent Name:</strong> ${esc(u.parentName||'-')}</div>
-          <div><strong>Parent Phone:</strong> ${u.parentPhone ? `<a href="tel:${esc(u.parentPhone)}" style="color:var(--navy);">${esc(u.parentPhone)}</a>` : '-'}</div>
-          <div><strong>Parent Email:</strong> ${u.parentEmail ? `<a href="mailto:${esc(u.parentEmail)}" style="color:var(--navy);">${esc(u.parentEmail)}</a>` : '-'}</div>
-        </div>
-      </div>`;
-    }).join('');
-  }
-
   // ── Tutor: Awards ─────────────────────────────────────────────────────────
   async function loadAwards() {
     await _populateTutorStudentSelects(['aw-student']);
     const feed = document.getElementById('awards-feed');
     feed.innerHTML = '<div class="empty-state">Loading...</div>';
-    const snap = await getDocs(query(collection(db, 'certificates'),
-      where('tutorUid', '==', me.uid), orderBy('createdAt', 'desc')));
-    if (!snap.docs.length) {
+    // No orderBy here (avoids a tutorUid+createdAt composite index) - sort after fetch
+    const snap = await getDocs(query(collection(db, 'certificates'), where('tutorUid', '==', me.uid)));
+    const awRows = snap.docs.map(d=>d.data()).sort((a,b) => (b.createdAt?.seconds||0) - (a.createdAt?.seconds||0));
+    if (!awRows.length) {
       feed.innerHTML = '<div class="empty-state"><span class="empty-icon">🏅</span>No awards given yet.</div>';
       return;
     }
-    feed.innerHTML = snap.docs.map(d => {
-      const a = d.data();
+    feed.innerHTML = awRows.map(a => {
       const icon = a.type === 'badge' ? '🏅' : '🏆';
       return `<div class="card" style="margin-bottom:0.75rem;">
         <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.2rem;">
@@ -9450,9 +9645,11 @@
     const eventsFeed = document.getElementById('cdash-events-feed');
     eventsFeed.innerHTML = '<div class="empty-state">Loading...</div>';
     if (myChapter) {
-      const evSnap = await getDocs(query(collection(db, 'events'), where('chapter', '==', myChapter), orderBy('date', 'desc')));
-      eventsFeed.innerHTML = evSnap.docs.length ? evSnap.docs.map(d => {
-        const e = d.data();
+      // Sort client-side to avoid a where+orderBy composite index requirement
+      const evSnap = await getDocs(query(collection(db, 'events'), where('chapter', '==', myChapter)));
+      const evRows = evSnap.docs.map(d => ({ id: d.id, ...d.data() }))
+        .sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+      eventsFeed.innerHTML = evRows.length ? evRows.map(e => {
         const canDel = e.createdByUid === me.uid || isPresidentOrDirector;
         return `<div class="card" style="margin-bottom:0.65rem;">
           <div style="display:flex;justify-content:space-between;align-items:flex-start;">
@@ -9461,7 +9658,7 @@
               <div style="font-size:0.78rem;color:var(--muted);">${esc(e.date||'')}${e.time ? ' at ' + esc(e.time) : ''}${e.location ? ' &bull; ' + esc(e.location) : ''}</div>
               ${e.description ? `<div style="font-size:0.82rem;color:var(--text-soft);margin-top:0.2rem;">${esc(e.description)}</div>` : ''}
             </div>
-            ${canDel ? `<button onclick="deleteEvent('${d.id}')" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:0.75rem;padding:0.2rem 0.4rem;" onmouseover="this.style.color='#e74c3c'" onmouseout="this.style.color='var(--muted)'">Delete</button>` : ''}
+            ${canDel ? `<button onclick="deleteEvent('${e.id}')" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:0.75rem;padding:0.2rem 0.4rem;" onmouseover="this.style.color='#e74c3c'" onmouseout="this.style.color='var(--muted)'">Delete</button>` : ''}
           </div>
         </div>`;
       }).join('') : '<div class="empty-state"><span class="empty-icon">📅</span>No events yet.</div>';
@@ -9894,7 +10091,7 @@
   }
 
   // Renders matching members into a results box. `handlerName` is the NAME of a
-  // window function called on click — this is required so the selection reaches
+  // window function called on click - this is required so the selection reaches
   // module scope (a stringified inline closure would run in global scope and the
   // assignment would silently miss the module variable).
   function ceoSearchDropdown(inputId, resultsId, handlerName) {
@@ -10142,8 +10339,8 @@
   // When DevTools is open, the debugger; statement causes a measurable pause
   var _devOpen = false;
   function _checkDevTools() {
-    // Never block the developer (super_admin) account
-    if (typeof myRole !== 'undefined' && (myRole === 'super_admin' || _devRealRole === 'super_admin')) return;
+    // Never block the developer (super_admin) account - flag is set by boot()
+    if (window.__edutineDev) return;
     var before = performance.now();
     // eslint-disable-next-line no-debugger
     debugger;
@@ -10167,7 +10364,7 @@
   // ── Nav drag-and-drop reorder ────────────────────────────────────────────
 
   function navOrderKey() {
-    return 'nav_order_' + (typeof me !== 'undefined' && me ? me.uid : 'guest') + '_' + (typeof myRole !== 'undefined' && myRole ? myRole : '');
+    return 'nav_order_' + (window.__edutineUid || 'guest') + '_' + (window.__edutineRole || '');
   }
 
   function saveNavOrder() {
@@ -10194,11 +10391,11 @@
     } catch(e) {}
   }
 
-  // Pointer-based reordering — native HTML5 drag-and-drop on <button> elements is
+  // Pointer-based reordering - native HTML5 drag-and-drop on <button> elements is
   // unreliable across browsers/OSes (it depends on the browser's internal drag-gesture
   // recognition, which frequently never fires on form controls). Plain pointer events
   // work everywhere and give us full control, so every nav item is reordered by
-  // dragging its handle with pointerdown/pointermove/pointerup — the same reliable
+  // dragging its handle with pointerdown/pointermove/pointerup - the same reliable
   // approach used for the dashboard widget resize handles.
   let _navDrag = null; // { el, startY, dragging }
 
@@ -10279,7 +10476,7 @@
   window._restoreNavOrder = restoreNavOrder;
   window._saveNavOrder    = saveNavOrder;
 
-  // ── Resizable sidebar (pointer-events based — same reliable approach as the
+  // ── Resizable sidebar (pointer-events based - same reliable approach as the
   // dashboard widget resize and nav reordering above) ──
   const SIDEBAR_MIN = 180, SIDEBAR_MAX = 420, SIDEBAR_WIDTH_KEY = 'edutine_sidebar_width';
 
@@ -10369,6 +10566,37 @@
   </div>
 </div>
 
+<!-- ── New Message Modal ─────────────────────────────────────────────────── -->
+<div id="msg-modal-backdrop" onclick="closeMsgModal()" style="display:none;position:fixed;inset:0;background:rgba(14,20,40,0.5);backdrop-filter:blur(4px);z-index:800;"></div>
+<div id="msg-modal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:801;width:440px;max-width:calc(100vw - 2rem);background:#fff;border-radius:20px;box-shadow:0 24px 64px rgba(14,20,40,0.28);border:1px solid var(--border);overflow:hidden;">
+  <div style="background:var(--navy);padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between;">
+    <div>
+      <div style="font-family:'Lora',serif;font-size:1.05rem;font-weight:700;color:#fff;">New Message</div>
+      <div style="font-size:0.73rem;color:rgba(255,255,255,0.55);margin-top:0.15rem;">Message any student, tutor, or staff member.</div>
+    </div>
+    <button onclick="closeMsgModal()" style="background:rgba(255,255,255,0.1);border:none;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:rgba(255,255,255,0.8);font-size:1.1rem;line-height:1;flex-shrink:0;">&times;</button>
+  </div>
+  <div style="padding:1.5rem;display:flex;flex-direction:column;gap:1rem;">
+    <div>
+      <label style="font-size:0.72rem;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:0.4rem;">Recipient</label>
+      <div style="position:relative;">
+        <input class="form-input" id="msg-to-search" oninput="msgRecipientSearch()" onfocus="msgRecipientSearch()" placeholder="Search by name or email..." autocomplete="off" style="font-size:0.85rem;padding:0.55rem 0.75rem;" />
+        <div id="msg-to-results" style="display:none;position:absolute;top:100%;left:0;right:0;margin-top:2px;background:var(--white);border:1px solid var(--border);border-radius:var(--r-sm);box-shadow:var(--shadow-md);z-index:50;max-height:220px;overflow-y:auto;"></div>
+      </div>
+      <div id="msg-to-selected" style="display:none;margin-top:0.5rem;font-size:0.82rem;font-weight:600;color:var(--navy);align-items:center;gap:0.4rem;"></div>
+    </div>
+    <div>
+      <label style="font-size:0.72rem;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:0.4rem;">Message</label>
+      <textarea class="form-input" id="msg-modal-text" rows="4" placeholder="Type your message..." style="font-size:0.85rem;padding:0.6rem 0.75rem;resize:vertical;font-family:inherit;line-height:1.55;display:block;width:100%;box-sizing:border-box;"></textarea>
+    </div>
+    <div id="msg-modal-err" style="display:none;font-size:0.82rem;color:#a33;background:#fdf0f0;border:1px solid #ecc;border-radius:8px;padding:0.5rem 0.75rem;"></div>
+    <div style="display:flex;gap:0.5rem;">
+      <button onclick="closeMsgModal()" style="flex:1;padding:0.65rem;background:none;border:1px solid var(--border);border-radius:10px;font-size:0.85rem;font-weight:600;color:var(--muted);cursor:pointer;font-family:'Inter',sans-serif;">Cancel</button>
+      <button id="msg-modal-send-btn" onclick="sendNewMessage()" style="flex:1;background:var(--navy);color:#fff;border:none;border-radius:10px;padding:0.65rem 1rem;font-size:0.88rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;">Send</button>
+    </div>
+  </div>
+</div>
+
 <!-- ── Interview Scheduling Modal ────────────────────────────────────────── -->
 <div id="sched-modal-backdrop" onclick="closeScheduleModal()" style="display:none;position:fixed;inset:0;background:rgba(14,20,40,0.5);backdrop-filter:blur(4px);z-index:800;"></div>
 <div id="sched-modal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:801;width:460px;max-width:calc(100vw - 2rem);background:#fff;border-radius:20px;box-shadow:0 24px 64px rgba(14,20,40,0.28);border:1px solid var(--border);overflow:hidden;">
@@ -10434,7 +10662,7 @@
     <p>These terms apply to everyone who uses the Portal or applies through it, including students, parents/guardians who assist a student, tutor applicants, tutors, and Edutine staff, officers, and board members across all chapters.</p>
 
     <p style="font-weight:700;color:var(--navy);margin-top:1.1rem;">2. Acceptable use</p>
-    <p>You agree to use the Portal only for its intended purpose — coordinating tutoring, volunteer activities, and Edutine chapter operations. You will not share your login credentials, impersonate another user, misrepresent your identity or qualifications in an application, or attempt to access accounts, chapters, or data you are not authorized to view.</p>
+    <p>You agree to use the Portal only for its intended purpose - coordinating tutoring, volunteer activities, and Edutine chapter operations. You will not share your login credentials, impersonate another user, misrepresent your identity or qualifications in an application, or attempt to access accounts, chapters, or data you are not authorized to view.</p>
 
     <p style="font-weight:700;color:var(--navy);margin-top:1.1rem;">3. Code of conduct</p>
     <p>Edutine connects student volunteers with student learners, including minors. All users must communicate respectfully and professionally at all times. Harassment, discrimination, or inappropriate contact of any kind will result in immediate removal from the Portal and the organization, and may be reported to a parent/guardian, law enforcement, or another appropriate authority where required by law.</p>
@@ -10443,10 +10671,10 @@
     <p>Tutoring provided through Edutine is delivered by student volunteers on a best-effort basis for general educational support only. It is not a substitute for professional educational, therapeutic, medical, psychological, or legal services, and nothing provided through the Portal constitutes professional advice of any kind. Edutine does not guarantee specific academic outcomes, grades, test scores, or admissions results.</p>
 
     <p style="font-weight:700;color:var(--navy);margin-top:1.1rem;">5. Information we collect and how we use it</p>
-    <p>We collect the information you provide directly (name, email, phone number, school/grade, application responses, messages, volunteer hours, notes, and similar records) as well as usage and analytics data collected automatically when you use the Portal — for example, pages and tabs visited, actions taken (such as approvals, sign-offs, and submissions), device/browser type, IP address, and timestamps. This is used to operate, maintain, secure, and improve Edutine's tutoring and volunteer programs, to match students and tutors, to measure program impact for grant and reporting purposes, and to keep an audit trail of approvals and account activity.</p>
+    <p>We collect the information you provide directly (name, email, phone number, school/grade, application responses, messages, volunteer hours, notes, and similar records) as well as usage and analytics data collected automatically when you use the Portal - for example, pages and tabs visited, actions taken (such as approvals, sign-offs, and submissions), device/browser type, IP address, and timestamps. This is used to operate, maintain, secure, and improve Edutine's tutoring and volunteer programs, to match students and tutors, to measure program impact for grant and reporting purposes, and to keep an audit trail of approvals and account activity.</p>
 
     <p style="font-weight:700;color:var(--navy);margin-top:1.1rem;">6. Data retention</p>
-    <p>We retain account and program records for as long as your account is active and for a reasonable period afterward as needed for recordkeeping, grant reporting, safety, and legal purposes (generally up to seven years following your last activity, or longer if required by law, a pending dispute, or a legitimate business need). Some information — such as approval records, volunteer-hour sign-offs, and safety-related records — may be retained longer than other data even after an account is deactivated. You may request deletion of your personal information by emailing tutor@edutinereachout.com; we will honor such requests except where retention is required for legal, safety, or accounting purposes.</p>
+    <p>We retain account and program records for as long as your account is active and for a reasonable period afterward as needed for recordkeeping, grant reporting, safety, and legal purposes (generally up to seven years following your last activity, or longer if required by law, a pending dispute, or a legitimate business need). Some information - such as approval records, volunteer-hour sign-offs, and safety-related records - may be retained longer than other data even after an account is deactivated. You may request deletion of your personal information by emailing tutor@edutinereachout.com; we will honor such requests except where retention is required for legal, safety, or accounting purposes.</p>
 
     <p style="font-weight:700;color:var(--navy);margin-top:1.1rem;">7. Sharing of information</p>
     <p>We do not sell your personal information. Information is shared only with Edutine staff, officers, and board members who need it to operate the program, and with service providers (such as our hosting and authentication providers) who process it on our behalf under confidentiality obligations. We may disclose information if required by law, subpoena, or court order, or to protect the safety of any person.</p>
