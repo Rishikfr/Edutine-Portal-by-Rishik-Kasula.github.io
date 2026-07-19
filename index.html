@@ -191,6 +191,34 @@
     }
     .tab.active { background: rgba(255,255,255,0.15); color: #e8f2ff; font-weight: 600; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
 
+    /* ── Auth view switch (login ⇄ student sign-up) ── */
+    @keyframes authViewIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: none; }
+    }
+    #form-signin, #form-signup { animation: authViewIn 0.28s ease; }
+    /* When the student sign-up view is active, the whole panel picks up a green
+       accent so it's unmistakable you've left the sign-in screen. */
+    .auth-box.signup-mode { position: relative; }
+    .auth-box.signup-mode #auth-title { color: #8ff0c0; transition: color 0.2s; }
+    .signup-mode-badge {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: rgba(60,220,150,0.16); border: 1px solid rgba(96,240,180,0.5);
+      color: #8ff0c0; font-size: 0.66rem; font-weight: 800; letter-spacing: 0.1em;
+      text-transform: uppercase; padding: 0.3rem 0.7rem; border-radius: 999px;
+      margin-bottom: 0.85rem;
+    }
+    .signup-mode-badge::before {
+      content: ''; width: 7px; height: 7px; border-radius: 50%;
+      background: #3cdc96; box-shadow: 0 0 0 0 rgba(60,220,150,0.6);
+      animation: signupPulse 1.6s ease-out infinite;
+    }
+    @keyframes signupPulse {
+      0%   { box-shadow: 0 0 0 0 rgba(60,220,150,0.55); }
+      70%  { box-shadow: 0 0 0 7px rgba(60,220,150,0); }
+      100% { box-shadow: 0 0 0 0 rgba(60,220,150,0); }
+    }
+
     .input-field {
       width: 100%; padding: 0.85rem 1rem;
       border: 1.5px solid rgba(255,255,255,0.15); border-radius: var(--r-sm);
@@ -313,6 +341,7 @@
       background: rgba(255,255,255,0.08);
       border-radius: var(--r-sm); margin-bottom: 1rem;
       border: 1px solid rgba(255,255,255,0.1);
+      position: relative;
     }
     .sidebar-avatar {
       width: 32px; height: 32px; border-radius: 50%;
@@ -323,6 +352,41 @@
     }
     .sidebar-name { font-size: 0.875rem; font-weight: 600; color: #fff; line-height: 1.2; }
     .sidebar-role-badge { font-size: 0.63rem; font-weight: 500; color: rgba(255,255,255,0.5); margin-top: 0.15rem; }
+
+    /* ── Active-role switcher (users assigned more than one position) ── */
+    .sb-role-switch {
+      display: inline-flex; align-items: center; gap: 0.25rem;
+      background: none; border: none; padding: 0; margin-top: 0.15rem;
+      color: rgba(255,255,255,0.5); font-family: 'Inter', sans-serif;
+      font-size: 0.63rem; font-weight: 500; line-height: 1.2;
+      cursor: default; text-align: left; max-width: 100%;
+    }
+    .sb-role-switch #sb-role { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sb-role-switch.switchable { cursor: pointer; }
+    .sb-role-switch.switchable:hover { color: rgba(255,255,255,0.9); }
+    .sb-role-caret { font-size: 0.5rem; transition: transform 0.15s; display: none; flex-shrink: 0; }
+    .sb-role-switch.open .sb-role-caret { transform: rotate(180deg); }
+    .sb-role-menu {
+      display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+      background: #1e2840; border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.45);
+      z-index: 70; overflow: hidden; padding: 0.25rem;
+    }
+    .sb-role-menu-head {
+      font-size: 0.54rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      color: rgba(255,255,255,0.4); padding: 0.35rem 0.5rem 0.3rem;
+    }
+    .sb-role-opt {
+      display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;
+      width: 100%; box-sizing: border-box; background: none; border: none;
+      border-radius: 6px; padding: 0.4rem 0.5rem; cursor: pointer;
+      color: rgba(255,255,255,0.85); font-family: 'Inter', sans-serif;
+      font-size: 0.76rem; text-align: left;
+    }
+    .sb-role-opt:hover { background: rgba(255,255,255,0.1); }
+    .sb-role-opt.active { background: rgba(126,206,244,0.18); color: #cfeeff; font-weight: 600; }
+    .sb-role-opt-chapter { display: block; font-size: 0.6rem; color: rgba(255,255,255,0.45); font-weight: 500; margin-top: 0.05rem; }
+    .sb-role-opt-check { color: #7ecef4; font-size: 0.78rem; flex-shrink: 0; }
 
     .sidebar-nav { display: flex; flex-direction: column; gap: 0.1rem; flex: 1; }
 
@@ -529,9 +593,19 @@
     .dash-pill { font-size: 0.62rem; font-weight: 700; padding: 0.16rem 0.55rem; border-radius: 20px; white-space: nowrap; display: inline-flex; align-items: center; gap: 0.25rem; }
     .dash-empty { font-size: 0.76rem; color: var(--muted); font-style: italic; }
 
-    /* Tutor-application checklist rows - clickable to expand interview/notes detail */
-    .app-check-row { border-radius: 6px; padding: 0.25rem 0.35rem; margin: 0.05rem -0.35rem; transition: background 0.12s; cursor: pointer; }
-    .app-check-row:hover { background: var(--panel); }
+    /* Tutor-application checklist - each step is a tickable checkbox */
+    .app-check-row { border-radius: 8px; padding: 0.4rem 0.45rem; margin: 0.05rem -0.45rem; transition: background 0.12s; }
+    .app-check-row.actionable:hover { background: var(--panel); }
+    .app-check-box {
+      width: 26px; height: 26px; border-radius: 50%;
+      border: 2px solid #c9d2e0; background: #fff;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 0.95rem; font-weight: 800; line-height: 1; color: transparent;
+      flex-shrink: 0; margin-top: 1px;
+      transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.12s;
+    }
+    .app-check-box.done { background: #1a6e3c; border-color: #1a6e3c; color: #fff; }
+    .app-check-row.actionable:hover .app-check-box { border-color: var(--navy); background: #eef3fa; transform: scale(1.06); }
     .app-check-chevron { margin-left: auto; color: var(--light); font-size: 0.7rem; transition: transform 0.15s; flex-shrink: 0; }
     .app-check-chevron.open { transform: rotate(90deg); }
 
@@ -877,6 +951,30 @@
       font-size:0.62rem; font-weight:700; min-width:16px; height:16px;
       padding:0 4px; margin-left:auto; flex-shrink:0;
     }
+    /* ── Support tab ── */
+    #support-staff-filters { display:none; }
+    #support-staff-filters.shown { display:flex; }
+    .support-filter-btn {
+      background: var(--white); border: 1px solid var(--border); color: var(--text-soft);
+      border-radius: 20px; padding: 0.32rem 0.85rem; font-size: 0.78rem; font-weight: 600;
+      cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.12s, color 0.12s, border-color 0.12s;
+    }
+    .support-filter-btn:hover { border-color: var(--navy); color: var(--navy); }
+    .support-filter-btn.active { background: var(--navy); border-color: var(--navy); color: #fff; }
+    .support-status {
+      display:inline-block; font-size:0.66rem; font-weight:700; letter-spacing:0.04em;
+      text-transform:uppercase; border-radius:20px; padding:0.15rem 0.6rem;
+    }
+    .support-status.open     { background:#fbeacb; color:#9a6a12; }
+    .support-status.assigned { background:#e3eef7; color:#2d7aac; }
+    .support-status.resolved { background:#e2f0e8; color:#1a6e3c; }
+    .support-msg {
+      max-width: 85%; border-radius: 12px; padding: 0.5rem 0.7rem; font-size: 0.85rem;
+      line-height: 1.4; word-break: break-word; white-space: pre-wrap;
+    }
+    .support-msg.staff   { background: var(--navy); color: #fff; align-self: flex-end; }
+    .support-msg.student { background: #f0f4ff; color: var(--text); align-self: flex-start; }
+    .support-msg-meta { font-size: 0.66rem; color: var(--muted); margin-top: 0.15rem; }
     /* ── Toast notifications ── */
     #toast-stack {
       position: fixed; bottom: 1.25rem; right: 1.25rem; z-index: 500;
@@ -1050,43 +1148,53 @@
     <div class="auth-box">
 
       <div id="auth-section">
-        <h2>Welcome back</h2>
-        <p class="auth-sub">Sign in to access your Edutine portal.</p>
-        <div class="tab-row">
-          <button class="tab active" id="tab-signin" onclick="switchTab('signin')">Sign In</button>
-          <button class="tab" id="tab-signup" onclick="switchTab('signup')">Sign Up</button>
-        </div>
+        <h2 id="auth-title">Welcome back</h2>
+        <p class="auth-sub" id="auth-sub">Sign in to access your Edutine portal.</p>
+
+        <!-- ── Sign in ── -->
         <div id="form-signin">
           <input type="email" class="input-field" id="signin-email" placeholder="Email" />
           <div style="position:relative;">
             <input type="password" class="input-field" id="signin-password" placeholder="Password" style="padding-right:2.75rem;" />
             <button type="button" onclick="togglePw('signin-password',this)" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted);font-size:0.78rem;font-weight:600;padding:0;">Show</button>
           </div>
+          <label style="display:flex;align-items:flex-start;gap:0.55rem;margin:0.9rem 0 0.15rem;cursor:pointer;font-size:0.78rem;color:rgba(200,220,255,0.75);line-height:1.5;">
+            <input type="checkbox" id="tos-agree" onchange="onTosAgreeChange()" style="margin-top:0.15rem;accent-color:#7ecef4;cursor:pointer;flex-shrink:0;" />
+            <span>I agree to the <a onclick="event.preventDefault();showTosModal();" href="#" style="color:#7ecef4;font-weight:600;text-decoration:underline;">Terms of Service</a></span>
+          </label>
           <button class="btn-primary" id="signin-btn" onclick="signInEmail()" disabled style="opacity:0.5;cursor:not-allowed;">Sign In</button>
+          <div class="divider"><span>or</span></div>
+          <button class="btn-google" id="google-btn" onclick="signInGoogle()" disabled style="opacity:0.5;cursor:not-allowed;">
+            <svg width="18" height="18" viewBox="0 0 48 48" fill="none"><path d="M47.5 24.5c0-1.6-.1-3.2-.4-4.7H24v9h13.1c-.6 3-2.3 5.5-4.9 7.2v6h7.9c4.6-4.2 7.4-10.5 7.4-17.5z" fill="#4285F4"/><path d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.9-6c-2.2 1.5-5 2.3-8 2.3-6.1 0-11.3-4.1-13.2-9.7H2.7v6.2C6.7 42.8 14.8 48 24 48z" fill="#34A853"/><path d="M10.8 28.8c-.5-1.5-.8-3-.8-4.8s.3-3.3.8-4.8V13H2.7C1 16.3 0 20 0 24s1 7.7 2.7 11l8.1-6.2z" fill="#FBBC05"/><path d="M24 9.5c3.4 0 6.5 1.2 8.9 3.5l6.6-6.6C35.9 2.4 30.5 0 24 0 14.8 0 6.7 5.2 2.7 13l8.1 6.2C12.7 13.6 17.9 9.5 24 9.5z" fill="#EA4335"/></svg>
+            Continue with Google
+          </button>
+          <div id="auth-error" class="error-msg" style="display:none;"></div>
+          <button onclick="showTutorInquiryModal()" style="display:block;width:100%;margin-top:1.4rem;background:linear-gradient(135deg,#5a9fbf,#7ecef4);color:#0f1b2e;border:none;border-radius:14px;padding:0.85rem 1.25rem;font-family:'Inter',sans-serif;font-size:0.95rem;font-weight:700;cursor:pointer;box-shadow:0 4px 18px rgba(126,206,244,0.25);transition:transform 0.12s,box-shadow 0.12s;" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 6px 22px rgba(126,206,244,0.35)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 18px rgba(126,206,244,0.25)'">
+            ✦ Want to volunteer as a tutor?
+          </button>
+          <button onclick="signUpAsStudent()" style="display:block;width:100%;margin-top:0.75rem;background:transparent;color:#cfe6f7;border:1.5px solid rgba(126,206,244,0.5);border-radius:14px;padding:0.8rem 1.25rem;font-family:'Inter',sans-serif;font-size:0.95rem;font-weight:700;cursor:pointer;transition:background 0.12s,border-color 0.12s;" onmouseover="this.style.background='rgba(126,206,244,0.12)';this.style.borderColor='rgba(126,206,244,0.8)'" onmouseout="this.style.background='transparent';this.style.borderColor='rgba(126,206,244,0.5)'">
+            🎒 Sign up as a student
+          </button>
+          <div style="text-align:center;margin-top:0.5rem;font-size:0.74rem;color:rgba(180,210,255,0.45);">Apply to join a chapter's tutoring team, or create a student account</div>
         </div>
+
+        <!-- ── Student sign up (create login) ── -->
         <div id="form-signup" style="display:none;">
+          <button type="button" onclick="showSignInView()" style="background:none;border:none;color:rgba(180,210,255,0.7);cursor:pointer;font-size:0.8rem;padding:0;margin-bottom:0.6rem;font-family:'Inter',sans-serif;">&#8592; Back to sign in</button>
+          <div class="signup-mode-badge">Creating a new student account</div>
           <input type="text" class="input-field" id="signup-name" placeholder="Full Name" />
           <input type="email" class="input-field" id="signup-email" placeholder="Email" />
           <div style="position:relative;">
             <input type="password" class="input-field" id="signup-password" placeholder="Password" style="padding-right:2.75rem;" />
             <button type="button" onclick="togglePw('signup-password',this)" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted);font-size:0.78rem;font-weight:600;padding:0;">Show</button>
           </div>
+          <label style="display:flex;align-items:flex-start;gap:0.55rem;margin:0.9rem 0 0.15rem;cursor:pointer;font-size:0.78rem;color:rgba(200,220,255,0.75);line-height:1.5;">
+            <input type="checkbox" id="signup-tos-agree" onchange="onSignupTosChange()" style="margin-top:0.15rem;accent-color:#7ecef4;cursor:pointer;flex-shrink:0;" />
+            <span>I agree to the <a onclick="event.preventDefault();showTosModal();" href="#" style="color:#7ecef4;font-weight:600;text-decoration:underline;">Terms of Service</a></span>
+          </label>
           <button class="btn-primary" id="signup-btn" onclick="signUpEmail()" disabled style="opacity:0.5;cursor:not-allowed;">Create Account</button>
+          <div id="signup-error" class="error-msg" style="display:none;margin-top:0.5rem;"></div>
         </div>
-        <label style="display:flex;align-items:flex-start;gap:0.55rem;margin:0.9rem 0 0.15rem;cursor:pointer;font-size:0.78rem;color:rgba(200,220,255,0.75);line-height:1.5;">
-          <input type="checkbox" id="tos-agree" onchange="onTosAgreeChange()" style="margin-top:0.15rem;accent-color:#7ecef4;cursor:pointer;flex-shrink:0;" />
-          <span>I agree to the <a onclick="event.preventDefault();showTosModal();" href="#" style="color:#7ecef4;font-weight:600;text-decoration:underline;">Terms of Service</a></span>
-        </label>
-        <div class="divider"><span>or</span></div>
-        <button class="btn-google" id="google-btn" onclick="signInGoogle()" disabled style="opacity:0.5;cursor:not-allowed;">
-          <svg width="18" height="18" viewBox="0 0 48 48" fill="none"><path d="M47.5 24.5c0-1.6-.1-3.2-.4-4.7H24v9h13.1c-.6 3-2.3 5.5-4.9 7.2v6h7.9c4.6-4.2 7.4-10.5 7.4-17.5z" fill="#4285F4"/><path d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.9-6c-2.2 1.5-5 2.3-8 2.3-6.1 0-11.3-4.1-13.2-9.7H2.7v6.2C6.7 42.8 14.8 48 24 48z" fill="#34A853"/><path d="M10.8 28.8c-.5-1.5-.8-3-.8-4.8s.3-3.3.8-4.8V13H2.7C1 16.3 0 20 0 24s1 7.7 2.7 11l8.1-6.2z" fill="#FBBC05"/><path d="M24 9.5c3.4 0 6.5 1.2 8.9 3.5l6.6-6.6C35.9 2.4 30.5 0 24 0 14.8 0 6.7 5.2 2.7 13l8.1 6.2C12.7 13.6 17.9 9.5 24 9.5z" fill="#EA4335"/></svg>
-          Continue with Google
-        </button>
-        <div id="auth-error" class="error-msg" style="display:none;"></div>
-        <button onclick="showTutorInquiryModal()" style="display:block;width:100%;margin-top:1.4rem;background:linear-gradient(135deg,#5a9fbf,#7ecef4);color:#0f1b2e;border:none;border-radius:14px;padding:0.85rem 1.25rem;font-family:'Inter',sans-serif;font-size:0.95rem;font-weight:700;cursor:pointer;box-shadow:0 4px 18px rgba(126,206,244,0.25);transition:transform 0.12s,box-shadow 0.12s;" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 6px 22px rgba(126,206,244,0.35)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 18px rgba(126,206,244,0.25)'">
-          ✦ Want to volunteer as a tutor?
-        </button>
-        <div style="text-align:center;margin-top:0.5rem;font-size:0.74rem;color:rgba(180,210,255,0.45);">Apply to join a chapter's tutoring team</div>
       </div>
 
       <div id="role-section" style="display:none;">
@@ -1406,11 +1514,15 @@
     </div>
     <div class="sidebar-user">
       <div class="sidebar-avatar" id="sb-avatar"></div>
-      <div>
+      <div style="min-width:0;flex:1;">
         <div class="sidebar-name" id="sb-name"></div>
-        <div class="sidebar-role-badge" id="sb-role"></div>
+        <button type="button" class="sb-role-switch" id="sb-role-switch" onclick="toggleRoleMenu(event)" title="Switch position">
+          <span id="sb-role"></span>
+          <span class="sb-role-caret" id="sb-role-caret">▾</span>
+        </button>
         <div id="sb-chapter" style="font-size:0.58rem;color:rgba(255,255,255,0.3);margin-top:0.1rem;letter-spacing:0.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px;"></div>
       </div>
+      <div class="sb-role-menu" id="sb-role-menu"></div>
     </div>
     <!-- Developer role switcher (super_admin only) - collapsed by default so it
          doesn't eat sidebar space on every visit; expands only when needed. -->
@@ -1515,7 +1627,7 @@
       </button>
       <!-- Tutor new tabs -->
       <button class="nav-item" id="nav-sessions" style="display:none;" onclick="showTab('sessions')">
-        <span class="nav-icon">📓</span> Sessions
+        <span class="nav-icon">📓</span> Post-Session Notes
       </button>
       <button class="nav-item" id="nav-tutor-homework" style="display:none;" onclick="showTab('tutor-homework')">
         <span class="nav-icon">📝</span> Assign Homework
@@ -1544,6 +1656,10 @@
       </button>
       <button class="nav-item" id="nav-events" style="display:none;" onclick="showTab('events')">
         <span class="nav-icon">📅</span> Events
+      </button>
+      <button class="nav-item" id="nav-support" style="display:none;" onclick="showTab('support')">
+        <span class="nav-icon">🆘</span> <span id="nav-support-label">Support</span>
+        <span id="support-badge" class="notif-badge" style="display:none;margin-left:auto;"></span>
       </button>
     </nav>
     <button class="sidebar-signout" onclick="signOut()">Sign Out</button>
@@ -1892,7 +2008,10 @@
         <div id="tutor-inquiry-feed"></div>
       </div>
       <div id="tutor-applications-section" style="display:none;margin-bottom:1.5rem;">
-        <div class="card-label" style="margin-bottom:0.65rem;">Tutor Applications</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:0.75rem;flex-wrap:wrap;margin-bottom:0.65rem;">
+          <div class="card-label" id="tutor-applications-label" style="margin:0;">Tutor Applications</div>
+          <button id="app-archive-toggle" onclick="toggleAppArchiveView()" class="btn-sm" style="font-size:0.74rem;padding:0.3rem 0.8rem;background:#f4f1ea;border:1px solid #e0d9c8;color:var(--navy);font-weight:600;">🗄 View archived</button>
+        </div>
         <div id="tutor-applications-feed"></div>
       </div>
       <div id="tutor-review-feed">
@@ -2560,6 +2679,7 @@
         <div class="page-title">Request a Tutor</div>
         <p class="page-sub">Fill out this form to be matched with a volunteer tutor.</p>
       </div>
+      <div id="signup-tutoring-closed" style="display:none;"></div>
       <div id="signup-tutoring-pending" class="card" style="display:none;text-align:center;">
         <div style="font-size:2rem;margin-bottom:0.5rem;">⏳</div>
         <div style="font-family:'Lora',serif;font-weight:700;font-size:1.1rem;color:var(--navy);margin-bottom:0.4rem;">Application Submitted</div>
@@ -2589,7 +2709,7 @@
           </div>
           <div class="form-group">
             <label class="form-label">Chapter *</label>
-            <select class="form-input" id="ist-chapter">
+            <select class="form-input" id="ist-chapter" onchange="populateSignupSubjectOptions()">
               <option value="">Select chapter...</option>
               <option>Alameda</option><option>Contra Costa</option><option>San Joaquin County</option><option>Southern California</option><option>Texas</option>
             </select>
@@ -2608,7 +2728,9 @@
         </div>
         <div class="form-group">
           <label class="form-label">Subjects Needed *</label>
-          <input class="form-input" id="ist-subjects" placeholder="e.g. Math, English, Science..." />
+          <div style="font-size:0.78rem;color:var(--muted);margin-bottom:0.45rem;" id="ist-subjects-hint">Pick from the subjects tutors in your chapter currently teach.</div>
+          <div id="ist-subject-pills" style="display:flex;flex-wrap:wrap;gap:0.35rem;"></div>
+          <input type="hidden" id="ist-subjects" />
         </div>
         <div class="form-row">
           <div class="form-group">
@@ -2703,14 +2825,63 @@
       </div>
     </div>
 
+    <!-- ── Support (students contact staff; any staff can respond) ──────────── -->
+    <div class="tab-content" id="tab-support">
+      <div class="page-header">
+        <div class="page-title" id="support-page-title">Support</div>
+        <p class="page-sub" id="support-page-sub">Need help? Send our team a message and we'll get you sorted out.</p>
+      </div>
+
+      <!-- Student-only: submit a new request -->
+      <div id="support-student-wrap" style="display:none;">
+        <div class="card" style="background:linear-gradient(135deg,var(--navy-dark) 0%,var(--navy) 100%);color:#fff;margin-bottom:1.25rem;">
+          <div style="display:flex;align-items:center;gap:0.6rem;">
+            <span style="font-size:1.4rem;">🕑</span>
+            <div>
+              <div style="font-weight:700;font-size:0.95rem;">We usually get back within 24–48 hours.</div>
+              <div style="font-size:0.82rem;color:rgba(255,255,255,0.7);margin-top:0.15rem;">A member of our team will reply right here and by email. For emergencies, contact tutor@edutinereachout.com.</div>
+            </div>
+          </div>
+        </div>
+        <div class="card" id="support-new-wrap" style="margin-bottom:1.25rem;">
+          <div class="card-label">Contact Support</div>
+          <div class="form-group">
+            <label class="form-label">What do you need help with? *</label>
+            <input class="form-input" id="support-subject" placeholder="Short summary (e.g. Can't join my session)" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Describe your issue *</label>
+            <textarea class="form-input" id="support-message" rows="4" style="resize:vertical;" placeholder="Tell us what's going on and we'll help you fix it..."></textarea>
+          </div>
+          <div id="support-new-err" style="display:none;font-size:0.8rem;color:#c0392b;margin-bottom:0.5rem;"></div>
+          <div class="compose-footer">
+            <button class="btn-sm" id="support-submit-btn" onclick="submitSupportTicket()">Send to Support</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Staff-only: filter controls -->
+      <div id="support-staff-filters" style="display:none;margin-bottom:1rem;gap:0.4rem;flex-wrap:wrap;">
+        <button class="support-filter-btn active" data-filter="open" onclick="setSupportFilter('open')">Open</button>
+        <button class="support-filter-btn" data-filter="mine" onclick="setSupportFilter('mine')">Assigned to me</button>
+        <button class="support-filter-btn" data-filter="unassigned" onclick="setSupportFilter('unassigned')">Unassigned</button>
+        <button class="support-filter-btn" data-filter="resolved" onclick="setSupportFilter('resolved')">Resolved</button>
+        <button class="support-filter-btn" data-filter="all" onclick="setSupportFilter('all')">All</button>
+      </div>
+
+      <div id="support-feed">
+        <div class="empty-state"><span class="empty-icon">🆘</span>Loading...</div>
+      </div>
+    </div>
+
     <!-- ── Sessions - tutor (log reports) + student (view history) ───────── -->
     <div class="tab-content" id="tab-sessions">
       <div class="page-header">
-        <div class="page-title">Sessions</div>
+        <div class="page-title">Post-Session Notes</div>
         <p class="page-sub" id="sessions-page-sub">Submit a required post-session report after every tutoring session.</p>
       </div>
       <div class="card" id="sn-log-wrap" style="margin-bottom:1.25rem;">
-        <div class="card-label">Log a Session</div>
+        <div class="card-label">Log a Post-Session Report</div>
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">Student</label>
@@ -2997,12 +3168,17 @@
   } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
   import {
     getFirestore, doc, getDoc, getDocs, setDoc, addDoc, updateDoc, deleteDoc,
-    collection, query, orderBy, where, onSnapshot, serverTimestamp
+    collection, query, orderBy, where, onSnapshot, serverTimestamp, arrayUnion
   } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+  import {
+    getDatabase, ref as dbRef, push as dbPush, onValue,
+    query as dbQuery, limitToLast, serverTimestamp as rtdbTimestamp
+  } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
   const app = initializeApp({
     apiKey: "AIzaSyAAbOHfOgYdo4R6NzbZyYNinVHver5nhhE",
     authDomain: "edutine-f7c1a.firebaseapp.com",
+    databaseURL: "https://edutine-f7c1a-default-rtdb.firebaseio.com",
     projectId: "edutine-f7c1a",
     storageBucket: "edutine-f7c1a.firebasestorage.app",
     messagingSenderId: "680584051377",
@@ -3013,6 +3189,7 @@
   getAnalytics(app);
   const auth = getAuth(app);
   const db = getFirestore(app);
+  const rtdb = getDatabase(app);
   const gProvider = new GoogleAuthProvider();
 
   const SPECIAL = {
@@ -3162,6 +3339,56 @@
     'Southern California',
     'Texas'
   ];
+
+  // ── Student signup launch ────────────────────────────────────────────────
+  // Student tutoring signups open July 22, 2026 at 12:00 AM Pacific. Written
+  // with an explicit UTC offset so it can't drift: July is PDT (UTC-7).
+  // Change this one constant to move or re-open the launch.
+  const STUDENT_SIGNUP_LAUNCH = new Date('2026-07-22T00:00:00-07:00').getTime();
+  function studentSignupsOpen() { return Date.now() >= STUDENT_SIGNUP_LAUNCH; }
+  function studentSignupLaunchLabel() {
+    return new Date(STUDENT_SIGNUP_LAUNCH).toLocaleString('en-US', {
+      timeZone: 'America/Los_Angeles', weekday: 'long', month: 'long', day: 'numeric',
+      year: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short'
+    });
+  }
+  // Card shown anywhere a student would start a signup before launch day.
+  function studentSignupClosedCard() {
+    return `<div class="card" style="text-align:center;padding:2rem 1.5rem;">
+      <div style="font-size:2.5rem;margin-bottom:0.75rem;">🗓️</div>
+      <div style="font-family:'Lora',serif;font-size:1.15rem;font-weight:700;color:var(--navy);margin-bottom:0.5rem;">Student signups open soon</div>
+      <div style="font-size:0.88rem;color:var(--muted);line-height:1.6;max-width:420px;margin:0 auto;">
+        Tutoring signups for the upcoming season open on<br/>
+        <strong style="color:var(--navy);">${esc(studentSignupLaunchLabel())}</strong>.<br/>
+        Check back then to request a tutor — we'll match you shortly after.
+      </div>
+    </div>`;
+  }
+
+  // ── Chapter subject availability ─────────────────────────────────────────
+  // Students should only be offered subjects that tutors IN THEIR OWN CHAPTER
+  // are actually available to teach (not the global catalog). Results cached
+  // per chapter for the session.
+  const _chapterSubjectCache = {};
+  async function chapterTutorSubjects(chapter) {
+    if (!chapter) return [];
+    if (_chapterSubjectCache[chapter]) return _chapterSubjectCache[chapter];
+    const set = new Set();
+    try {
+      const snap = await getDocs(query(collection(db, 'users'), where('chapter', '==', chapter)));
+      snap.docs.forEach(d => {
+        const u = d.data();
+        const isTutor = u.role === 'tutor' || (Array.isArray(u.roles) && u.roles.includes('tutor'));
+        if (!isTutor) return;
+        // Skip tutors who aren't currently available to take students.
+        if (u.onLeave === true || u.leaveStatus === 'approved') return;
+        (Array.isArray(u.subjects) ? u.subjects : []).forEach(s => { if (s) set.add(String(s).trim()); });
+      });
+    } catch(e) { console.error('[chapterTutorSubjects]', e); return []; }
+    const out = [...set].filter(Boolean).sort((a, b) => a.localeCompare(b));
+    _chapterSubjectCache[chapter] = out;
+    return out;
+  }
 
   // Tutor portal orientation video - paste the YouTube/Vimeo/Drive embed URL here
   // once the orientation is recorded. Leave '' to show a "coming soon" placeholder.
@@ -3352,6 +3579,7 @@
       'progress':          () => loadProgress(),
       'messages':          () => loadMessages(),
       'events':            () => loadEvents(),
+      'support':           () => loadSupport(),
       'sessions':          () => loadSessions(),
       'tutor-homework':    () => loadTutorHomework(),
       'awards':            () => loadAwards(),
@@ -3378,16 +3606,48 @@
   };
 
   // ── Terms of Service gate (must agree before signing in or up) ───────────
+  // ── Terms-of-Service agreement (login) ───────────────────────────────────
+  // Once a person agrees on this device the choice is remembered, so the box
+  // stays checked on return AND auto-login is allowed to proceed. Clearing it
+  // (unchecking) both disables the login buttons and blocks silent auto-login.
+  const TOS_KEY = 'edutine_tos_agreed';
+  function tosAgreed() { try { return localStorage.getItem(TOS_KEY) === '1'; } catch(e) { return false; } }
+  function setTosAgreed(v) { try { v ? localStorage.setItem(TOS_KEY, '1') : localStorage.removeItem(TOS_KEY); } catch(e) {} }
+
+  // Set while a valid session exists but the person hasn't yet agreed to the
+  // Terms - we hold them on the login screen instead of auto-logging in, and
+  // complete the login the moment they tick the box.
+  let _pendingAuthUser = null;
+
   window.onTosAgreeChange = () => {
     const agreed = document.getElementById('tos-agree').checked;
-    ['signin-btn', 'signup-btn', 'google-btn'].forEach(id => {
+    setTosAgreed(agreed);
+    ['signin-btn', 'google-btn'].forEach(id => {
       const btn = document.getElementById(id);
       if (!btn) return;
       btn.disabled = !agreed;
       btn.style.opacity = agreed ? '' : '0.5';
       btn.style.cursor = agreed ? '' : 'not-allowed';
     });
+    // If a session was waiting on this agreement, log in now (no re-entry needed).
+    if (agreed && _pendingAuthUser) {
+      const u = _pendingAuthUser; _pendingAuthUser = null;
+      hideErr('auth-error');
+      handleUser(u);
+    }
   };
+
+  // Student sign-up has its own agreement box that must be ticked fresh for
+  // every new account - it is never pre-filled from the remembered login flag.
+  window.onSignupTosChange = () => {
+    const agreed = document.getElementById('signup-tos-agree').checked;
+    const btn = document.getElementById('signup-btn');
+    if (!btn) return;
+    btn.disabled = !agreed;
+    btn.style.opacity = agreed ? '' : '0.5';
+    btn.style.cursor = agreed ? '' : 'not-allowed';
+  };
+
   window.showTosModal = () => {
     document.getElementById('tos-modal-backdrop').style.display = 'block';
     document.getElementById('tos-modal').style.display = 'flex';
@@ -3396,11 +3656,16 @@
     document.getElementById('tos-modal-backdrop').style.display = 'none';
     document.getElementById('tos-modal').style.display = 'none';
   };
-  // Reading and closing the modal counts as reviewing it - check the box for them
+  // Reading and closing the modal counts as reviewing it - tick whichever
+  // agreement box is currently on screen (login, student sign-up, or tutor).
   window.acceptTosFromModal = () => {
-    const cb = document.getElementById('tos-agree');
-    cb.checked = true;
-    onTosAgreeChange();
+    ['tos-agree', 'signup-tos-agree', 'tiq-tos-agree'].forEach(cbId => {
+      const cb = document.getElementById(cbId);
+      if (cb && cb.offsetParent !== null && !cb.checked) {
+        cb.checked = true;
+        cb.dispatchEvent(new Event('change'));
+      }
+    });
     closeTosModal();
   };
   function requireTosAgreement() {
@@ -3409,13 +3674,53 @@
     return false;
   }
 
-  window.switchTab = (tab) => {
-    document.getElementById('tab-signin').classList.toggle('active', tab === 'signin');
-    document.getElementById('tab-signup').classList.toggle('active', tab === 'signup');
-    document.getElementById('form-signin').style.display = tab === 'signin' ? 'block' : 'none';
-    document.getElementById('form-signup').style.display = tab === 'signup' ? 'block' : 'none';
+  // Restart the CSS entry animation on an element (re-trigger by reflow).
+  function restartAuthAnim(el) {
+    if (!el) return;
+    el.style.animation = 'none';
+    void el.offsetWidth; // force reflow so the animation can replay
+    el.style.animation = '';
+  }
+
+  // Show the sign-in view (default entry).
+  window.showSignInView = () => {
+    document.getElementById('form-signin').style.display = 'block';
+    document.getElementById('form-signup').style.display = 'none';
+    document.querySelector('.auth-box')?.classList.remove('signup-mode');
+    document.getElementById('auth-title').textContent = 'Welcome back';
+    document.getElementById('auth-sub').textContent = 'Sign in to access your Edutine portal.';
     hideErr('auth-error');
+    restartAuthAnim(document.getElementById('form-signin'));
   };
+
+  // Students create their own login here, then land in the student onboarding
+  // flow (non-org emails default to the student role). TOS must be agreed to
+  // fresh on this screen before an account can be created.
+  window.signUpAsStudent = () => {
+    document.getElementById('form-signin').style.display = 'none';
+    document.getElementById('form-signup').style.display = 'block';
+    // Green "signup mode" accent makes the switch away from sign-in obvious.
+    document.querySelector('.auth-box')?.classList.add('signup-mode');
+    document.getElementById('auth-title').textContent = 'Create your student account';
+    document.getElementById('auth-sub').textContent = 'You\'re now signing up — this is not the login screen. Set up your login, then a short profile.';
+    hideErr('signup-error');
+    const cb = document.getElementById('signup-tos-agree');
+    if (cb) { cb.checked = false; onSignupTosChange(); }
+    restartAuthAnim(document.getElementById('form-signup'));
+    const nameEl = document.getElementById('signup-name');
+    if (nameEl) { nameEl.scrollIntoView({ behavior: 'smooth', block: 'center' }); setTimeout(() => nameEl.focus(), 60); }
+  };
+
+  // Reset the auth panel to a clean sign-in entry (used when a session is held
+  // back for Terms agreement, or when returning to the login screen).
+  function showAuthEntry() {
+    document.getElementById('auth-section').style.display = 'block';
+    ['role-section', 'onboarding-section', 'pending-section', 'application-section'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    });
+    showSignInView();
+  }
 
   function boot(user, role, chapter = '', userData = {}) {
     me = user; myRole = role;
@@ -3424,15 +3729,20 @@
     window.__edutineUid = user.uid;
     window.__edutineRole = role;
     if (role === 'super_admin' || _devRealRole === 'super_admin') window.__edutineDev = true;
-    myRoles = Array.isArray(userData.roles) ? userData.roles.filter(r => r && r !== role) : [];
+    // Full set of positions this person holds = canonical `role` + any extra
+    // `roles`, minus whichever one is currently active. Unioning `userData.role`
+    // here is what lets a non-primary active role (e.g. viewing as Tutor while
+    // canonically a Chapter President) still retain the president position.
+    myRoles = [...new Set([userData.role, ...(Array.isArray(userData.roles) ? userData.roles : [])].filter(r => r && r !== role))];
     const name = user.displayName || user.email.split('@')[0];
     const initials = name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
     const isStudent = role === 'student';
 
     document.getElementById('sb-avatar').textContent = initials;
     document.getElementById('sb-name').textContent = name.split(' ')[0];
-    document.getElementById('sb-role').textContent = (LABELS[role] || role) + (myRoles.length ? ' +' + myRoles.length : '');
+    document.getElementById('sb-role').textContent = (LABELS[role] || role);
     document.getElementById('sb-chapter').textContent = chapter || '';
+    renderRoleSwitcher(role, chapter || '');
     const mobileAv = document.getElementById('mobile-avatar');
     if (mobileAv) mobileAv.textContent = initials;
 
@@ -3508,6 +3818,10 @@
     document.getElementById('nav-chapter-trainings').style.display = (role === 'tutor') ? 'flex' : 'none';
     // Messages is available to everyone now that you can message anyone in the portal.
     document.getElementById('nav-messages').style.display = 'flex';
+    // Support: students contact the team; every staff member can respond.
+    document.getElementById('nav-support').style.display = 'flex';
+    document.getElementById('nav-support-label').textContent = (role === 'student') ? 'Support' : 'Support Requests';
+    startSupportBadgeWatch();
 
     // Student-specific tabs - shown/hidden based on enrollment after user data loads
     const isStudentRole = (role === 'student');
@@ -3543,6 +3857,7 @@
 
     loadStatus();
     startAnnouncementFeed();
+    startChapterMsgWatch(); // surface the dashboard messages widget on new chatter
     if (role === 'ceo' || role === 'super_admin') startNotificationListener();
     goPostLogin();
     showTab('dashboard');
@@ -3568,9 +3883,12 @@
       if (!snap.exists() || !me) return;
       const data = snap.data();
       document.getElementById('sb-chapter').textContent = data.chapter || '';
-      const newRoles = Array.isArray(data.roles) ? data.roles.filter(r => r && r !== data.role) : [];
+      startChapterMsgWatch(); // re-point the messages watcher if the chapter changed
+      const nextRole = resolveActiveRole(data);
+      const newRoles = [...new Set([data.role, ...(Array.isArray(data.roles) ? data.roles : [])].filter(r => r && r !== nextRole))];
       const rolesChanged = JSON.stringify(newRoles) !== JSON.stringify(myRoles);
       myRoles = newRoles;
+      renderRoleSwitcher(nextRole, data.chapter || '');
       // Update student enrollment nav state
       if (myRole === 'student') {
         _studentEnrolled = !!data.assignedTutor;
@@ -3582,7 +3900,7 @@
       }
       // Skip re-boot while developer is viewing as a different role
       if (_devViewActive) return;
-      if ((data.role && data.role !== myRole) || rolesChanged) boot(user, data.role || myRole, data.chapter || '', data);
+      if ((nextRole && nextRole !== myRole) || rolesChanged) boot(user, nextRole, data.chapter || '', data);
     });
 
     // For students, check enrollment immediately
@@ -3700,6 +4018,7 @@
     shield:    `<svg ${DASH_ICON_ATTRS}><path d="M12 3.2 19 6v6c0 5-3.2 8-7 9-3.8-1-7-4-7-9V6Z"/><polyline points="9 12 11 14 15.5 9.5"/></svg>`,
     flag:      `<svg ${DASH_ICON_ATTRS}><line x1="5" y1="3.5" x2="5" y2="21"/><path d="M5 4.5h13l-3 4 3 4H5"/></svg>`,
     megaphone: `<svg ${DASH_ICON_ATTRS}><path d="M3 10.5v3.5h3.2L13 18V7l-6.8 3.5Z"/><path d="M17 9.3a4 4 0 0 1 0 6.4"/></svg>`,
+    chat:      `<svg ${DASH_ICON_ATTRS}><path d="M4 5.5h16a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H9l-4 3.5V16.5H4a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1Z"/><line x1="7.5" y1="10" x2="16.5" y2="10"/><line x1="7.5" y1="13" x2="13" y2="13"/></svg>`,
   };
   function dashIcon(name){ return DASH_ICONS[name] || ''; }
 
@@ -3728,6 +4047,8 @@
       visible:()=> true, load: dashLoadStatus },
     { id:'announcements', title:'Latest Announcements', icon:'megaphone', link:'announcements', linkLabel:'View all', size:'wide',
       visible:()=> true, load: dashLoadAnnouncements },
+    { id:'messages', title:'Chapter Messages', icon:'chat', size:'wide', tone:'navy',
+      visible:()=> hasNewChapterMessages(), load: dashLoadMessages },
   ];
 
   function dashPrefsKey() { return `edutine_dash_v2_${(me&&me.uid)||'anon'}`; }
@@ -4159,6 +4480,129 @@
     }).join('');
   }
 
+  // ── Chapter Messages widget (Firebase Realtime Database) ──────────────────
+  // A live, chapter-scoped message board. Everyone in the same chapter shares a
+  // room (keyed by a slug of the chapter name); users with no chapter share the
+  // org-wide "general" room. Realtime Database streams new messages instantly.
+  let _rtdbMsgUnsub = null, _rtdbMsgRoom = null;
+  function dashMsgRoom() {
+    const ch = (dashMyChapter() || '').trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    return ch || 'general';
+  }
+  function dashMsgRoomLabel() {
+    return (dashMyChapter() || '').trim() || 'General';
+  }
+
+  // ── "New messages" tracking ──────────────────────────────────────────────
+  // The dashboard widget only appears when there are unseen messages from other
+  // people. We remember (per user + room, in localStorage) the timestamp of the
+  // newest message the user has seen, and a small always-on watcher tracks the
+  // latest message in the room so hasNewChapterMessages() can answer instantly.
+  let _dashMsgLatestTs = 0, _dashMsgLatestUid = null, _dashMsgWatchRoom = null, _dashMsgWatchUnsub = null;
+  function msgSeenKey(room) { return `edutine_msgseen_${(me && me.uid) || 'anon'}_${room}`; }
+  function msgLastSeen(room) { try { return parseInt(localStorage.getItem(msgSeenKey(room)) || '0', 10) || 0; } catch(e) { return 0; } }
+  function msgMarkSeen(room, ts) { try { localStorage.setItem(msgSeenKey(room), String(ts || Date.now())); } catch(e) {} }
+  function hasNewChapterMessages() {
+    return _dashMsgLatestTs > 0
+      && _dashMsgLatestTs > msgLastSeen(dashMsgRoom())
+      && _dashMsgLatestUid !== (me && me.uid);
+  }
+  // Attach a background listener on the latest message in the user's room. When
+  // "new-ness" flips on and the dashboard is open (but the widget isn't showing
+  // yet), re-render so the widget appears.
+  function startChapterMsgWatch() {
+    if (!me) return;
+    const room = dashMsgRoom();
+    if (_dashMsgWatchUnsub && _dashMsgWatchRoom === room) return; // already watching this room
+    if (_dashMsgWatchUnsub) { try { _dashMsgWatchUnsub(); } catch(e) {} _dashMsgWatchUnsub = null; }
+    _dashMsgWatchRoom = room;
+    const q = dbQuery(dbRef(rtdb, 'messages/' + room), limitToLast(1));
+    _dashMsgWatchUnsub = onValue(q, snap => {
+      const wasNew = hasNewChapterMessages();
+      const entries = Object.values(snap.val() || {});
+      const last = entries[entries.length - 1];
+      _dashMsgLatestTs = last ? (last.ts || 0) : 0;
+      _dashMsgLatestUid = last ? (last.uid || null) : null;
+      const nowNew = hasNewChapterMessages();
+      if (nowNew !== wasNew) {
+        const dashActive = document.getElementById('tab-dashboard')?.classList.contains('active');
+        const widgetMounted = !!document.getElementById('rtmsg-feed');
+        if (dashActive && !widgetMounted) loadDashboard(); // reveal the widget
+      }
+    }, () => { /* denied/offline: leave flag false so the widget stays hidden */ });
+  }
+  function stopChapterMsgWatch() {
+    if (_dashMsgWatchUnsub) { try { _dashMsgWatchUnsub(); } catch(e) {} _dashMsgWatchUnsub = null; }
+    _dashMsgWatchRoom = null; _dashMsgLatestTs = 0; _dashMsgLatestUid = null;
+  }
+  async function dashLoadMessages(body) {
+    const room = dashMsgRoom();
+    body.innerHTML = `
+      <div id="rtmsg-feed" style="flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:0.5rem;padding-right:2px;">
+        <span class="dash-empty">Loading messages…</span>
+      </div>
+      <div style="display:flex;gap:0.4rem;margin-top:0.5rem;flex-shrink:0;">
+        <input id="rtmsg-input" maxlength="2000" autocomplete="off" placeholder="Message ${esc(dashMsgRoomLabel())}…"
+          style="flex:1;min-width:0;border:1px solid rgba(255,255,255,0.25);background:rgba(255,255,255,0.12);color:#fff;border-radius:9px;padding:0.45rem 0.6rem;font-family:'Inter',sans-serif;font-size:0.8rem;"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();dashSendMessage();}" />
+        <button onclick="dashSendMessage()" style="flex-shrink:0;background:#fff;color:var(--navy);border:none;border-radius:9px;padding:0.45rem 0.9rem;font-family:'Inter',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">Send</button>
+      </div>`;
+
+    // Detach any previous listener (dashboard reloads re-run every widget).
+    if (_rtdbMsgUnsub) { try { _rtdbMsgUnsub(); } catch(e) {} _rtdbMsgUnsub = null; }
+    _rtdbMsgRoom = room;
+
+    const q = dbQuery(dbRef(rtdb, 'messages/' + room), limitToLast(50));
+    _rtdbMsgUnsub = onValue(q, snap => {
+      const feed = document.getElementById('rtmsg-feed');
+      if (!feed) return;
+      const val = snap.val() || {};
+      const list = Object.entries(val).map(([id, m]) => ({ id, ...m })).sort((a, b) => (a.ts || 0) - (b.ts || 0));
+      if (!list.length) {
+        feed.innerHTML = `<span class="dash-empty">No messages in ${esc(dashMsgRoomLabel())} yet. Say hi 👋</span>`;
+        return;
+      }
+      const nearBottom = feed.scrollHeight - feed.scrollTop - feed.clientHeight < 60;
+      feed.innerHTML = list.map(m => {
+        const mine = m.uid === (me && me.uid);
+        const who = `${esc(m.name || 'Member')}${m.role ? ' · ' + esc(LABELS[m.role] || m.role) : ''}${m.ts ? ' · ' + timeAgo(m.ts) : ''}`;
+        return `<div style="display:flex;flex-direction:column;align-items:${mine ? 'flex-end' : 'flex-start'};">
+          <div style="max-width:88%;background:${mine ? '#fff' : 'rgba(255,255,255,0.14)'};color:${mine ? 'var(--navy)' : '#fff'};border-radius:12px;padding:0.4rem 0.62rem;font-size:0.8rem;line-height:1.35;word-break:break-word;white-space:pre-wrap;">${esc(m.text || '')}</div>
+          <div style="margin-top:0.15rem;font-size:0.62rem;color:rgba(255,255,255,0.55);">${who}</div>
+        </div>`;
+      }).join('');
+      if (nearBottom) feed.scrollTop = feed.scrollHeight;
+      // The widget is on screen, so everything shown is now "seen" - clear the
+      // new-message flag (the widget will hide again on the next dashboard load).
+      const newestTs = list[list.length - 1].ts || Date.now();
+      msgMarkSeen(room, newestTs);
+      _dashMsgLatestTs = Math.max(_dashMsgLatestTs, newestTs);
+    }, err => {
+      const feed = document.getElementById('rtmsg-feed');
+      if (feed) feed.innerHTML = `<span class="dash-empty">Couldn't load messages (${esc(err.code || 'error')}).</span>`;
+    });
+  }
+  window.dashSendMessage = async () => {
+    const input = document.getElementById('rtmsg-input');
+    if (!input || !me) return;
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    const room = _rtdbMsgRoom || dashMsgRoom();
+    try {
+      await dbPush(dbRef(rtdb, 'messages/' + room), {
+        uid: me.uid,
+        name: (me.displayName || me.email || 'Member').split('@')[0],
+        role: myRole || '',
+        text: text.slice(0, 2000),
+        ts: rtdbTimestamp()
+      });
+    } catch(e) {
+      console.error('[rtdb message] send failed', e);
+      input.value = text; // restore so nothing is lost
+    }
+  };
+
   // ── Customize modal ──
   let _dashEditOrder = [], _dashEditHidden = new Set();
   window.openDashCustomize = () => {
@@ -4329,6 +4773,87 @@
     document.getElementById('dev-chapter-select').value = '';
     document.getElementById('sb-role').textContent = LABELS[realRole] || realRole;
     document.getElementById('dev-switcher-active-tag').textContent = '';
+  };
+
+  // ── Active-role switcher (users who hold more than one position) ──────────
+  // A person can be assigned several roles (e.g. Chapter President who also
+  // tutors). `activeRole` is a per-user *view* preference: it selects which
+  // position drives the portal without ever altering the canonical `role`
+  // others see. Falls back to `role` when unset or no longer valid.
+  function resolveActiveRole(data) {
+    if (!data) return null;
+    const all = [data.role, ...(Array.isArray(data.roles) ? data.roles : [])].filter(Boolean);
+    const act = data.activeRole;
+    return (act && all.includes(act)) ? act : data.role;
+  }
+
+  function renderRoleSwitcher(role, chapter) {
+    const btn = document.getElementById('sb-role-switch');
+    const caret = document.getElementById('sb-role-caret');
+    const menu = document.getElementById('sb-role-menu');
+    if (!btn || !menu || !caret) return;
+    const all = [...new Set([role, ...myRoles].filter(Boolean))];
+    // No switcher when impersonating (dev) or when there's only one position.
+    if (_devViewActive || all.length <= 1) {
+      btn.classList.remove('switchable', 'open');
+      caret.style.display = 'none';
+      menu.style.display = 'none';
+      menu.innerHTML = '';
+      return;
+    }
+    btn.classList.add('switchable');
+    caret.style.display = 'inline-block';
+    const chapLabel = chapter ? esc(chapter) : '';
+    menu.innerHTML =
+      '<div class="sb-role-menu-head">Switch position</div>' +
+      all.map(r => {
+        const active = r === role;
+        return `<button type="button" class="sb-role-opt${active ? ' active' : ''}" onclick="switchActiveRole('${r}')">
+          <span style="min-width:0;">
+            <span style="display:block;overflow:hidden;text-overflow:ellipsis;">${esc(LABELS[r] || r)}</span>
+            ${chapLabel ? `<span class="sb-role-opt-chapter">${chapLabel}</span>` : ''}
+          </span>
+          ${active ? '<span class="sb-role-opt-check">&#10003;</span>' : ''}
+        </button>`;
+      }).join('');
+  }
+
+  window.toggleRoleMenu = (e) => {
+    if (e) e.stopPropagation();
+    const btn = document.getElementById('sb-role-switch');
+    const menu = document.getElementById('sb-role-menu');
+    if (!btn || !menu || !btn.classList.contains('switchable')) return;
+    const open = menu.style.display === 'block';
+    menu.style.display = open ? 'none' : 'block';
+    btn.classList.toggle('open', !open);
+  };
+
+  // Dismiss the switcher menu on any outside click.
+  document.addEventListener('click', (e) => {
+    const menu = document.getElementById('sb-role-menu');
+    const btn = document.getElementById('sb-role-switch');
+    if (!menu || menu.style.display !== 'block') return;
+    if ((btn && btn.contains(e.target)) || menu.contains(e.target)) return;
+    menu.style.display = 'none';
+    if (btn) btn.classList.remove('open');
+  });
+
+  window.switchActiveRole = async (newRole) => {
+    const menu = document.getElementById('sb-role-menu');
+    const btn = document.getElementById('sb-role-switch');
+    if (menu) menu.style.display = 'none';
+    if (btn) btn.classList.remove('open');
+    if (!me || !newRole || newRole === myRole || _devViewActive) return;
+    const all = [...new Set([myRole, ...myRoles].filter(Boolean))];
+    if (!all.includes(newRole)) return;
+    const chapter = document.getElementById('sb-chapter')?.textContent || '';
+    // Re-boot the portal in the chosen position immediately for a snappy switch.
+    boot(me, newRole, chapter, { roles: all });
+    showTab('dashboard');
+    // Remember the choice so it survives reloads. This writes only `activeRole`,
+    // never `role`, so the person's canonical position is untouched.
+    try { await updateDoc(doc(db, 'users', me.uid), { activeRole: newRole }); }
+    catch (err) { /* the local switch still applies even if the write fails */ }
   };
 
   // ── Notifications tab ────────────────────────────────────────────────────
@@ -4590,11 +5115,11 @@
     const snap = await getDoc(doc(db, 'users', user.uid));
     if (snap.exists() && snap.data().role) {
       if (snap.data().pendingApproval) {
-        boot(user, snap.data().role, snap.data().chapter || '', snap.data());
+        boot(user, resolveActiveRole(snap.data()), snap.data().chapter || '', snap.data());
         document.getElementById('pending-approval-banner').style.display = 'flex';
         return;
       }
-      boot(user, snap.data().role, snap.data().chapter || '', snap.data()); return;
+      boot(user, resolveActiveRole(snap.data()), snap.data().chapter || '', snap.data()); return;
     }
     if (isOrgEmail(user.email)) {
       document.getElementById('auth-section').style.display = 'none';
@@ -4621,7 +5146,7 @@
       'auth/email-already-in-use': 'An account already exists with that email.',
       'auth/weak-password': 'Password must be at least 6 characters.',
       'auth/too-many-requests': 'Too many attempts. Please try again later.',
-      'auth/invalid-credential': 'Invalid email or password. Don\'t have an account? Switch to Sign Up above.',
+      'auth/invalid-credential': 'Invalid email or password. New student? Use "Sign up as a student" below.',
       'auth/unauthorized-domain': 'This website address isn\'t authorized for sign-in. Please contact tutor@edutinereachout.com.',
       'auth/operation-not-allowed': 'Google sign-in is not enabled. Enable it in the Firebase console under Authentication → Sign-in Method.',
       'auth/popup-blocked': 'Your browser blocked the sign-in popup. Allow popups for this site and try again.',
@@ -4645,14 +5170,19 @@
     const name = document.getElementById('signup-name').value.trim();
     const email = document.getElementById('signup-email').value.trim();
     const pw = document.getElementById('signup-password').value;
-    hideErr('auth-error');
-    if (!name) { showErr('auth-error', 'Please enter your full name.'); return; }
-    if (!requireTosAgreement()) return;
+    hideErr('signup-error');
+    if (!name) { showErr('signup-error', 'Please enter your full name.'); return; }
+    if (!document.getElementById('signup-tos-agree')?.checked) {
+      showErr('signup-error', 'Please agree to the Terms of Service to continue.'); return;
+    }
+    // Remember the agreement up front so the auth-state listener (which fires as
+    // soon as the account is created) auto-logs them in instead of blocking.
+    setTosAgreed(true);
     try {
       const c = await createUserWithEmailAndPassword(auth, email, pw);
-      await setDoc(doc(db, 'users', c.user.uid), { email, displayName: name, createdAt: serverTimestamp() });
+      await setDoc(doc(db, 'users', c.user.uid), { email, displayName: name, tosAgreedAt: serverTimestamp(), createdAt: serverTimestamp() });
       await handleUser(c.user);
-    } catch(e) { showErr('auth-error', errMsg(e.code)); }
+    } catch(e) { showErr('signup-error', errMsg(e.code)); }
   };
 
   window.signInGoogle = async () => {
@@ -4924,15 +5454,35 @@
 
   // ── Onboarding flow ──────────────────────────────────────────────────────
 
+  // Rebuilt whenever the student reaches the subjects step, so the options match
+  // the chapter they picked in step 1 (only subjects its tutors actually teach).
+  async function buildOnboardingSubjectPills() {
+    const wrap = document.getElementById('ob-subject-pills');
+    if (!wrap) return;
+    const chapter = document.getElementById('ob-chapter')?.value || '';
+    if (!chapter) {
+      wrap.innerHTML = '<span style="font-size:0.78rem;color:rgba(180,210,255,0.7);font-style:italic;">Go back and pick your chapter to see available subjects.</span>';
+      return;
+    }
+    wrap.innerHTML = '<span style="font-size:0.78rem;color:rgba(180,210,255,0.7);">Loading subjects…</span>';
+    const subs = await chapterTutorSubjects(chapter);
+    if (!subs.length) {
+      wrap.innerHTML = `<span style="font-size:0.78rem;color:#ffd9a0;">No tutors in ${esc(chapter)} have listed subjects yet. Type what you need below and we'll match you when a tutor is available.</span>`;
+      return;
+    }
+    wrap.innerHTML = subs.map(s =>
+      `<label class="subj-pill" style="font-size:0.7rem;"><input type="checkbox" value="${esc(s)}" /><span style="padding:0.2rem 0.55rem;">${esc(s)}</span></label>`
+    ).join('');
+  }
+
+  let _obCustomBound = false;
   function buildOnboardingPills() {
     populateChapterDropdowns();
     const wrap = document.getElementById('ob-subject-pills');
-    if (!wrap || wrap.children.length) return;
-    wrap.innerHTML = Object.entries(SUBJECTS).map(([, list]) =>
-      list.map(s => `<label class="subj-pill" style="font-size:0.7rem;"><input type="checkbox" value="${esc(s)}" /><span style="padding:0.2rem 0.55rem;">${esc(s)}</span></label>`).join('')
-    ).join('');
+    if (!wrap) return;
     const customInput = document.getElementById('ob-custom-subject');
-    if (customInput) {
+    if (customInput && !_obCustomBound) {
+      _obCustomBound = true;
       customInput.addEventListener('keydown', e => {
         if (e.key !== 'Enter') return;
         e.preventDefault();
@@ -4961,6 +5511,8 @@
       const dot = document.getElementById(`ob-step-dot-${n}`);
       dot.style.background = n <= step ? 'rgba(106,176,216,0.85)' : 'rgba(255,255,255,0.2)';
     });
+    // Subjects step: rebuild from the chapter chosen in step 1.
+    if (step === 3) buildOnboardingSubjectPills();
   }
 
   window.obNext = (currentStep) => {
@@ -5097,14 +5649,15 @@
     if (unsubRequests) { unsubRequests(); unsubRequests = null; }
     if (unsubSelf) { unsubSelf(); unsubSelf = null; }
     if (_unsubMessages) { _unsubMessages(); _unsubMessages = null; }
+    if (_rtdbMsgUnsub) { try { _rtdbMsgUnsub(); } catch(e) {} _rtdbMsgUnsub = null; }
+    stopChapterMsgWatch();
+    stopSupportBadgeWatch();
     stopMsgPolling();
     readCache.clear(); me = null; myRole = null; myRoles = [];
     _lastHandledUid = null;
     await fbSignOut(auth);
-    document.getElementById('auth-section').style.display = 'block';
-    document.getElementById('role-section').style.display = 'none';
     goPreLogin();
-    switchTab('signin');
+    showAuthEntry();
   };
 
   window.postAnnouncement = async () => {
@@ -5905,6 +6458,17 @@
     window.open(url, '_blank', 'noopener');
   };
 
+  // Toggles between the active queue and the archived/deleted history.
+  let _appShowArchived = false;
+  window.toggleAppArchiveView = () => {
+    _appShowArchived = !_appShowArchived;
+    const btn = document.getElementById('app-archive-toggle');
+    if (btn) btn.textContent = _appShowArchived ? '← Back to active' : '🗄 View archived';
+    const label = document.getElementById('tutor-applications-label');
+    if (label) label.textContent = _appShowArchived ? 'Archived & Deleted Applications' : 'Tutor Applications';
+    loadTutorApplications();
+  };
+
   async function loadTutorApplications() {
     const section = document.getElementById('tutor-applications-section');
     const feed = document.getElementById('tutor-applications-feed');
@@ -5915,16 +6479,66 @@
       const myChapter = document.getElementById('sb-chapter')?.textContent || '';
       let docs = snap.docs.map(d => ({ id: d.id, data: d.data() }));
       if (!isCeoLevel) docs = docs.filter(x => x.data.chapter === myChapter);
+      _appCache = {}; docs.forEach(d => { _appCache[d.id] = d.data; });
+
+      if (_appShowArchived) {
+        section.style.display = 'block';
+        await renderApplicationArchive(feed, docs.filter(x => x.data.archived), isCeoLevel, myChapter);
+        return;
+      }
+
+      // Keep the section (and its archive button) visible whenever anything exists.
       if (!docs.length) { section.style.display = 'none'; return; }
       section.style.display = 'block';
+      const active = docs.filter(x => !x.data.archived);
+      if (!active.length) {
+        feed.innerHTML = `<div style="font-size:0.82rem;color:var(--muted);padding:0.5rem 0;">No active applications — everything is archived. Use “View archived” to see them.</div>`;
+        return;
+      }
       const order = { pending:0, approved:1, interview_link_sent:2, orientation_sent:3, tutor_approved:4, denied:5 };
-      docs.sort((a, b) => (order[a.data.status] ?? 9) - (order[b.data.status] ?? 9));
-      _appCache = {}; docs.forEach(d => { _appCache[d.id] = d.data; });
-      feed.innerHTML = docs.map(renderApplicationCard).join('');
+      active.sort((a, b) => (order[a.data.status] ?? 9) - (order[b.data.status] ?? 9));
+      feed.innerHTML = active.map(renderApplicationCard).join('');
     } catch(e) {
       section.style.display = 'block';
       feed.innerHTML = `<div style="font-size:0.82rem;color:var(--muted);padding:0.5rem 0;">Could not load applications. ${esc(e.message || e.code)}</div>`;
     }
+  }
+
+  // Archived view: archived applications (restorable) + a log of deleted ones.
+  async function renderApplicationArchive(feed, archived, isCeoLevel, myChapter) {
+    let dels = [];
+    try {
+      const dSnap = await getDocs(query(collection(db, 'tutor_application_deletions'), orderBy('deletedAt', 'desc')));
+      dels = dSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+      if (!isCeoLevel) dels = dels.filter(d => !d.chapter || d.chapter === myChapter);
+    } catch(e) { /* log unavailable - still show archived apps */ }
+
+    const archivedHtml = archived.length
+      ? archived.map(renderApplicationCard).join('')
+      : `<div style="font-size:0.82rem;color:var(--muted);padding:0.4rem 0 0.8rem;">No archived applications.</div>`;
+
+    const delRows = dels.length
+      ? dels.map(d => `<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;padding:0.6rem 0;border-bottom:1px solid var(--border-light);flex-wrap:wrap;">
+          <div style="min-width:0;">
+            <div style="font-weight:700;font-size:0.9rem;color:var(--navy);">${esc(d.applicantName || 'Unknown applicant')}</div>
+            <div style="font-size:0.8rem;color:var(--text-soft);margin-top:0.12rem;">${esc(d.applicantEmail || 'no email on file')}${d.applicantPhone ? ' · ' + esc(d.applicantPhone) : ''}</div>
+            ${d.chapter ? `<div style="font-size:0.76rem;color:var(--muted);margin-top:0.1rem;">${esc(d.chapter)}</div>` : ''}
+          </div>
+          <div style="text-align:right;font-size:0.78rem;color:var(--muted);flex-shrink:0;">
+            Deleted by <strong style="color:var(--text-soft);">${esc(d.deletedByName || 'unknown')}</strong>
+            ${d.deletedAt ? `<div style="margin-top:0.1rem;">${esc(fmtDate(d.deletedAt))}</div>` : ''}
+          </div>
+        </div>`).join('')
+      : `<div style="font-size:0.82rem;color:var(--muted);padding:0.4rem 0;">No deleted applications.</div>`;
+
+    feed.innerHTML = `
+      <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.08em;color:var(--muted);text-transform:uppercase;margin:0.2rem 0 0.5rem;">Archived (${archived.length})</div>
+      ${archivedHtml}
+      <div class="card" style="margin-top:1rem;">
+        <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.08em;color:var(--muted);text-transform:uppercase;margin-bottom:0.3rem;">Deleted applications (${dels.length})</div>
+        <div style="font-size:0.78rem;color:var(--muted);margin-bottom:0.5rem;">The application itself is gone — this is the record of who was removed and by whom.</div>
+        ${delRows}
+      </div>`;
   }
 
   // Rank of each status so we know which checklist steps are complete
@@ -5938,16 +6552,29 @@
     const dateStr = a.createdAt?.toDate ? a.createdAt.toDate().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '';
     const detail = (label, val) => val ? `<div style="font-size:0.8rem;color:var(--text-soft);margin-top:0.2rem;"><span style="color:var(--muted);">${label}:</span> ${esc(val)}</div>` : '';
 
-    // Self-tracking checklist - each row is clickable and expands a shared details
-    // panel below (interview date/time + tutor notes + orientation confirmation).
+    // Self-tracking checklist. Each step is a real checkbox: tick the next open
+    // one to advance the pipeline (this replaces the old single action button).
+    // Steps are sequential, so only the next incomplete step is tickable.
     const isExpanded = _appExpandedIds.has(id);
-    const checkRow = (done, label, note) => `<div class="app-check-row" onclick="toggleAppExpand('${id}')" style="display:flex;align-items:flex-start;gap:0.5rem;font-size:0.8rem;margin-top:0.15rem;">
-      <span style="color:${done ? '#1a6e3c' : 'var(--light)'};font-weight:700;">${done ? '✓' : '○'}</span>
-      <div style="flex:1;"><span style="color:${done ? 'var(--text-soft)' : 'var(--muted)'};">${label}</span>${note ? `<span style="color:var(--muted);font-size:0.72rem;"> · ${esc(note)}</span>` : ''}</div>
-      <span class="app-check-chevron${isExpanded ? ' open' : ''}">▸</span>
-    </div>`;
+    const checkRow = (done, label, note, action, hint, undoAction) => {
+      const canCheck = !done && !!action;
+      const canUncheck = done && !!undoAction;
+      const clickable = canCheck || canUncheck;
+      const onclick = canUncheck ? undoAction : (canCheck ? action : null);
+      return `<div class="app-check-row${clickable ? ' actionable' : ''}"${onclick ? ` onclick="${onclick}"` : ''}${canUncheck ? ' title="Click to uncheck this step"' : ''} style="display:flex;align-items:flex-start;gap:0.7rem;margin-top:0.5rem;${clickable ? 'cursor:pointer;' : ''}">
+        <span class="app-check-box${done ? ' done' : ''}">${done ? '✓' : ''}</span>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:0.95rem;line-height:1.35;font-weight:${done ? '600' : '500'};color:${done ? 'var(--text)' : 'var(--text-soft)'};">${label}</div>
+          ${note ? `<div style="font-size:0.78rem;color:var(--muted);margin-top:0.1rem;">${esc(note)}</div>` : ''}
+          ${canCheck ? `<div style="font-size:0.76rem;color:var(--navy);font-weight:600;margin-top:0.15rem;">Click to mark done${hint ? ` <span style="color:var(--muted);font-weight:500;">· ${hint}</span>` : ''}</div>` : ''}
+          ${canUncheck ? `<div class="app-uncheck-hint" style="font-size:0.74rem;color:var(--muted);margin-top:0.12rem;">↩ Click to uncheck</div>` : ''}
+        </div>
+      </div>`;
+    };
+    // Shown on a step that someone rolled back, so it's clear who undid it.
+    const undoneNote = (by, at) => by ? `Unchecked by ${by}${at ? ' · ' + fmtDate(at) : ''}` : '';
 
-    let checklist = '', primary = '';
+    let checklist = '';
     if (!denied) {
       const orientationNote = a.orientationWatched
         ? (a.orientationConfirmedBy ? 'confirmed by ' + a.orientationConfirmedBy : 'confirmed by applicant')
@@ -5974,38 +6601,48 @@
         </div>
       </div>`;
 
+      // Only the next incomplete step is tickable, so the pipeline stays in order.
+      // Any completed step can be unchecked, which rolls back the later ones too.
       checklist = `<div style="margin-top:0.7rem;border-top:1px solid var(--border-light);padding-top:0.6rem;">
-        ${checkRow(rank >= 1, 'Application approved', rank >= 1 ? (a.approverName || '') : '')}
-        ${checkRow(rank >= 2, 'Booking-link email sent to applicant', rank >= 2 ? (a.interviewLinkSentBy || '') : '')}
-        ${checkRow(rank >= 3, 'Edutine email + orientation sent', rank >= 3 ? (a.orientationSentBy || '') : '')}
-        ${checkRow(a.orientationWatched, 'Applicant watched orientation', orientationNote)}
+        ${checkRow(rank >= 1, 'Application approved',
+          rank >= 1 ? (a.approverName || '') : undoneNote(a.approvedUndoneBy, a.approvedUndoneAt),
+          a.status === 'pending' ? `approveTutorApplication('${id}')` : null, '',
+          `undoAppStep('${id}','approved')`)}
+        ${checkRow(rank >= 2, 'Booking-link email sent to applicant',
+          rank >= 2 ? (a.interviewLinkSentBy || '') : undoneNote(a.linkUndoneBy, a.linkUndoneAt),
+          a.status === 'approved' ? `markInterviewLinkSent('${id}')` : null, '',
+          `undoAppStep('${id}','link')`)}
+        ${checkRow(rank >= 3, 'Edutine email + orientation sent',
+          rank >= 3 ? (a.orientationSentBy || '') : undoneNote(a.orientationUndoneBy, a.orientationUndoneAt),
+          a.status === 'interview_link_sent' ? `markOrientationSent('${id}')` : null, '',
+          `undoAppStep('${id}','orientation')`)}
+        ${checkRow(a.orientationWatched, 'Applicant watched orientation',
+          a.orientationWatched ? orientationNote : undoneNote(a.watchedUndoneBy, a.watchedUndoneAt),
+          (a.status === 'orientation_sent' && !a.orientationWatched) ? `staffConfirmOrientationWatched('${id}')` : null,
+          'or wait for the applicant to confirm',
+          `undoAppStep('${id}','watched')`)}
       </div>
       ${expandPanel}`;
-      // Contextual primary action button - advances the pipeline one step
-      if (a.status === 'pending') {
-        primary = `<button onclick="approveTutorApplication('${id}')" class="btn-sm" style="background:var(--navy);color:#fff;border:none;font-size:0.78rem;">Approve</button>`;
-      } else if (a.status === 'approved') {
-        primary = `<button onclick="markInterviewLinkSent('${id}')" class="btn-sm" style="background:var(--navy);color:#fff;border:none;font-size:0.78rem;">✉ I sent the booking-link email</button>`;
-      } else if (a.status === 'interview_link_sent') {
-        primary = `<button onclick="markOrientationSent('${id}')" class="btn-sm" style="background:var(--navy);color:#fff;border:none;font-size:0.78rem;">✉ I sent the Edutine email + orientation</button>`;
-      } else if (a.status === 'orientation_sent') {
-        // The applicant normally confirms this themselves, but staff need a visible
-        // way to mark it done too (e.g. the applicant confirmed by phone/email).
-        primary = a.orientationWatched
-          ? `<span style="font-size:0.78rem;color:#1a6e3c;align-self:center;font-weight:600;">✓ Orientation watched</span>`
-          : `<button onclick="staffConfirmOrientationWatched('${id}')" class="btn-sm" style="background:#1a6e3c;color:#fff;border:none;font-size:0.78rem;">✓ Mark orientation watched</button>
-             <span style="font-size:0.74rem;color:var(--muted);align-self:center;">or wait for the applicant to confirm</span>`;
-      }
     }
 
     const buttons = denied ? '' : `<div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.7rem;align-items:center;">
-      ${primary}
+      <button id="appx-toggle-${id}" onclick="toggleAppExpand('${id}')" class="btn-sm" style="font-size:0.74rem;padding:0.3rem 0.8rem;background:#f4f1ea;border:1px solid #e0d9c8;color:var(--navy);font-weight:600;">📝 ${isExpanded ? 'Close' : 'Open'} Applicant Notes</button>
       ${a.email ? `<button onclick="draftApplicantEmail('${id}')" class="btn-sm" style="font-size:0.74rem;padding:0.3rem 0.8rem;background:#e6f1f8;border:1px solid #cfe3ef;color:#2d7aac;font-weight:600;">✉ Draft email</button>` : ''}
       ${rank >= 1 ? `<button onclick="updateApplicantEmail('${id}')" class="btn-sm" style="font-size:0.74rem;padding:0.3rem 0.8rem;">Update login email</button>` : ''}
       ${a.status !== 'tutor_approved' ? `<button onclick="denyTutorApplication('${id}')" style="background:none;border:1px solid #f0c7c7;border-radius:20px;color:#c0392b;font-size:0.74rem;font-weight:600;padding:0.3rem 0.8rem;cursor:pointer;">Deny</button>` : ''}
     </div>`;
 
-    return `<div class="card" style="margin-bottom:0.75rem;">
+    // Archive/Delete are always available - including for denied applications,
+    // which are exactly the ones you tend to want out of the queue.
+    const archiveRow = `<div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.55rem;align-items:center;border-top:1px solid var(--border-light);padding-top:0.55rem;">
+      ${a.archived
+        ? `<button onclick="unarchiveApplication('${id}')" class="btn-sm" style="font-size:0.74rem;padding:0.3rem 0.8rem;">↩ Restore to active</button>
+           <span style="font-size:0.74rem;color:var(--muted);">Archived${a.archivedBy ? ' by ' + esc(a.archivedBy) : ''}${a.archivedAt ? ' · ' + esc(fmtDate(a.archivedAt)) : ''}</span>`
+        : `<button onclick="archiveApplication('${id}')" class="btn-sm" style="font-size:0.74rem;padding:0.3rem 0.8rem;background:#f4f1ea;border:1px solid #e0d9c8;color:var(--navy);font-weight:600;">🗄 Archive</button>`}
+      <button onclick="deleteApplication('${id}')" title="Permanently delete this application" style="background:none;border:1px solid #f0c7c7;border-radius:20px;color:#c0392b;font-size:0.74rem;font-weight:600;padding:0.3rem 0.8rem;cursor:pointer;margin-left:auto;">🗑 Delete</button>
+    </div>`;
+
+    return `<div class="card" style="margin-bottom:0.75rem;${a.archived ? 'opacity:0.85;' : ''}">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:0.75rem;flex-wrap:wrap;">
         <div style="font-weight:700;">${esc(a.name)} <span style="font-weight:400;color:var(--muted);font-size:0.8rem;">· ${esc(a.chapter)}</span></div>
         <span style="background:${m.bg};color:${m.color};padding:0.2rem 0.65rem;border-radius:20px;font-size:0.72rem;font-weight:700;white-space:nowrap;">${m.label}</span>
@@ -6015,6 +6652,7 @@
       ${a.interviewDate ? `<div style="margin-top:0.5rem;background:#eef6fb;border:1px solid #d5e7f2;border-radius:8px;padding:0.5rem 0.7rem;font-size:0.78rem;color:#2d6a8f;">📅 <strong>Interview:</strong> ${esc(a.interviewDate)}${a.interviewTime ? ' · ' + esc(a.interviewTime) : ''}${a.interviewerName ? ' · with ' + esc(a.interviewerName) : ''}</div>` : ''}
       ${checklist}
       ${buttons}
+      ${archiveRow}
     </div>`;
   }
 
@@ -6061,7 +6699,8 @@
         approverUid: me.uid, approverName: me.displayName || me.email,
         interviewDate: dateLabel, interviewDateRaw: date, interviewTime: time,
         interviewerName: interviewer,
-        reviewedAt: serverTimestamp()
+        reviewedAt: serverTimestamp(),
+        approvedUndoneBy: null, approvedUndoneAt: null
       });
       // Add / update the shared interview-calendar entry (keyed by application id)
       await setDoc(doc(db, 'interviews', id), {
@@ -6086,11 +6725,100 @@
     }
   };
 
+  // ── Archiving / deleting applications ────────────────────────────────────
+  window.archiveApplication = async (id) => {
+    const a = _appCache[id] || {};
+    if (!confirm(`Archive ${a.name || 'this application'}?\n\nIt moves out of the active queue into the archive, and can be restored anytime.`)) return;
+    try {
+      await updateDoc(doc(db, 'tutor_applications', id), {
+        archived: true, archivedBy: me.displayName || me.email, archivedAt: serverTimestamp()
+      });
+      showToast('Application archived.', 'success');
+      loadTutorApplications();
+    } catch(e) { alert('Failed: ' + (e.message || e.code)); }
+  };
+
+  window.unarchiveApplication = async (id) => {
+    try {
+      await updateDoc(doc(db, 'tutor_applications', id), {
+        archived: false, archivedBy: null, archivedAt: null
+      });
+      showToast('Application restored to the active queue.', 'success');
+      loadTutorApplications();
+    } catch(e) { alert('Failed: ' + (e.message || e.code)); }
+  };
+
+  // Delete removes the application itself but leaves a permanent record in the
+  // archive of who the applicant was and who removed them.
+  window.deleteApplication = async (id) => {
+    const a = _appCache[id] || {};
+    if (!confirm(`Permanently delete ${a.name || 'this application'}?\n\nThe application is removed for good. A record of their name, email, phone and who deleted it stays in the archive.`)) return;
+    try {
+      await addDoc(collection(db, 'tutor_application_deletions'), {
+        applicantName: a.name || '', applicantEmail: a.email || '', applicantPhone: a.phone || '',
+        chapter: a.chapter || '', applicationStatus: a.status || '', originalApplicationId: id,
+        deletedByUid: me.uid, deletedByName: me.displayName || me.email,
+        deletedAt: serverTimestamp()
+      });
+      await deleteDoc(doc(db, 'tutor_applications', id));
+      // Drop any interview calendar entry tied to the removed application.
+      try { await deleteDoc(doc(db, 'interviews', id)); } catch(_) {}
+      showToast('Application deleted — logged in the archive.', 'success');
+      loadTutorApplications();
+    } catch(e) { alert('Failed: ' + (e.message || e.code)); }
+  };
+
+  // ── Rolling a pipeline step back ─────────────────────────────────────────
+  // Unchecking a step returns the applicant to the previous stage and clears
+  // every later step (the pipeline is sequential), stamping who undid it.
+  const APP_STEP_UNDO = {
+    approved: {
+      label: 'Application approved', status: 'pending',
+      clear: ['approverUid','approverName','reviewedAt','interviewLinkSentBy','interviewLinkSentAt',
+              'orientationSentBy','orientationSentAt','orientationConfirmedBy','orientationWatchedAt'],
+      byField: 'approvedUndoneBy', atField: 'approvedUndoneAt'
+    },
+    link: {
+      label: 'Booking-link email sent to applicant', status: 'approved',
+      clear: ['interviewLinkSentBy','interviewLinkSentAt','orientationSentBy','orientationSentAt',
+              'orientationConfirmedBy','orientationWatchedAt'],
+      byField: 'linkUndoneBy', atField: 'linkUndoneAt'
+    },
+    orientation: {
+      label: 'Edutine email + orientation sent', status: 'interview_link_sent',
+      clear: ['orientationSentBy','orientationSentAt','orientationConfirmedBy','orientationWatchedAt'],
+      byField: 'orientationUndoneBy', atField: 'orientationUndoneAt'
+    },
+    watched: {
+      label: 'Applicant watched orientation', status: 'orientation_sent',
+      clear: ['orientationConfirmedBy','orientationWatchedAt'],
+      byField: 'watchedUndoneBy', atField: 'watchedUndoneAt'
+    }
+  };
+
+  window.undoAppStep = async (id, step) => {
+    const cfg = APP_STEP_UNDO[step];
+    if (!cfg) return;
+    if (!confirm(`Uncheck "${cfg.label}"?\n\nThis moves the applicant back to the previous stage and clears any steps after it.`)) return;
+    const update = { status: cfg.status, orientationWatched: false };
+    cfg.clear.forEach(f => { update[f] = null; });
+    update[cfg.byField] = me.displayName || me.email;
+    update[cfg.atField] = serverTimestamp();
+    try {
+      await updateDoc(doc(db, 'tutor_applications', id), update);
+      // An un-approved applicant shouldn't linger on the shared interview calendar.
+      if (step === 'approved') { try { await deleteDoc(doc(db, 'interviews', id)); } catch(_) {} }
+      showToast('Step unchecked.', 'success');
+      loadTutorApplications();
+    } catch(e) { alert('Failed: ' + (e.message || e.code)); }
+  };
+
   window.markInterviewLinkSent = async (id) => {
     try {
       await updateDoc(doc(db, 'tutor_applications', id), {
         status: 'interview_link_sent',
-        interviewLinkSentBy: me.displayName || me.email, interviewLinkSentAt: serverTimestamp()
+        interviewLinkSentBy: me.displayName || me.email, interviewLinkSentAt: serverTimestamp(),
+        linkUndoneBy: null, linkUndoneAt: null
       });
       loadTutorApplications();
     } catch(e) { alert('Failed: ' + (e.message || e.code)); }
@@ -6100,7 +6828,8 @@
     try {
       await updateDoc(doc(db, 'tutor_applications', id), {
         status: 'orientation_sent',
-        orientationSentBy: me.displayName || me.email, orientationSentAt: serverTimestamp()
+        orientationSentBy: me.displayName || me.email, orientationSentAt: serverTimestamp(),
+        orientationUndoneBy: null, orientationUndoneAt: null
       });
       loadTutorApplications();
     } catch(e) { alert('Failed: ' + (e.message || e.code)); }
@@ -6135,6 +6864,11 @@
     document.querySelectorAll(`[onclick="toggleAppExpand('${id}')"] .app-check-chevron`).forEach(c => {
       c.classList.toggle('open', open);
     });
+    // Keep the "Open/Close Applicant Notes" button in sync with the panel.
+    const btn = document.getElementById('appx-toggle-' + id);
+    if (btn) btn.textContent = `📝 ${open ? 'Close' : 'Open'} Applicant Notes`;
+    // Opening from the button should bring the panel into view.
+    if (open && el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   };
 
   window.saveAppInterview = async (id) => {
@@ -6187,7 +6921,8 @@
       await updateDoc(doc(db, 'tutor_applications', id), {
         orientationWatched: true, orientationWatchedAt: serverTimestamp(),
         orientationConfirmedBy: me.displayName || me.email,
-        status: 'tutor_approved'
+        status: 'tutor_approved',
+        watchedUndoneBy: null, watchedUndoneAt: null
       });
       showToast('Marked as confirmed.', 'success');
       loadTutorApplications();
@@ -7593,10 +8328,12 @@
     const tutorUid = myData.assignedTutor;
 
     const mySubjects = myData.subjects || [];
+    // Only offer subjects that tutors in this student's chapter actually teach.
+    const chapterSubjects = await chapterTutorSubjects(myData.chapter || '');
     const subjectManagerHtml = `
       <div class="card" style="margin-bottom:1rem;">
         <div class="card-label">Subjects You Want Help With</div>
-        <div style="font-size:0.8rem;color:var(--muted);margin-bottom:0.65rem;">These are the subjects you'll get tutoring help in. You can add more at any time.</div>
+        <div style="font-size:0.8rem;color:var(--muted);margin-bottom:0.65rem;">These are the subjects you'll get tutoring help in${myData.chapter ? ', based on what tutors in <strong>' + esc(myData.chapter) + '</strong> teach' : ''}. You can add more at any time.</div>
         <div id="student-subjects-list" style="display:flex;flex-wrap:wrap;gap:0.35rem;margin-bottom:0.65rem;">
           ${mySubjects.length
             ? mySubjects.map(s => `<span style="display:inline-flex;align-items:center;gap:4px;background:#f0f4ff;color:var(--navy);border-radius:20px;padding:0.2rem 0.6rem;font-size:0.78rem;font-weight:500;">
@@ -7605,12 +8342,14 @@
             : '<span style="font-size:0.78rem;color:var(--muted);font-style:italic;">No subjects yet.</span>'}
         </div>
         <div id="add-subject-wrap" style="display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap;">
-          <select id="add-subject-select" class="form-input" style="width:200px;padding:0.35rem 0.6rem;font-size:0.82rem;">
+          ${chapterSubjects.length ? `
+          <select id="add-subject-select" class="form-input" style="width:220px;padding:0.35rem 0.6rem;font-size:0.82rem;">
             <option value="">Pick a subject to add...</option>
-            ${Object.values(SUBJECTS).flat().map(s => `<option value="${esc(s)}">${esc(s)}</option>`).join('')}
+            ${chapterSubjects.map(s => `<option value="${esc(s)}">${esc(s)}</option>`).join('')}
           </select>
           <input id="add-subject-custom" class="form-input" placeholder="Or type custom..." style="width:170px;padding:0.35rem 0.6rem;font-size:0.82rem;" />
           <button onclick="addStudentSubject()" style="background:var(--navy);color:#fff;border:none;border-radius:6px;padding:0.35rem 0.85rem;font-size:0.8rem;font-weight:600;cursor:pointer;">+ Add</button>
+          ` : `<span style="font-size:0.8rem;color:#9a6a12;">No tutors in your chapter have listed subjects yet — check back soon, or ask Support for help.</span>`}
         </div>
         <div id="subject-update-msg" style="display:none;font-size:0.78rem;font-weight:600;margin-top:0.4rem;"></div>
       </div>`;
@@ -7619,6 +8358,11 @@
 
     // STATE: none - student hasn't requested a tutor yet
     if (!tutorUid && tutorStatus === 'none') {
+      // Requests don't open until launch day - show the date instead of the button.
+      if (!studentSignupsOpen()) {
+        feed.innerHTML = subjectManagerHtml + studentSignupClosedCard();
+        return;
+      }
       const hasSubjects = mySubjects.length > 0;
       feed.innerHTML = subjectManagerHtml + `
         <div class="card" style="text-align:center;padding:2rem 1.5rem;">
@@ -7699,12 +8443,17 @@
     const availKeys = new Set(tutor.availability || []);
     const chosenSlot = myData.scheduledSlot;
 
-    const rSnap = await getDocs(query(
-      collection(db, 'tutor_change_requests'),
-      where('studentUid', '==', me.uid),
-      where('status', '==', 'pending')
-    ));
-    const hasPendingRequest = !rSnap.empty;
+    // Reading the student's own change request is a non-critical status check -
+    // never let a denied/failed read take down the whole My Tutor tab.
+    let hasPendingRequest = false;
+    try {
+      const rSnap = await getDocs(query(
+        collection(db, 'tutor_change_requests'),
+        where('studentUid', '==', me.uid),
+        where('status', '==', 'pending')
+      ));
+      hasPendingRequest = !rSnap.empty;
+    } catch(_) { hasPendingRequest = false; }
 
     let meetingLink = myData.latestMeetingLink || '';
     if (!meetingLink) {
@@ -8529,6 +9278,10 @@
   // ── Student tutor request flow ───────────────────────────────────────────
 
   window.studentRequestTutor = async () => {
+    if (!studentSignupsOpen()) {
+      alert('Student signups open ' + studentSignupLaunchLabel() + '. Please check back then!');
+      return;
+    }
     await updateDoc(doc(db, 'users', me.uid), { tutorStatus: 'searching' });
     loadMyTutor();
   };
@@ -8957,22 +9710,60 @@
     const snap = await getDocs(query(collection(db, 'student_signups'),
       where('submittedByUid', '==', me.uid)));
     const pending = snap.docs.filter(d => d.data().status !== 'paired');
+    const closedWrap = document.getElementById('signup-tutoring-closed');
+    // Before launch day nobody can start a new request (existing ones still show).
+    if (!studentSignupsOpen() && !pending.length) {
+      closedWrap.innerHTML = studentSignupClosedCard();
+      closedWrap.style.display = 'block';
+      document.getElementById('signup-tutoring-pending').style.display = 'none';
+      document.getElementById('signup-tutoring-form').style.display = 'none';
+      return;
+    }
+    closedWrap.style.display = 'none';
     document.getElementById('signup-tutoring-pending').style.display = pending.length ? 'block' : 'none';
     document.getElementById('signup-tutoring-form').style.display = pending.length ? 'none' : 'block';
+    if (!pending.length) await populateSignupSubjectOptions();
   }
 
+  // Offer only the subjects tutors in the selected chapter actually teach.
+  window.populateSignupSubjectOptions = async function() {
+    const wrap = document.getElementById('ist-subject-pills');
+    const hint = document.getElementById('ist-subjects-hint');
+    if (!wrap) return;
+    const chapter = document.getElementById('ist-chapter')?.value || '';
+    if (!chapter) {
+      wrap.innerHTML = '<span style="font-size:0.8rem;color:var(--muted);font-style:italic;">Select your chapter first to see available subjects.</span>';
+      return;
+    }
+    wrap.innerHTML = '<span style="font-size:0.8rem;color:var(--muted);">Loading subjects…</span>';
+    const subs = await chapterTutorSubjects(chapter);
+    if (!subs.length) {
+      wrap.innerHTML = `<span style="font-size:0.8rem;color:#9a6a12;">No tutors in ${esc(chapter)} have listed subjects yet. Please check back soon or contact support.</span>`;
+      return;
+    }
+    if (hint) hint.textContent = `Subjects tutors in ${chapter} currently teach:`;
+    wrap.innerHTML = subs.map(s =>
+      `<label class="subj-pill" style="font-size:0.72rem;"><input type="checkbox" value="${esc(s)}" /><span style="padding:0.2rem 0.6rem;">${esc(s)}</span></label>`
+    ).join('');
+  };
+
   window.submitInPortalStudentSignup = async function() {
+    const errEl = document.getElementById('ist-error');
+    if (!studentSignupsOpen()) {
+      errEl.textContent = 'Student signups open ' + studentSignupLaunchLabel() + '.';
+      errEl.style.display = 'block';
+      return;
+    }
     const name = document.getElementById('ist-name').value.trim();
     const grade = document.getElementById('ist-grade').value;
     const school = document.getElementById('ist-school').value.trim();
     const chapter = document.getElementById('ist-chapter').value;
     const parentName = document.getElementById('ist-parent-name').value.trim();
     const parentPhone = document.getElementById('ist-parent-phone').value.trim();
-    const subjects = document.getElementById('ist-subjects').value.trim();
+    const subjects = [...document.querySelectorAll('#ist-subject-pills input:checked')].map(el => el.value).join(', ');
     const timezone = document.getElementById('ist-timezone').value.trim();
-    const errEl = document.getElementById('ist-error');
     if (!name || !grade || !school || !chapter || !parentName || !parentPhone || !subjects || !timezone) {
-      errEl.textContent = 'Please fill in all required fields.';
+      errEl.textContent = 'Please fill in all required fields (including at least one subject).';
       errEl.style.display = 'block';
       return;
     }
@@ -9391,6 +10182,250 @@
         ${e.description ? `<div style="font-size:0.85rem;color:var(--text-soft);margin-top:0.3rem;">${esc(e.description)}</div>` : ''}
       </div>`;
     }).join('');
+  }
+
+  // ── Support (help desk) ─────────────────────────────────────────────────
+  // Students open a ticket ("Support" tab). Any staff member can reply with a
+  // fix; Student Support Leads (and higher) can assign an owner to a ticket.
+  // Tickets live in the `support_tickets` Firestore collection.
+  let _supportFilter = 'open';
+  let _supportCache = [];
+  let _supportBadgeUnsub = null;
+
+  function canAssignSupport() {
+    return hasRole('student_support_lead') || hasRole('student_support_director')
+      || hasRole('super_admin') || hasRole('ceo') || roleLevel() >= LEVELS['chapter_director'];
+  }
+
+  window.setSupportFilter = (f) => {
+    _supportFilter = f;
+    document.querySelectorAll('.support-filter-btn').forEach(b =>
+      b.classList.toggle('active', b.dataset.filter === f));
+    renderSupportStaff();
+  };
+
+  async function loadSupport() {
+    const isStudent = myRole === 'student';
+    document.getElementById('support-page-title').textContent = isStudent ? 'Support' : 'Support Requests';
+    document.getElementById('support-page-sub').textContent = isStudent
+      ? "Need help? Send our team a message and we'll get you sorted out."
+      : 'Student help requests. Any staff member can reply; Student Support Leads can assign an owner.';
+    document.getElementById('support-student-wrap').style.display = isStudent ? 'block' : 'none';
+    document.getElementById('support-staff-filters').classList.toggle('shown', !isStudent);
+
+    const feed = document.getElementById('support-feed');
+    feed.innerHTML = '<div class="empty-state">Loading...</div>';
+
+    if (isStudent) {
+      const snap = await getDocs(query(collection(db, 'support_tickets'), where('studentUid', '==', me.uid)));
+      _supportCache = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+        .sort((a, b) => (b.updatedAt?.seconds || 0) - (a.updatedAt?.seconds || 0));
+      renderSupportStudent();
+    } else {
+      const [snap] = await Promise.all([
+        getDocs(collection(db, 'support_tickets')),
+        canAssignSupport() ? loadAllMembersForCeo() : Promise.resolve()
+      ]);
+      _supportCache = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+        .sort((a, b) => (b.updatedAt?.seconds || 0) - (a.updatedAt?.seconds || 0));
+      renderSupportStaff();
+    }
+  }
+
+  function renderSupportStudent() {
+    const feed = document.getElementById('support-feed');
+    if (!_supportCache.length) {
+      feed.innerHTML = '<div class="empty-state"><span class="empty-icon">💬</span>You haven\'t contacted support yet. Use the form above whenever you need help.</div>';
+      return;
+    }
+    feed.innerHTML = '<div style="font-size:0.72rem;font-weight:700;letter-spacing:0.08em;color:var(--muted);text-transform:uppercase;margin-bottom:0.6rem;">Your Requests</div>'
+      + _supportCache.map(t => supportTicketCard(t, false)).join('');
+  }
+
+  function renderSupportStaff() {
+    const feed = document.getElementById('support-feed');
+    if (!feed) return;
+    let list = _supportCache.slice();
+    if (_supportFilter === 'open')            list = list.filter(t => t.status !== 'resolved');
+    else if (_supportFilter === 'resolved')   list = list.filter(t => t.status === 'resolved');
+    else if (_supportFilter === 'unassigned') list = list.filter(t => t.status !== 'resolved' && !t.assignedToUid);
+    else if (_supportFilter === 'mine')       list = list.filter(t => t.status !== 'resolved' && t.assignedToUid === me.uid);
+    if (!list.length) {
+      feed.innerHTML = '<div class="empty-state"><span class="empty-icon">✅</span>No requests in this view.</div>';
+      return;
+    }
+    feed.innerHTML = list.map(t => supportTicketCard(t, true)).join('');
+  }
+
+  function supportStaffOptions(selectedUid) {
+    const staff = _allMembersCache.filter(u => u.role && u.role !== 'student');
+    // High-level assigners see everyone; chapter-scoped ones see their chapter's staff.
+    const isHigh = hasRole('super_admin') || hasRole('ceo') || hasRole('student_support_director');
+    const myChapter = document.getElementById('sb-chapter')?.textContent || '';
+    const scoped = (!isHigh && myChapter) ? staff.filter(u => !u.chapter || u.chapter === myChapter) : staff;
+    return scoped
+      .sort((a, b) => (a.displayName || a.email || '').localeCompare(b.displayName || b.email || ''))
+      .map(u => `<option value="${u.id}" ${u.id === selectedUid ? 'selected' : ''}>${esc(u.displayName || u.email || 'Staff')}${u.role ? ' (' + esc(LABELS[u.role] || u.role) + ')' : ''}</option>`)
+      .join('');
+  }
+
+  function supportTicketCard(t, isStaffView) {
+    const msgs = Array.isArray(t.messages) ? t.messages : [];
+    const thread = msgs.map(m => `
+      <div style="display:flex;flex-direction:column;align-items:${m.staff ? 'flex-end' : 'flex-start'};margin-bottom:0.5rem;">
+        <div class="support-msg ${m.staff ? 'staff' : 'student'}">${esc(m.text || '')}</div>
+        <div class="support-msg-meta">${esc(m.name || '')}${m.role ? ' · ' + esc(LABELS[m.role] || m.role) : ''}${m.ts ? ' · ' + timeAgo(m.ts) : ''}</div>
+      </div>`).join('');
+    const status = t.status || 'open';
+    const assignBadge = t.assignedToName
+      ? `<span style="font-size:0.72rem;color:var(--muted);">Assigned to <strong>${esc(t.assignedToName)}</strong></span>` : '';
+    const replyBox = (status === 'resolved') ? '' : `
+      <div style="display:flex;gap:0.5rem;margin-top:0.7rem;">
+        <input class="form-input" id="support-reply-${t.id}" placeholder="${isStaffView ? 'Reply with how to fix it…' : 'Add a follow-up…'}" style="flex:1;" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendSupportReply('${t.id}');}" />
+        <button class="btn-sm" onclick="sendSupportReply('${t.id}')">Send</button>
+      </div>`;
+    let staffControls = '';
+    if (isStaffView) {
+      const assignCtrl = canAssignSupport() ? `
+        <select onchange="assignSupportTicket('${t.id}', this.value)" style="font-size:0.75rem;padding:0.28rem 0.5rem;border:1px solid var(--border);border-radius:6px;background:var(--white);color:var(--text);cursor:pointer;">
+          <option value="">Assign to…</option>${supportStaffOptions(t.assignedToUid)}
+        </select>` : '';
+      const resolveBtn = status !== 'resolved'
+        ? `<button onclick="resolveSupportTicket('${t.id}', true)" style="font-size:0.75rem;padding:0.32rem 0.7rem;border:1px solid #bfe0c8;background:#e2f0e8;color:#1a6e3c;border-radius:6px;font-weight:600;cursor:pointer;">✓ Mark resolved</button>`
+        : `<button onclick="resolveSupportTicket('${t.id}', false)" style="font-size:0.75rem;padding:0.32rem 0.7rem;border:1px solid var(--border);background:var(--white);color:var(--muted);border-radius:6px;font-weight:600;cursor:pointer;">Reopen</button>`;
+      // Permanent delete - for clearing out test/spam tickets. Leads and above only.
+      const deleteBtn = canAssignSupport()
+        ? `<button onclick="deleteSupportTicket('${t.id}')" title="Permanently delete this request" style="font-size:0.75rem;padding:0.32rem 0.7rem;border:1px solid #f5c6c6;background:var(--white);color:#c0392b;border-radius:6px;font-weight:600;cursor:pointer;margin-left:auto;">🗑 Delete</button>`
+        : '';
+      staffControls = `<div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;margin-top:0.7rem;">${assignCtrl}${resolveBtn}${deleteBtn}</div>`;
+    }
+    const who = isStaffView ? `${esc(t.studentName || 'Student')}${t.studentEmail ? ' · ' + esc(t.studentEmail) : ''}${t.chapter ? ' · ' + esc(t.chapter) : ''}` : '';
+    return `<div class="card" style="margin-bottom:0.9rem;">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:0.75rem;margin-bottom:0.35rem;">
+        <div style="min-width:0;">
+          <div style="font-weight:700;font-size:0.95rem;color:var(--navy);">${esc(t.subject || 'Support request')}</div>
+          ${who ? `<div style="font-size:0.78rem;color:var(--muted);margin-top:0.1rem;">${who}</div>` : ''}
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.25rem;flex-shrink:0;"><span class="support-status ${status}">${esc(status)}</span>${assignBadge}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;margin-top:0.5rem;">${thread}</div>
+      ${replyBox}
+      ${staffControls}
+    </div>`;
+  }
+
+  window.submitSupportTicket = async () => {
+    const subjectEl = document.getElementById('support-subject');
+    const msgEl = document.getElementById('support-message');
+    const err = document.getElementById('support-new-err');
+    const subject = subjectEl.value.trim();
+    const message = msgEl.value.trim();
+    err.style.display = 'none';
+    if (!subject || !message) { err.textContent = 'Please add a short summary and describe your issue.'; err.style.display = 'block'; return; }
+    const btn = document.getElementById('support-submit-btn');
+    btn.disabled = true; btn.textContent = 'Sending…';
+    try {
+      const myChapter = document.getElementById('sb-chapter')?.textContent || '';
+      const who = me.displayName || me.email || 'Student';
+      await addDoc(collection(db, 'support_tickets'), {
+        studentUid: me.uid, studentName: who, studentEmail: me.email || '', chapter: myChapter,
+        subject, status: 'open', assignedToUid: null, assignedToName: '', lastReplyStaff: false,
+        messages: [{ uid: me.uid, name: who, role: myRole || 'student', staff: false, text: message.slice(0, 4000), ts: Date.now() }],
+        createdAt: serverTimestamp(), updatedAt: serverTimestamp()
+      });
+      subjectEl.value = ''; msgEl.value = '';
+      showToast('Support request sent — we usually reply within 24–48 hours.', 'success');
+      loadSupport();
+    } catch(e) {
+      err.textContent = 'Could not send: ' + (e.message || e.code); err.style.display = 'block';
+    } finally { btn.disabled = false; btn.textContent = 'Send to Support'; }
+  };
+
+  window.sendSupportReply = async (ticketId) => {
+    const input = document.getElementById('support-reply-' + ticketId);
+    if (!input) return;
+    const text = input.value.trim();
+    if (!text) return;
+    const isStaff = myRole !== 'student';
+    input.disabled = true;
+    try {
+      const msg = { uid: me.uid, name: (me.displayName || me.email || 'Member'), role: myRole || '', staff: isStaff, text: text.slice(0, 4000), ts: Date.now() };
+      await updateDoc(doc(db, 'support_tickets', ticketId), {
+        messages: arrayUnion(msg), lastReplyStaff: isStaff, updatedAt: serverTimestamp()
+      });
+      input.value = '';
+      loadSupport();
+    } catch(e) {
+      showToast('Reply failed: ' + (e.message || e.code), 'error');
+      input.disabled = false;
+    }
+  };
+
+  window.assignSupportTicket = async (ticketId, uid) => {
+    if (!uid) return;
+    const person = _allMembersCache.find(u => u.id === uid);
+    const name = person ? (person.displayName || person.email || 'Staff') : 'Staff';
+    try {
+      await updateDoc(doc(db, 'support_tickets', ticketId), {
+        assignedToUid: uid, assignedToName: name, status: 'assigned', updatedAt: serverTimestamp()
+      });
+      const t = _supportCache.find(x => x.id === ticketId);
+      if (t) { t.assignedToUid = uid; t.assignedToName = name; t.status = 'assigned'; }
+      showToast('Assigned to ' + name, 'success');
+      renderSupportStaff();
+    } catch(e) { showToast('Assign failed: ' + (e.message || e.code), 'error'); }
+  };
+
+  window.deleteSupportTicket = async (ticketId) => {
+    const t = _supportCache.find(x => x.id === ticketId);
+    const label = t ? `"${t.subject || 'Support request'}"${t.studentName ? ' from ' + t.studentName : ''}` : 'this request';
+    if (!confirm(`Permanently delete ${label}?\n\nThe whole conversation will be removed for the student too. This cannot be undone.`)) return;
+    try {
+      await deleteDoc(doc(db, 'support_tickets', ticketId));
+      _supportCache = _supportCache.filter(x => x.id !== ticketId);
+      showToast('Support request deleted.', 'success');
+      renderSupportStaff();
+    } catch(e) { showToast('Delete failed: ' + (e.message || e.code), 'error'); }
+  };
+
+  window.resolveSupportTicket = async (ticketId, resolved) => {
+    const t = _supportCache.find(x => x.id === ticketId);
+    const newStatus = resolved ? 'resolved' : ((t && t.assignedToUid) ? 'assigned' : 'open');
+    try {
+      await updateDoc(doc(db, 'support_tickets', ticketId), { status: newStatus, updatedAt: serverTimestamp() });
+      if (t) t.status = newStatus;
+      renderSupportStaff();
+    } catch(e) { showToast('Update failed: ' + (e.message || e.code), 'error'); }
+  };
+
+  // Live count on the Support nav item: staff see open tickets; students see
+  // requests that have a staff reply waiting for them.
+  function startSupportBadgeWatch() {
+    if (_supportBadgeUnsub) { try { _supportBadgeUnsub(); } catch(e) {} _supportBadgeUnsub = null; }
+    if (!me) return;
+    const badge = document.getElementById('support-badge');
+    const isStudent = myRole === 'student';
+    const qy = isStudent
+      ? query(collection(db, 'support_tickets'), where('studentUid', '==', me.uid))
+      : query(collection(db, 'support_tickets'));
+    _supportBadgeUnsub = onSnapshot(qy, snap => {
+      let count = 0;
+      snap.forEach(d => {
+        const t = d.data();
+        if (t.status === 'resolved') return;
+        if (isStudent) { if (t.lastReplyStaff) count++; }
+        else count++;
+      });
+      if (badge) {
+        badge.style.display = count > 0 ? 'inline-flex' : 'none';
+        badge.textContent = count > 99 ? '99+' : String(count);
+      }
+    }, () => { if (badge) badge.style.display = 'none'; });
+  }
+  function stopSupportBadgeWatch() {
+    if (_supportBadgeUnsub) { try { _supportBadgeUnsub(); } catch(e) {} _supportBadgeUnsub = null; }
+    const badge = document.getElementById('support-badge');
+    if (badge) badge.style.display = 'none';
   }
 
   // ── Tutor: Sessions ───────────────────────────────────────────────────────
@@ -10212,7 +11247,33 @@
     } catch(e) { msg.textContent = 'Failed: ' + (e.message||e.code); msg.style.color='#c0392b'; msg.style.display='block'; }
   };
 
-  onAuthStateChanged(auth, user => { if (user) handleUser(user); else goPreLogin(); });
+  // Pre-check the remembered Terms agreement so the box stays ticked and the
+  // login buttons are enabled on return.
+  (function initTosState() {
+    const cb = document.getElementById('tos-agree');
+    if (cb && tosAgreed()) cb.checked = true;
+    onTosAgreeChange();
+  })();
+
+  onAuthStateChanged(auth, user => {
+    if (user) {
+      // A valid session exists - but never auto-login unless the person has
+      // agreed to the Terms of Service. Hold them on the login screen and
+      // finish signing in the instant they tick the box (onTosAgreeChange).
+      if (tosAgreed()) {
+        _pendingAuthUser = null;
+        handleUser(user);
+      } else {
+        _pendingAuthUser = user;
+        goPreLogin();
+        showAuthEntry();
+        showErr('auth-error', 'Please agree to the Terms of Service to continue.');
+      }
+    } else {
+      _pendingAuthUser = null;
+      goPreLogin();
+    }
+  });
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/89/three.min.js"></script>
 <script>
