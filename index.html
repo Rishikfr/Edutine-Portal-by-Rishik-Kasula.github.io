@@ -1441,7 +1441,7 @@
             <div style="font-size:0.7rem;font-weight:700;color:rgba(180,210,255,0.5);letter-spacing:0.08em;margin-bottom:0.65rem;">STEP 2 OF 4 - PARENT / GUARDIAN</div>
             <input class="input-field" id="ob-parent-name" placeholder="Parent's First and Last Name *" />
             <input class="input-field" id="ob-parent-phone" placeholder="Parent Phone Number *" />
-            <input class="input-field" id="ob-parent-email" placeholder="Parent Email (optional)" />
+            <input class="input-field" id="ob-parent-email" placeholder="Parent Email *" />
             <div style="display:flex;gap:0.5rem;margin-top:0.25rem;">
               <button onclick="obBack(2)" style="flex:0 0 auto;padding:0.9rem 1.25rem;background:rgba(255,255,255,0.08);color:#e8f2ff;border:none;border-radius:var(--r-sm);font-size:0.95rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;">← Back</button>
               <button onclick="obNext(2)" style="flex:1;padding:0.9rem;background:rgba(106,176,216,0.85);color:#fff;border:none;border-radius:var(--r-sm);font-size:0.95rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;">Continue →</button>
@@ -1976,6 +1976,11 @@
         <p class="page-sub" id="tutor-review-sub">Review tutor applications and manage interviews.</p>
       </div>
       <!-- Job openings management -->
+      <div class="card" id="chapter-app-status" style="display:none;margin-bottom:1.5rem;">
+        <div class="card-label">Application Status</div>
+        <p style="font-size:0.8rem;color:var(--muted);margin:0 0 0.85rem;">Open or close applications per chapter. When closed, the public tutor form and student sign-ups are blocked for that chapter.</p>
+        <div id="chapter-app-status-list"></div>
+      </div>
       <div class="card" id="tutor-openings-manage" style="display:none;margin-bottom:1.5rem;">
         <div class="card-label">Tutor Job Openings</div>
         <p style="font-size:0.8rem;color:var(--muted);margin:0 0 0.85rem;">Post the positions applicants can apply to. Closed openings stop accepting new applications.</p>
@@ -2215,7 +2220,12 @@
     <div class="tab-content" id="tab-all-students">
       <div class="page-header">
         <div class="page-title">All Students</div>
-        <p class="page-sub">Every student registered on the portal.</p>
+        <p class="page-sub" id="all-students-sub">Every student registered on the portal.</p>
+      </div>
+      <div class="card" id="chapter-subjects-editor" style="display:none;margin-bottom:1.25rem;">
+        <div class="card-label">Chapter Subjects</div>
+        <p style="font-size:0.8rem;color:var(--muted);margin:0 0 0.85rem;">These are the subjects students in this chapter can request help with. Add the subjects your tutors cover; remove any you no longer offer.</p>
+        <div id="chapter-subjects-editor-body"></div>
       </div>
       <div class="card" style="padding:0.5rem 0.75rem;margin-bottom:1.25rem;">
         <input class="form-input" id="all-students-search" placeholder="Search by name or email..." oninput="filterAllStudents()" style="border:none;box-shadow:none;padding:0.5rem 0.25rem;font-size:0.9rem;" />
@@ -3345,7 +3355,14 @@
   // with an explicit UTC offset so it can't drift: July is PDT (UTC-7).
   // Change this one constant to move or re-open the launch.
   const STUDENT_SIGNUP_LAUNCH = new Date('2026-07-22T00:00:00-07:00').getTime();
-  function studentSignupsOpen() { return Date.now() >= STUDENT_SIGNUP_LAUNCH; }
+  // A chapter president's explicit open/closed toggle wins; if they haven't set
+  // one yet, fall back to the scheduled launch date.
+  function studentSignupsOpen(chapter) {
+    const ch = chapter || (document.getElementById('sb-chapter')?.textContent || '');
+    const s = _chapterSettings[chapterSlug(ch)];
+    if (s && typeof s.studentSignupsOpen === 'boolean') return s.studentSignupsOpen;
+    return Date.now() >= STUDENT_SIGNUP_LAUNCH;
+  }
   function studentSignupLaunchLabel() {
     return new Date(STUDENT_SIGNUP_LAUNCH).toLocaleString('en-US', {
       timeZone: 'America/Los_Angeles', weekday: 'long', month: 'long', day: 'numeric',
@@ -3365,13 +3382,77 @@
     </div>`;
   }
 
+  // ── Per-chapter application status ───────────────────────────────────────
+  // Chapter presidents/directors (and org leadership) open or close their
+  // chapter's tutor applications and student sign-ups. Stored in
+  // chapter_settings/{slug}. Defaults: tutor apps OPEN, student sign-ups follow
+  // the launch date, until someone sets an explicit value.
+  function chapterSlug(chapter) {
+    return (chapter || '').trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  }
+  let _chapterSettings = {};
+  let _chapterSettingsLoaded = false;
+  async function loadChapterSettings(force) {
+    if (_chapterSettingsLoaded && !force) return _chapterSettings;
+    try {
+      const snap = await getDocs(collection(db, 'chapter_settings'));
+      _chapterSettings = {};
+      snap.docs.forEach(d => { _chapterSettings[d.id] = d.data(); });
+      _chapterSettingsLoaded = true;
+    } catch(e) { /* keep whatever we have */ }
+    return _chapterSettings;
+  }
+  function chapterTutorAppsOpen(chapter) {
+    const s = _chapterSettings[chapterSlug(chapter)];
+    return s ? s.tutorAppsOpen !== false : true;   // default open
+  }
+  function canManageChapterApps() {
+    return hasRole('chapter_president') || hasRole('chapter_director')
+      || hasRole('ceo') || hasRole('super_admin') || hasRole('board_president')
+      || hasRole('vp_student_tutor');
+  }
+  // Who may edit a chapter's subject list. Chapter president/director edit their
+  // OWN chapter; org leadership can edit any chapter.
+  function canManageChapterSubjects() {
+    return canManageChapterApps() || hasRole('vp_chapter_dev');
+  }
+  function isChapterSubjectsAdmin() {
+    return hasRole('ceo') || hasRole('super_admin') || hasRole('board_president')
+      || hasRole('vp_student_tutor') || hasRole('vp_chapter_dev');
+  }
+
   // ── Chapter subject availability ─────────────────────────────────────────
-  // Students should only be offered subjects that tutors IN THEIR OWN CHAPTER
-  // are actually available to teach (not the global catalog). Results cached
-  // per chapter for the session.
+  // Curated list of subjects offered per chapter (based on the tutors each
+  // chapter currently has). Students only pick from their own chapter's list.
+  // Chapters with no tutors get an empty list (sign-ups stay closed for them).
+  const CHAPTER_SUBJECTS = {
+    'Alameda': [
+      'Elementary/Middle School Math', 'Algebra 1', 'Algebra 2', 'Biology', 'AP Biology',
+      'World History', 'AP English Language and Composition', 'AP World History',
+      'French 1', 'French 2', 'French 3', 'AP French',
+      'Middle School Writing', 'Elementary English'
+    ],
+    'Contra Costa': [
+      'Algebra 1', 'Algebra 2', 'Precalculus', 'Biology', 'AP Biology', 'AP World History'
+    ],
+    'Texas': [],
+    'San Joaquin County': []
+  };
   const _chapterSubjectCache = {};
+  // The default list a chapter starts with (before a president customizes it).
+  function chapterDefaultSubjects(chapter) {
+    return (CHAPTER_SUBJECTS[chapter] || []).slice();
+  }
   async function chapterTutorSubjects(chapter) {
     if (!chapter) return [];
+    await loadChapterSettings();
+    // 1) A president's saved list wins.
+    const saved = _chapterSettings[chapterSlug(chapter)];
+    if (saved && Array.isArray(saved.subjects)) return saved.subjects.slice();
+    // 2) Otherwise the curated default (an empty array is a valid answer).
+    const curated = CHAPTER_SUBJECTS[chapter];
+    if (curated) return curated.slice();
+    // For any chapter without a curated list, fall back to the live tutor roster.
     if (_chapterSubjectCache[chapter]) return _chapterSubjectCache[chapter];
     const set = new Set();
     try {
@@ -3380,7 +3461,6 @@
         const u = d.data();
         const isTutor = u.role === 'tutor' || (Array.isArray(u.roles) && u.roles.includes('tutor'));
         if (!isTutor) return;
-        // Skip tutors who aren't currently available to take students.
         if (u.onLeave === true || u.leaveStatus === 'approved') return;
         (Array.isArray(u.subjects) ? u.subjects : []).forEach(s => { if (s) set.add(String(s).trim()); });
       });
@@ -3794,7 +3874,7 @@
     const canSeeRoster = hasRole('super_admin') || hasRole('ceo') || hasRole('board_president') ||
       hasRole('vp_student_tutor') || hasRole('vp_marketing') || hasRole('vp_website') || hasRole('vp_chapter_dev');
     document.getElementById('nav-members').style.display = canSeeRoster ? 'flex' : 'none';
-    document.getElementById('nav-all-students').style.display = (hasRole('super_admin') || hasRole('ceo') || hasRole('board_president') || hasRole('vp_student_tutor')) ? 'flex' : 'none';
+    document.getElementById('nav-all-students').style.display = (hasRole('super_admin') || hasRole('ceo') || hasRole('board_president') || hasRole('vp_student_tutor') || canManageChapterSubjects()) ? 'flex' : 'none';
     // Board nav items
     document.getElementById('nav-tasks').style.display = 'flex';
     document.getElementById('nav-board-meetings').style.display = isBoard ? 'flex' : 'none';
@@ -3858,6 +3938,7 @@
     loadStatus();
     startAnnouncementFeed();
     startChapterMsgWatch(); // surface the dashboard messages widget on new chatter
+    loadChapterSettings(); // preload per-chapter open/closed status for gating
     if (role === 'ceo' || role === 'super_admin') startNotificationListener();
     goPostLogin();
     showTab('dashboard');
@@ -5530,6 +5611,9 @@
     if (currentStep === 2) {
       if (!val('ob-parent-name'))  { alert("Please enter your parent's name."); return; }
       if (!val('ob-parent-phone')) { alert("Please enter your parent's phone number."); return; }
+      const pe = val('ob-parent-email');
+      if (!pe) { alert("Please enter your parent's email."); return; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(pe)) { alert("Please enter a valid parent email."); return; }
     }
     if (currentStep === 3) {
       if (!getOnboardingSubjects().length) { alert('Please select at least one subject.'); return; }
@@ -5747,7 +5831,7 @@
     ).join('')}</div>` : '';
     return `<div style="display:flex;align-items:center;justify-content:space-between;padding:0.75rem 0;border-bottom:1px solid var(--border-light);gap:1rem;">
       <div style="flex:1;min-width:0;">
-        <div style="font-weight:600;font-size:0.92rem;">${esc(u.displayName || u.email)}</div>
+        <div style="font-weight:600;font-size:0.92rem;">${esc(u.displayName || u.email)}${u.chapter ? `<span style="font-weight:500;font-size:0.72rem;color:var(--muted);"> · ${esc(u.chapter)}</span>` : ''}</div>
         <div style="font-size:0.78rem;color:var(--muted);margin-top:0.1rem;">${esc(u.email)}</div>
         ${extraBadges}
       </div>
@@ -5781,12 +5865,82 @@
     renderMembersList(membersCache, 'members-feed');
   }
 
+  // ── Chapter subjects editor (chapter presidents + leadership) ────────────
+  function _jsStr(s) { return String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'"); }
+  function chapterCurrentSubjects(chapter) {
+    const saved = _chapterSettings[chapterSlug(chapter)];
+    return (saved && Array.isArray(saved.subjects)) ? saved.subjects.slice() : chapterDefaultSubjects(chapter);
+  }
+  async function loadChapterSubjectsEditor() {
+    const wrap = document.getElementById('chapter-subjects-editor');
+    if (!wrap) return;
+    if (!canManageChapterSubjects()) { wrap.style.display = 'none'; return; }
+    wrap.style.display = 'block';
+    await loadChapterSettings(true);
+    const myChapter = document.getElementById('sb-chapter')?.textContent || '';
+    const chapters = isChapterSubjectsAdmin() ? CHAPTERS : (myChapter ? [myChapter] : []);
+    const body = document.getElementById('chapter-subjects-editor-body');
+    if (!chapters.length) { body.innerHTML = '<div style="font-size:0.8rem;color:var(--muted);">No chapter is set on your account.</div>'; return; }
+    body.innerHTML = chapters.map(chapterSubjectsSection).join('');
+  }
+  function chapterSubjectsSection(chapter) {
+    const subs = chapterCurrentSubjects(chapter);
+    const slug = chapterSlug(chapter);
+    const pills = subs.length
+      ? subs.map(s => `<span style="display:inline-flex;align-items:center;gap:5px;background:#f0f4ff;color:var(--navy);border-radius:20px;padding:0.25rem 0.7rem;font-size:0.8rem;font-weight:500;">${esc(s)} <span onclick="removeChapterSubject('${_jsStr(chapter)}','${_jsStr(s)}')" title="Remove" style="cursor:pointer;opacity:0.55;font-size:0.72rem;">✕</span></span>`).join('')
+      : '<span style="font-size:0.8rem;color:var(--muted);font-style:italic;">No subjects yet — add some below.</span>';
+    return `<div style="padding:0.85rem 0;border-bottom:1px solid var(--border-light);">
+      <div style="font-weight:700;font-size:0.95rem;color:var(--navy);margin-bottom:0.5rem;">${esc(chapter)} <span style="font-weight:500;font-size:0.74rem;color:var(--muted);">· ${subs.length} subject${subs.length === 1 ? '' : 's'}</span></div>
+      <div style="display:flex;flex-wrap:wrap;gap:0.35rem;margin-bottom:0.6rem;">${pills}</div>
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;">
+        <input id="chsub-input-${slug}" class="form-input" placeholder="Add a subject (e.g. AP Chemistry)" style="width:260px;max-width:100%;padding:0.4rem 0.6rem;font-size:0.82rem;" onkeydown="if(event.key==='Enter'){event.preventDefault();addChapterSubject('${_jsStr(chapter)}');}" />
+        <button onclick="addChapterSubject('${_jsStr(chapter)}')" class="btn-sm" style="font-size:0.78rem;">+ Add</button>
+      </div>
+    </div>`;
+  }
+  async function saveChapterSubjects(chapter, subjects) {
+    const slug = chapterSlug(chapter);
+    try {
+      await setDoc(doc(db, 'chapter_settings', slug), {
+        chapter, subjects, subjectsUpdatedByName: me.displayName || me.email, subjectsUpdatedAt: serverTimestamp()
+      }, { merge: true });
+      _chapterSettings[slug] = { ...(_chapterSettings[slug] || {}), chapter, subjects };
+      delete _chapterSubjectCache[chapter];
+      loadChapterSubjectsEditor();
+    } catch(e) { alert('Failed: ' + (e.message || e.code)); }
+  }
+  window.addChapterSubject = async (chapter) => {
+    const inp = document.getElementById('chsub-input-' + chapterSlug(chapter));
+    const val = (inp?.value || '').trim();
+    if (!val) return;
+    const cur = chapterCurrentSubjects(chapter);
+    if (cur.some(s => s.toLowerCase() === val.toLowerCase())) { if (inp) inp.value = ''; showToast('That subject is already listed.', 'error'); return; }
+    if (inp) inp.value = '';
+    await saveChapterSubjects(chapter, [...cur, val]);
+    showToast(`Added “${val}” to ${chapter}.`, 'success');
+  };
+  window.removeChapterSubject = async (chapter, subject) => {
+    const cur = chapterCurrentSubjects(chapter);
+    await saveChapterSubjects(chapter, cur.filter(s => s !== subject));
+  };
+
   async function loadAllStudents() {
     const feed = document.getElementById('all-students-feed');
     feed.innerHTML = '<div class="empty-state"><span class="empty-icon">⏳</span>Loading...</div>';
+    loadChapterSubjectsEditor();
     const snap = await getDocs(query(collection(db, 'users'), where('role', '==', 'student')));
-    allStudentsCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    allStudentsCache.sort((a,b) => (a.displayName||'').localeCompare(b.displayName||''));
+    let list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    // Chapter president/director see only their own chapter's students; org
+    // leadership sees everyone.
+    const sub = document.getElementById('all-students-sub');
+    if (!isChapterSubjectsAdmin()) {
+      const myChapter = document.getElementById('sb-chapter')?.textContent || '';
+      list = list.filter(u => u.chapter === myChapter);
+      if (sub) sub.textContent = myChapter ? `Students in ${myChapter}.` : 'Every student registered on the portal.';
+    } else if (sub) {
+      sub.textContent = 'Every student registered on the portal.';
+    }
+    allStudentsCache = list.sort((a,b) => (a.displayName||'').localeCompare(b.displayName||''));
     renderStudentsList(allStudentsCache);
   }
 
@@ -5806,7 +5960,7 @@
           : `<span style="font-size:0.72rem;color:var(--muted);">${u.assignedTutor ? 'Assigned' : 'Unassigned'}</span>`;
         return `<div style="display:flex;align-items:center;justify-content:space-between;padding:0.75rem 0;border-bottom:1px solid var(--border-light);gap:1rem;">
           <div style="flex:1;min-width:0;">
-            <div style="font-weight:600;font-size:0.92rem;">${esc(u.displayName || u.email)}</div>
+            <div style="font-weight:600;font-size:0.92rem;">${esc(u.displayName || u.email)}${u.chapter ? `<span style="font-weight:500;font-size:0.72rem;color:var(--muted);"> · ${esc(u.chapter)}</span>` : ''}</div>
             <div style="font-size:0.78rem;color:var(--muted);margin-top:0.1rem;">${esc(u.email)}</div>
           </div>
           ${rightSide}
@@ -6114,6 +6268,7 @@
     feed.innerHTML = '<div class="empty-state"><span class="empty-icon">⏳</span>Loading...</div>';
 
     // New tutor application flow: job openings + walk-in applications
+    loadChapterAppStatus();
     loadTutorOpenings();
     loadTutorApplications();
 
@@ -6356,6 +6511,47 @@
            hasRole('tutor_support_lead') || hasRole('chapter_president') || hasRole('chapter_director');
   }
 
+  // ── Application-status manager (open/close per chapter) ──────────────────
+  async function loadChapterAppStatus() {
+    const wrap = document.getElementById('chapter-app-status');
+    if (!wrap) return;
+    if (!canManageChapterApps()) { wrap.style.display = 'none'; return; }
+    wrap.style.display = 'block';
+    await loadChapterSettings(true);
+    const isHigh = hasRole('ceo') || hasRole('super_admin') || hasRole('board_president') || hasRole('vp_student_tutor');
+    const myChapter = document.getElementById('sb-chapter')?.textContent || '';
+    const chapters = isHigh ? CHAPTERS : (myChapter ? [myChapter] : []);
+    const list = document.getElementById('chapter-app-status-list');
+    if (!chapters.length) { list.innerHTML = '<div style="font-size:0.8rem;color:var(--muted);">No chapter is set on your account.</div>'; return; }
+    const pill = (chapter, kind, open) => {
+      const bg = open ? '#e2f0e8' : '#fbeaea', fg = open ? '#1a6e3c' : '#c0392b', bd = open ? '#bfe0c8' : '#f0c7c7';
+      return `<select onchange="setChapterAppStatus('${esc(chapter)}','${kind}',this.value==='open')" style="font-weight:700;font-size:0.78rem;padding:0.3rem 0.55rem;border-radius:8px;border:1px solid ${bd};background:${bg};color:${fg};cursor:pointer;">
+        <option value="open"${open ? ' selected' : ''}>🟢 Open</option>
+        <option value="closed"${!open ? ' selected' : ''}>🔴 Closed</option>
+      </select>`;
+    };
+    list.innerHTML = chapters.map(c => `
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;padding:0.75rem 0;border-bottom:1px solid var(--border-light);">
+        <div style="font-weight:700;font-size:0.95rem;color:var(--navy);">${esc(c)}</div>
+        <div style="display:flex;gap:1.5rem;flex-wrap:wrap;align-items:center;">
+          <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.8rem;color:var(--text-soft);">Tutor applications ${pill(c, 'tutor', chapterTutorAppsOpen(c))}</label>
+          <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.8rem;color:var(--text-soft);">Student sign-ups ${pill(c, 'student', studentSignupsOpen(c))}</label>
+        </div>
+      </div>`).join('');
+  }
+  window.setChapterAppStatus = async (chapter, kind, open) => {
+    const slug = chapterSlug(chapter);
+    const field = kind === 'tutor' ? 'tutorAppsOpen' : 'studentSignupsOpen';
+    try {
+      await setDoc(doc(db, 'chapter_settings', slug), {
+        chapter, [field]: open, updatedByName: me.displayName || me.email, updatedAt: serverTimestamp()
+      }, { merge: true });
+      _chapterSettings[slug] = { ...(_chapterSettings[slug] || {}), chapter, [field]: open };
+      showToast(`${chapter} ${kind === 'tutor' ? 'tutor applications' : 'student sign-ups'} ${open ? 'opened' : 'closed'}.`, 'success');
+      loadChapterAppStatus();
+    } catch(e) { alert('Failed: ' + (e.message || e.code)); }
+  };
+
   async function loadTutorOpenings() {
     const wrap = document.getElementById('tutor-openings-manage');
     if (!wrap) return;
@@ -6433,7 +6629,9 @@
   // Build a stage-appropriate email draft for an applicant
   function buildApplicantEmail(a) {
     const first = (a.name || '').trim().split(/\s+/)[0] || 'there';
-    const signoff = `\n\nBest,\nThe Edutine Tutor Support Team\ntutor@edutinereachout.com`;
+    // Auto-sign with the officer sending it (their name, then the team line).
+    const sender = (me && (me.displayName || me.email)) || '';
+    const signoff = `\n\nBest,\n${sender ? sender + '\n' : ''}Edutine Tutor Support Team\ntutor@edutinereachout.com`;
     if (a.status === 'interview_link_sent' || a.status === 'orientation_sent' || a.status === 'tutor_approved') {
       return {
         subject: 'Welcome to Edutine - Next Steps',
@@ -6544,6 +6742,134 @@
   // Rank of each status so we know which checklist steps are complete
   const APP_STAGE_RANK = { pending:0, approved:1, interview_link_sent:2, orientation_sent:3, tutor_approved:4 };
 
+  // ── Interview question set ───────────────────────────────────────────────
+  // Each applicant gets ONE subject question, drawn from the hardest subject
+  // they listed (AP > Honors > regular). It's deterministic per applicant (so
+  // it never changes on re-render) but hidden from the interviewer until the
+  // scheduled interview time.
+  // Concrete, exam-style questions (roughly AP / honors difficulty). Ordered so
+  // more specific matches win — e.g. "precalc" must come before "calc" because
+  // "precalculus" also contains "calc".
+  const INTERVIEW_QUESTION_BANK = [
+    { match: /bio/, qs: [
+      { q: 'A plant cell is placed in a hypertonic solution. Predict the net direction of water movement and describe what happens to the cell, using the terms osmosis and water potential.',
+        a: 'Water moves OUT of the cell, toward the lower (more negative) water potential of the hypertonic solution. The cell loses turgor and the membrane pulls away from the wall — plasmolysis.' },
+      { q: 'Two heterozygous parents (Bb × Bb) for a recessive trait have children. What fraction of offspring are expected to show the recessive phenotype, and what is the genotypic ratio?',
+        a: '1/4 show the recessive phenotype (bb). Genotypic ratio 1 BB : 2 Bb : 1 bb; phenotypic ratio 3 dominant : 1 recessive.' },
+      { q: 'Design a controlled experiment to test how temperature affects the rate of an enzyme-catalyzed reaction. Identify the independent variable, dependent variable, and one controlled variable.',
+        a: 'IV = temperature; DV = reaction rate (e.g., product formed per minute); control pH, enzyme/substrate concentration, volume. Rate should rise to an optimum, then fall as the enzyme denatures.' } ] },
+    { match: /chem/, qs: [
+      { q: '25.0 mL of 0.100 M HCl is titrated with 0.100 M NaOH. What volume of NaOH reaches the equivalence point, and what is the pH there? Explain.',
+        a: 'Moles HCl = 0.00250, so 25.0 mL of NaOH is needed. Strong acid + strong base leaves only NaCl and water at equivalence, so pH = 7.' },
+      { q: 'For N₂(g) + 3H₂(g) ⇌ 2NH₃(g), ΔH < 0. Predict how the equilibrium shifts when you (a) increase pressure and (b) increase temperature. Justify each.',
+        a: '(a) Higher pressure shifts toward fewer gas moles → toward NH₃ (2 vs 4 mol). (b) Higher temperature favors the endothermic (reverse) direction → back toward reactants, lowering yield.' },
+      { q: 'A weak acid HA at 0.10 M has Ka = 1.0×10⁻⁵. Estimate the pH.',
+        a: '[H⁺] ≈ √(Ka·C) = √(1.0×10⁻⁶) = 1.0×10⁻³ M, so pH ≈ 3.' } ] },
+    { match: /phys/, qs: [
+      { q: 'A ball is thrown horizontally at 15 m/s from a 20 m cliff (g = 10 m/s²). How long is it in the air, and how far from the base does it land?',
+        a: 'Vertical: 20 = ½·10·t² → t = 2 s. Horizontal range = 15 × 2 = 30 m. Horizontal and vertical motion are independent.' },
+      { q: 'Cart A (1.0 kg at 4.0 m/s) collides with and sticks to cart B (3.0 kg at rest). Find their common velocity afterward.',
+        a: 'Perfectly inelastic: momentum conserved. 1.0×4.0 = (1.0+3.0)·v → v = 1.0 m/s.' },
+      { q: 'A 2.0 kg block is released from rest on a frictionless 30° incline (g = 10 m/s²). Find its acceleration down the incline.',
+        a: 'a = g·sinθ = 10·sin30° = 5.0 m/s² (mass cancels).' } ] },
+    { match: /precalc/, qs: [
+      { q: 'Describe the transformations of y = 2·sin(x − π/2) + 1 relative to y = sin x: amplitude, period, phase shift, and vertical shift.',
+        a: 'Amplitude 2, period 2π, phase shift π/2 to the right, vertical shift up 1.' },
+      { q: 'Solve log₂(x) + log₂(x − 2) = 3.',
+        a: 'log₂(x(x−2)) = 3 → x² − 2x = 8 → x² − 2x − 8 = 0 → (x−4)(x+2)=0 → x = 4 (reject x = −2, outside the domain).' },
+      { q: 'Given f(x) = 2x − 3, find its inverse and verify.',
+        a: 'y = 2x − 3 → x = (y+3)/2, so f⁻¹(x) = (x+3)/2. Check: f(f⁻¹(x)) = 2·(x+3)/2 − 3 = x. ✓' } ] },
+    { match: /calc/, qs: [
+      { q: 'A particle moves with position s(t) = t³ − 6t² + 9t. Find when it is at rest and the interval where it moves left.',
+        a: 'v(t) = 3t² − 12t + 9 = 3(t−1)(t−3). At rest at t = 1 and t = 3; moves left where v < 0, i.e., 1 < t < 3.' },
+      { q: 'Evaluate ∫₀² (3x² − 2x) dx.',
+        a: '[x³ − x²] from 0 to 2 = (8 − 4) − 0 = 4.' },
+      { q: 'Find dy/dx for y = x·eˣ and locate any critical point.',
+        a: 'Product rule: y′ = eˣ(x + 1). Critical point where y′ = 0 → x = −1.' } ] },
+    { match: /algebra/, qs: [
+      { q: 'Solve 2x² − 5x − 3 = 0. Show your method and check one root.',
+        a: 'Factor: (2x + 1)(x − 3) = 0 → x = 3 or x = −½ (or use the quadratic formula). Check x = 3: 18 − 15 − 3 = 0. ✓' },
+      { q: 'Solve the system 3x + 2y = 12 and x − y = 1. Which method did you choose and why?',
+        a: 'x = y + 1, substitute: 3(y+1) + 2y = 12 → 5y = 9 → y = 1.8, x = 2.8. Substitution is clean because x is already isolated.' },
+      { q: 'A student adds fractions across as 1/2 + 1/3 = 2/5. How would you correct their reasoning?',
+        a: 'Use a common denominator/visual: 3/6 + 2/6 = 5/6. You can only add same-size pieces — show why the denominators must match first.' } ] },
+    { match: /geometry/, qs: [
+      { q: 'A right triangle has legs 6 and 8. Find the hypotenuse and the area.',
+        a: 'Hypotenuse = √(36 + 64) = 10. Area = ½ · 6 · 8 = 24.' },
+      { q: 'Two similar triangles have a scale factor of 3. If the smaller has area 5, what is the larger triangle\'s area?',
+        a: 'Areas scale by the square of the ratio: 3² · 5 = 45.' },
+      { q: 'Prove that the interior angles of any triangle sum to 180°.',
+        a: 'Draw a line through one vertex parallel to the opposite side. Alternate interior angles equal the other two triangle angles, and together they form a straight line = 180°.' } ] },
+    { match: /french/, qs: [
+      { q: 'Translate and explain the tense choice: "Quand j\'étais jeune, j\'ai visité Paris." Why imparfait then passé composé?',
+        a: '"When I was young (ongoing state → imparfait), I visited Paris (single completed action → passé composé)." Background/ongoing vs. a completed event.' },
+      { q: 'How would you teach French object-pronoun placement? Give an affirmative and a negative example.',
+        a: 'Before the conjugated verb: "Je le vois" / "Je ne le vois pas." In the affirmative imperative it follows: "Regarde-le." Multiple pronouns follow a fixed order.' } ] },
+    { match: /world|history|us /, qs: [
+      { q: 'Analyze the main causes of World War I. Which do you consider most significant, and how would you defend that with evidence? (DBQ-style)',
+        a: 'M.A.I.N. — militarism, alliances, imperialism, nationalism — plus the assassination trigger. Strong answers pick one, justify it with evidence, and acknowledge counterpoints.' },
+      { q: 'Write a defensible DBQ thesis evaluating the impact of the Columbian Exchange, and name two types of evidence you\'d use.',
+        a: 'Thesis takes a clear position (positive/negative/mixed: crops, disease, demographics) and previews reasoning; evidence could be population data and accounts of new crops. Argument, not summary.' } ] },
+    { match: /english|writing|composition|lang/, qs: [
+      { q: 'Rewrite this weak thesis into a defensible, nuanced AP-Lang argument and explain your changes: "Social media is bad."',
+        a: 'e.g., "While social media fragments attention, its power to mobilize communities makes it a net force for civic engagement." Specific, arguable, and previews reasoning.' },
+      { q: 'Identify the rhetorical strategy in "Ask not what your country can do for you — ask what you can do for your country," and explain its effect.',
+        a: 'Antithesis / chiasmus — parallel, inverted structure. It creates balance and memorability and shifts responsibility onto the listener.' } ] },
+    { match: /science/, qs: [
+      { q: 'A student mixes two clear solutions and a white solid forms. Explain what likely happened and how you would identify the products.',
+        a: 'A precipitation reaction: two soluble salts exchange ions to form an insoluble product. Predict it with solubility rules; confirm by filtering and testing the precipitate.' },
+      { q: 'Design an experiment to test whether light intensity affects the rate of photosynthesis. State the independent variable, dependent variable, and one control.',
+        a: 'IV = light intensity; DV = O₂ produced (e.g., bubbles per minute from pondweed); control CO₂, temperature, and plant type. Rate rises then plateaus.' },
+      { q: 'Explain the difference between an independent and a dependent variable using a specific example experiment.',
+        a: 'IV = what you deliberately change; DV = what you measure in response. e.g., vary fertilizer amount (IV), measure plant height (DV), holding light/water constant.' } ] },
+    { match: /math/, qs: [
+      { q: 'A recipe needs 3/4 cup of sugar for 12 cookies. How much sugar for 30 cookies? Walk through how you would guide a student.',
+        a: 'Scale factor 30/12 = 2.5, so 3/4 × 2.5 = 15/8 = 1⅞ cups. Or set up a proportion. Emphasize the reasoning, not just the number.' },
+      { q: 'A $40 shirt is 25% off. What is the sale price, and how would you teach the percent step?',
+        a: '25% of 40 = 10, so $30. Teach "percent = per 100," convert to 0.25, then multiply — and sanity-check the result.' } ] },
+  ];
+  const GENERIC_INTERVIEW_QS = [
+    { q: 'Give me a genuine exam-style problem from your strongest subject, then solve it out loud as if teaching a struggling student.',
+      a: 'No fixed answer — judge the rigor of the problem they pick, the correctness of their solution, and how clearly they would teach each step.' },
+    { q: 'Walk me through a hard problem in your best subject step by step, and show how you would guide a student to solve it themselves.',
+      a: 'Look for structure — givens → plan → execute → verify — and student-centered coaching, not just lecturing.' } ];
+  function _hashStr(s) { let h = 0; for (const c of String(s)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h; }
+  function _subjectDifficulty(s) {
+    const t = ' ' + s.toLowerCase() + ' ';
+    if (/\bap\b/.test(t) || t.includes(' ap ')) return 3;
+    if (t.includes('honors') || t.includes('accelerated')) return 2;
+    return 1;
+  }
+  function pickInterviewQuestion(a, id) {
+    const subs = Array.isArray(a.subjects)
+      ? a.subjects.slice()
+      : String(a.subjects || '').split(',').map(s => s.trim()).filter(Boolean);
+    if (!subs.length) {
+      const g = GENERIC_INTERVIEW_QS[_hashStr(id) % GENERIC_INTERVIEW_QS.length];
+      return { subject: '', question: g.q, answer: g.a };
+    }
+    let best = subs[0], bestD = _subjectDifficulty(subs[0]);
+    subs.forEach(s => { const d = _subjectDifficulty(s); if (d > bestD) { bestD = d; best = s; } });
+    const entry = INTERVIEW_QUESTION_BANK.find(e => e.match.test(best.toLowerCase()));
+    const qs = entry ? entry.qs : GENERIC_INTERVIEW_QS;
+    const picked = qs[_hashStr(id + '|' + best) % qs.length];
+    return { subject: best, question: picked.q, answer: picked.a };
+  }
+  // Shared style for the Pass/Fail buttons so click + render stay in sync.
+  function _rateBtnStyle(active, kind) {
+    const c = kind === 'pass' ? '#1a6e3c' : '#c0392b';
+    return `border:1.5px solid ${c};border-radius:8px;padding:0.35rem 0.9rem;font-size:0.8rem;font-weight:700;cursor:pointer;background:${active ? c : '#fff'};color:${active ? '#fff' : c};`;
+  }
+  function interviewDateTime(a) {
+    if (!a.interviewDateRaw) return null;
+    const dt = new Date(a.interviewDateRaw + 'T' + (a.interviewTime || '00:00'));
+    return isNaN(dt.getTime()) ? null : dt;
+  }
+  function interviewQuestionRevealed(a) {
+    const dt = interviewDateTime(a);
+    return !!dt && Date.now() >= dt.getTime();
+  }
+
   function renderApplicationCard(x) {
     const a = x.data, id = x.id;
     const m = APP_STATUS_META[a.status] || APP_STATUS_META.pending;
@@ -6583,6 +6909,10 @@
       const interviewDetail = a.interviewDateRaw
         ? `<div style="font-size:0.76rem;color:var(--muted);margin-bottom:0.6rem;">Currently scheduled for <strong>${esc(a.interviewDate || a.interviewDateRaw)}</strong>${a.interviewTime ? ' at ' + esc(formatTime(a.interviewTime)) : ''}.</div>`
         : '';
+      // Deterministic subject question, hidden until the interview time.
+      const _iq = pickInterviewQuestion(a, id);
+      const _iqDt = interviewDateTime(a);
+      const _iqRevealed = interviewQuestionRevealed(a);
       const expandPanel = `<div id="appx-${id}" style="display:${isExpanded ? 'block' : 'none'};margin-top:0.65rem;background:#f8f9fc;border:1px solid var(--border-light);border-radius:10px;padding:0.85rem 1rem;">
         <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.06em;color:var(--navy);text-transform:uppercase;margin-bottom:0.5rem;">Interview Date &amp; Time</div>
         ${interviewDetail}
@@ -6593,11 +6923,34 @@
         </div>
         <div id="appx-int-msg-${id}" style="display:none;font-size:0.76rem;font-weight:600;margin-bottom:0.3rem;"></div>
 
-        <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.06em;color:var(--navy);text-transform:uppercase;margin:0.85rem 0 0.5rem;border-top:1px solid var(--border-light);padding-top:0.7rem;">Tutor Notes</div>
-        <textarea id="appx-notes-${id}" class="form-input" rows="3" placeholder="Private notes about this tutor for the team..." style="font-size:0.82rem;resize:vertical;margin-bottom:0.4rem;width:100%;">${esc(a.tutorNotes || '')}</textarea>
+        <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.06em;color:var(--navy);text-transform:uppercase;margin:0.85rem 0 0.5rem;border-top:1px solid var(--border-light);padding-top:0.7rem;">General Interview Questions</div>
+        <label style="font-size:0.82rem;font-weight:600;color:var(--text-soft);display:block;margin-bottom:0.2rem;">1. Why do you want to become a tutor with Edutine?</label>
+        <textarea id="appx-q1-${id}" class="form-input" rows="2" placeholder="Their answer…" style="font-size:0.82rem;resize:vertical;width:100%;margin-bottom:0.6rem;">${esc(a.interviewQ1 || '')}</textarea>
+        <label style="font-size:0.82rem;font-weight:600;color:var(--text-soft);display:block;margin-bottom:0.2rem;">2. Have you tutored or mentored anyone before? If so, tell us about that experience.</label>
+        <textarea id="appx-q2-${id}" class="form-input" rows="2" placeholder="Their answer…" style="font-size:0.82rem;resize:vertical;width:100%;margin-bottom:0.4rem;">${esc(a.interviewQ2 || '')}</textarea>
+
+        <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.06em;color:var(--navy);text-transform:uppercase;margin:0.85rem 0 0.5rem;border-top:1px solid var(--border-light);padding-top:0.7rem;">Subject Question${_iq.subject ? ` · ${esc(_iq.subject)}` : ''}</div>
+        ${_iqRevealed
+          ? `<div style="background:#eef6ef;border:1px solid #bfe0c8;border-radius:8px;padding:0.7rem 0.85rem;font-size:0.86rem;color:var(--text);line-height:1.5;margin-bottom:0.5rem;">${esc(_iq.question)}</div>
+             <details style="margin-bottom:0.55rem;">
+               <summary style="cursor:pointer;font-size:0.78rem;font-weight:700;color:#2d7aac;">📖 Show answer key (for interviewer)</summary>
+               <div style="background:#fff;border:1px solid var(--border-light);border-left:3px solid #6aa9c9;border-radius:8px;padding:0.6rem 0.8rem;font-size:0.82rem;color:var(--text-soft);line-height:1.5;margin-top:0.4rem;">${esc(_iq.answer)}</div>
+             </details>
+             <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.55rem;">
+               <span style="font-size:0.78rem;color:var(--muted);">Rate their answer:</span>
+               <button id="appx-pass-${id}" onclick="rateInterviewAnswer('${id}','pass')" style="${_rateBtnStyle(a.interviewSubjectResult === 'pass', 'pass')}">✓ Pass</button>
+               <button id="appx-fail-${id}" onclick="rateInterviewAnswer('${id}','fail')" style="${_rateBtnStyle(a.interviewSubjectResult === 'fail', 'fail')}">✕ Fail</button>
+               ${a.interviewSubjectRatedBy ? `<span id="appx-ratedby-${id}" style="font-size:0.7rem;color:var(--muted);">by ${esc(a.interviewSubjectRatedBy)}</span>` : `<span id="appx-ratedby-${id}"></span>`}
+             </div>
+             <label style="font-size:0.78rem;color:var(--muted);display:block;margin-bottom:0.2rem;">Notes on their answer</label>
+             <textarea id="appx-subjans-${id}" class="form-input" rows="2" placeholder="Notes on their answer…" style="font-size:0.82rem;resize:vertical;width:100%;margin-bottom:0.4rem;">${esc(a.interviewSubjectAnswer || '')}</textarea>`
+          : `<div style="background:#f4f1ea;border:1px dashed #d9cfb8;border-radius:8px;padding:0.7rem 0.85rem;font-size:0.84rem;color:#8a7a56;display:flex;align-items:flex-start;gap:0.5rem;margin-bottom:0.2rem;"><span>🔒</span><span>This question — and its answer key — reveal at interview time${_iqDt ? ` — ${esc(_iqDt.toLocaleString('en-US',{weekday:'short',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}))}` : ' (set the interview date & time above first)'}.</span></div>`}
+
+        <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.06em;color:var(--navy);text-transform:uppercase;margin:0.85rem 0 0.4rem;border-top:1px solid var(--border-light);padding-top:0.7rem;">Additional Notes</div>
+        <textarea id="appx-notes-${id}" class="form-input" rows="2" placeholder="Anything else about this applicant for the team…" style="font-size:0.82rem;resize:vertical;margin-bottom:0.4rem;width:100%;">${esc(a.interviewAdditionalNotes || a.tutorNotes || '')}</textarea>
         <div style="display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;">
-          <button onclick="saveAppNotes('${id}')" class="btn-sm" style="font-size:0.78rem;">Save Notes</button>
-          ${a.tutorNotesBy ? `<span style="font-size:0.72rem;color:var(--muted);">Last updated by ${esc(a.tutorNotesBy)}${a.tutorNotesAt ? ' · ' + fmtDate(a.tutorNotesAt) : ''}</span>` : ''}
+          <button onclick="saveInterviewNotes('${id}')" class="btn-sm" style="font-size:0.78rem;">Save Interview Notes</button>
+          ${(a.interviewNotesBy || a.tutorNotesBy) ? `<span style="font-size:0.72rem;color:var(--muted);">Last updated by ${esc(a.interviewNotesBy || a.tutorNotesBy)}${(a.interviewNotesAt || a.tutorNotesAt) ? ' · ' + fmtDate(a.interviewNotesAt || a.tutorNotesAt) : ''}</span>` : ''}
         </div>
       </div>`;
 
@@ -6903,14 +7256,50 @@
     }
   };
 
-  window.saveAppNotes = async (id) => {
-    const notes = document.getElementById('appx-notes-' + id).value.trim();
+  // Quick Pass/Fail rating on the subject-question answer (saved immediately).
+  window.rateInterviewAnswer = async (id, result) => {
     try {
       await updateDoc(doc(db, 'tutor_applications', id), {
-        tutorNotes: notes, tutorNotesBy: me.displayName || me.email, tutorNotesAt: serverTimestamp()
+        interviewSubjectResult: result,
+        interviewSubjectRatedBy: me.displayName || me.email,
+        interviewSubjectRatedAt: serverTimestamp()
       });
-      showToast('Notes saved.', 'success');
-      loadTutorApplications();
+      if (_appCache[id]) { _appCache[id].interviewSubjectResult = result; _appCache[id].interviewSubjectRatedBy = me.displayName || me.email; }
+      const pass = document.getElementById('appx-pass-' + id);
+      const fail = document.getElementById('appx-fail-' + id);
+      if (pass) pass.style.cssText = _rateBtnStyle(result === 'pass', 'pass');
+      if (fail) fail.style.cssText = _rateBtnStyle(result === 'fail', 'fail');
+      const by = document.getElementById('appx-ratedby-' + id);
+      if (by) by.textContent = 'by ' + (me.displayName || me.email);
+      showToast(result === 'pass' ? '✓ Marked Pass.' : '✕ Marked Fail.', 'success');
+    } catch(e) { alert('Failed: ' + (e.message || e.code)); }
+  };
+
+  // Saves the whole interview question set: the two general-question answers,
+  // the subject-question answer (if revealed), and additional notes.
+  window.saveInterviewNotes = async (id) => {
+    const v = eid => (document.getElementById(eid)?.value || '').trim();
+    const notes = v('appx-notes-' + id);
+    const update = {
+      interviewQ1: v('appx-q1-' + id),
+      interviewQ2: v('appx-q2-' + id),
+      interviewAdditionalNotes: notes,
+      interviewNotesBy: me.displayName || me.email,
+      interviewNotesAt: serverTimestamp(),
+      // keep the legacy field in sync so anything still reading tutorNotes works
+      tutorNotes: notes, tutorNotesBy: me.displayName || me.email, tutorNotesAt: serverTimestamp()
+    };
+    const subjEl = document.getElementById('appx-subjans-' + id);
+    if (subjEl) update.interviewSubjectAnswer = subjEl.value.trim();
+    try {
+      await updateDoc(doc(db, 'tutor_applications', id), update);
+      if (_appCache[id]) Object.assign(_appCache[id], {
+        interviewQ1: update.interviewQ1, interviewQ2: update.interviewQ2,
+        interviewAdditionalNotes: update.interviewAdditionalNotes,
+        interviewSubjectAnswer: update.interviewSubjectAnswer,
+        interviewNotesBy: update.interviewNotesBy, tutorNotes: notes
+      });
+      showToast('Interview notes saved.', 'success');
     } catch(e) { alert('Failed: ' + (e.message || e.code)); }
   };
 
@@ -8322,6 +8711,7 @@
   async function loadMyTutor() {
     const feed = document.getElementById('my-tutor-feed');
     feed.innerHTML = '<div class="empty-state"><span class="empty-icon">⏳</span>Loading...</div>';
+    await loadChapterSettings();
 
     const myDoc = await getDoc(doc(db, 'users', me.uid));
     const myData = myDoc.data() || {};
@@ -9278,8 +9668,9 @@
   // ── Student tutor request flow ───────────────────────────────────────────
 
   window.studentRequestTutor = async () => {
+    await loadChapterSettings();
     if (!studentSignupsOpen()) {
-      alert('Student signups open ' + studentSignupLaunchLabel() + '. Please check back then!');
+      alert('Student sign-ups are currently closed for your chapter. Please check back soon!');
       return;
     }
     await updateDoc(doc(db, 'users', me.uid), { tutorStatus: 'searching' });
@@ -9404,6 +9795,8 @@
       const snap = await getDocs(query(collection(db, 'tutor_openings'), where('status', '==', 'open')));
       _publicOpenings = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     } catch(e) { _publicOpenings = []; }
+    // Load per-chapter open/closed status so we can block closed chapters.
+    await loadChapterSettings(true);
 
     const inp = 'padding:0.6rem 0.85rem;border:1px solid var(--input-border);border-radius:var(--r-sm);font-family:\'Inter\',sans-serif;font-size:0.88rem;background:var(--white);color:var(--text);width:100%;box-sizing:border-box;';
     const overlay = document.createElement('div');
@@ -9433,6 +9826,7 @@
             <input type="checkbox" id="tiq-tos-agree" style="margin-top:0.15rem;accent-color:var(--navy);cursor:pointer;flex-shrink:0;" />
             <span>I agree to the <a onclick="event.preventDefault();showTosModal();" href="#" style="color:var(--navy);font-weight:600;text-decoration:underline;">Terms of Service</a></span>
           </label>
+          <div id="tiq-closed" style="display:none;background:#fbeaea;border:1px solid #f0c7c7;border-radius:8px;padding:0.6rem 0.8rem;font-size:0.8rem;color:#c0392b;font-weight:600;">🔴 Tutor applications for this chapter are currently closed. Please check back later.</div>
           <div id="tiq-err" style="font-size:0.78rem;color:#c0392b;display:none;"></div>
           <button id="tiq-submit" onclick="submitTutorInquiry()" style="background:var(--navy);color:#fff;border:none;border-radius:20px;padding:0.65rem 1.25rem;font-family:'Inter',sans-serif;font-size:0.88rem;font-weight:600;cursor:pointer;margin-top:0.25rem;">Submit Application</button>
         </div>
@@ -9451,6 +9845,12 @@
     sel.innerHTML = openings.length
       ? openings.map(o => `<option value="${o.id}">${esc(o.title)}${o.subjects ? ' - ' + esc(o.subjects) : ''}</option>`).join('')
       : '<option value="">General application (no specific opening yet)</option>';
+    // Block submission when this chapter's tutor applications are closed.
+    const open = chapterTutorAppsOpen(chapter);
+    const submit = document.getElementById('tiq-submit');
+    const closed = document.getElementById('tiq-closed');
+    if (submit) { submit.disabled = !open; submit.style.opacity = open ? '' : '0.5'; submit.style.cursor = open ? 'pointer' : 'not-allowed'; }
+    if (closed) closed.style.display = open ? 'none' : 'block';
   };
 
   window.submitTutorInquiry = async function() {
@@ -9463,6 +9863,9 @@
     const err = document.getElementById('tiq-err');
     if (!name || !email || !phone || !chapter) {
       err.textContent = 'Name, email, phone, and chapter are required.'; err.style.display = 'block'; return;
+    }
+    if (!chapterTutorAppsOpen(chapter)) {
+      err.textContent = `Tutor applications for ${chapter} are currently closed.`; err.style.display = 'block'; return;
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       err.textContent = 'Please enter a valid email address.'; err.style.display = 'block'; return;
@@ -9707,6 +10110,7 @@
 
   // ── In-portal student signup ──────────────────────────────────────────────
   async function loadSignupTutoring() {
+    await loadChapterSettings();
     const snap = await getDocs(query(collection(db, 'student_signups'),
       where('submittedByUid', '==', me.uid)));
     const pending = snap.docs.filter(d => d.data().status !== 'paired');
@@ -9749,15 +10153,18 @@
 
   window.submitInPortalStudentSignup = async function() {
     const errEl = document.getElementById('ist-error');
-    if (!studentSignupsOpen()) {
-      errEl.textContent = 'Student signups open ' + studentSignupLaunchLabel() + '.';
+    await loadChapterSettings();
+    const chapter = document.getElementById('ist-chapter').value;
+    if (!studentSignupsOpen(chapter)) {
+      errEl.textContent = chapter
+        ? `Student sign-ups for ${chapter} are currently closed.`
+        : 'Student sign-ups are currently closed.';
       errEl.style.display = 'block';
       return;
     }
     const name = document.getElementById('ist-name').value.trim();
     const grade = document.getElementById('ist-grade').value;
     const school = document.getElementById('ist-school').value.trim();
-    const chapter = document.getElementById('ist-chapter').value;
     const parentName = document.getElementById('ist-parent-name').value.trim();
     const parentPhone = document.getElementById('ist-parent-phone').value.trim();
     const subjects = [...document.querySelectorAll('#ist-subject-pills input:checked')].map(el => el.value).join(', ');
