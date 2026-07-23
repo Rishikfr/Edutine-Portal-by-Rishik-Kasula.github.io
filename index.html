@@ -265,9 +265,15 @@
     }
     .chapter-picker-opt:hover { background: rgba(255,255,255,0.1); }
     .chapter-picker-opt.selected { background: rgba(126,206,244,0.16); font-weight: 700; color: #cfeeff; }
+    .chapter-picker-opt.disabled, .chapter-picker-opt:disabled {
+      cursor: not-allowed; opacity: 0.45; background: none !important;
+    }
     .chapter-picker-menu.light .chapter-picker-opt { color: var(--text); }
     .chapter-picker-menu.light .chapter-picker-opt:hover { background: var(--panel); }
     .chapter-picker-menu.light .chapter-picker-opt.selected { background: #eef6fb; color: var(--navy); }
+    .chapter-picker-menu.light .chapter-picker-opt.disabled, .chapter-picker-menu.light .chapter-picker-opt:disabled {
+      opacity: 0.5;
+    }
     .chapter-picker-opt-name { display: flex; align-items: center; gap: 0.5rem; min-width: 0; }
     .chapter-picker-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
     .chapter-picker-dot.open { background: #3cdc96; box-shadow: 0 0 0 2px rgba(60,220,150,0.18); }
@@ -3573,6 +3579,14 @@
         const dot = open === null ? '' : `<span class="chapter-picker-dot ${open ? 'open' : 'closed'}"></span>`;
         const status = open === null ? '' : `<span class="chapter-picker-status ${open ? 'open' : 'closed'}">${open ? 'Open' : 'Closed'}</span>`;
         const selected = sel.value === c;
+        // Closed chapters are shown (so the status is visible) but can't be
+        // picked - they're rendered disabled instead of a clickable option.
+        const closed = open === false;
+        if (closed) {
+          return `<button type="button" class="chapter-picker-opt disabled" disabled title="${esc(c)} is not currently accepting ${kind === 'student' ? 'student sign-ups' : 'tutor applications'}.">
+            <span class="chapter-picker-opt-name">${dot}${esc(c)}</span>${status}
+          </button>`;
+        }
         return `<button type="button" class="chapter-picker-opt${selected ? ' selected' : ''}" onclick="_chapterPickerPick('${selectId}','${esc(c).replace(/'/g,"\\'")}')">
           <span class="chapter-picker-opt-name">${dot}${esc(c)}</span>${status}
         </button>`;
