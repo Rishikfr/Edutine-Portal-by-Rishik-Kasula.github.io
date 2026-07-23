@@ -4085,8 +4085,11 @@
     document.getElementById('nav-chapter-trainings').style.display = (role === 'tutor') ? 'flex' : 'none';
     // Messages is available to everyone now that you can message anyone in the portal.
     document.getElementById('nav-messages').style.display = 'flex';
-    // Applications open/close: available to every staff member (not students).
-    document.getElementById('nav-appstatus').style.display = (role !== 'student') ? 'flex' : 'none';
+    // Applications open/close: leads/officers/directors/execs/board/dev only -
+    // NOT plain tutors or students. Checks every role a person holds, so a
+    // tutor who also leads something still gets it via their other role.
+    document.getElementById('nav-appstatus').style.display =
+      allMyRoles().some(r => r !== 'student' && r !== 'tutor') ? 'flex' : 'none';
     // Support: students contact the team; every staff member can respond.
     document.getElementById('nav-support').style.display = 'flex';
     document.getElementById('nav-support-label').textContent = (role === 'student') ? 'Support' : 'Support Requests';
@@ -7987,6 +7990,15 @@
   let assignCache = { students: [], tutors: [] };
   let _selectedStudentId = null;
   let _selectedTutorId = null;
+  // Each unassigned student is exploded into one row PER subject they need help
+  // in - a student wanting both Math and ELA shows up as two separate rows, and
+  // staff match each one to a tutor independently. The eventual assignment still
+  // writes to the single `assignedTutor` field (matching stays a one-tutor-per-
+  // student model for now) - whichever subject gets matched first becomes the
+  // student's tutor, and all of that student's other rows then disappear too.
+  let _matchRows = [];
+  let _selectedRowKey = null;   // `${studentId}::${subject ?? ''}`
+  let _selectedSubject = null;  // subject of the currently selected row
 
   async function primeAssignCache() {
     // Fetch students + tutors from users collection in parallel
@@ -8032,24 +8044,36 @@
     const studentsPerTutor = {};
     assigned.forEach(s => { studentsPerTutor[s.assignedTutor] = (studentsPerTutor[s.assignedTutor] || 0) + 1; });
 
+    // Explode each unassigned student into one row per subject they need help
+    // in, so "Mike" needing ELA + Math shows as two separate matchable rows.
+    // A student with no subjects listed still gets a single row.
+    _matchRows = [];
+    unassigned.forEach(s => {
+      const subs = (s.subjects && s.subjects.length) ? s.subjects : [null];
+      subs.forEach(subject => _matchRows.push({ studentId: s.id, subject }));
+    });
+
     const uEl = document.getElementById('unassigned-count');
     const tEl = document.getElementById('tutors-count');
-    if (uEl) uEl.textContent = `(${unassigned.length})`;
+    if (uEl) uEl.textContent = `(${_matchRows.length}${_matchRows.length !== unassigned.length ? ' · ' + unassigned.length + ' student' + (unassigned.length !== 1 ? 's' : '') : ''})`;
     if (tEl) tEl.textContent = `(${assignCache.tutors.length})`;
 
-    // Students column
+    // Students column - one card per (student, subject) row.
     const sList = document.getElementById('match-students-list');
     if (sList) {
-      sList.innerHTML = !unassigned.length
+      sList.innerHTML = !_matchRows.length
         ? '<div style="font-size:0.82rem;color:var(--muted);padding:1rem;">All students have been assigned.</div>'
-        : unassigned.map(s => {
-            const subs = s.subjects || [];
-            const isSelected = _selectedStudentId === s.id;
-            return `<div id="sc-${s.id}" onclick="selectStudentForMatching('${s.id}')"
+        : _matchRows.map((row, idx) => {
+            const s = assignCache.students.find(x => x.id === row.studentId);
+            if (!s) return '';
+            const rowKey = row.studentId + '::' + (row.subject || '');
+            const isSelected = _selectedRowKey === rowKey;
+            const totalForStudent = _matchRows.filter(r => r.studentId === row.studentId).length;
+            return `<div id="mr-${idx}" onclick="selectStudentForMatching(${idx})"
               style="background:${isSelected ? '#e8f0fe' : '#fff'};border:1.5px solid ${isSelected ? 'var(--navy)' : '#e0e6ef'};border-radius:10px;padding:0.65rem 0.85rem;cursor:pointer;transition:all 0.15s;">
-              <div style="font-weight:700;font-size:0.9rem;margin-bottom:0.15rem;">${esc(s.displayName || s.email)}</div>
+              <div style="font-weight:700;font-size:0.9rem;margin-bottom:0.15rem;">${esc(s.displayName || s.email)}${totalForStudent > 1 ? `<span style="font-weight:500;font-size:0.7rem;color:var(--muted);"> · needs ${totalForStudent} tutors</span>` : ''}</div>
               <div style="font-size:0.74rem;color:var(--muted);margin-bottom:0.35rem;">${esc(s.email)}${s.grade ? ' · Grade ' + esc(s.grade) : ''}</div>
-              <div style="display:flex;flex-wrap:wrap;gap:3px;">${subjectTags(subs, isSelected)}</div>
+              <div style="display:flex;flex-wrap:wrap;gap:3px;">${row.subject ? subjectTags([row.subject], isSelected) : '<span style="font-size:0.7rem;color:var(--muted);font-style:italic;">No subject listed</span>'}</div>
               ${s.matchPending ? '<div style="font-size:0.7rem;color:#f5a623;font-weight:600;margin-top:0.3rem;">⏳ Requests sent - awaiting tutor response</div>' : ''}
             </div>`;
           }).join('');
@@ -8058,13 +8082,14 @@
     // Tutors column
     const tList = document.getElementById('match-tutors-list');
     if (tList) {
-      const selStudent = _selectedStudentId ? assignCache.students.find(s => s.id === _selectedStudentId) : null;
+      const selRow = _selectedRowKey ? _matchRows.find(r => (r.studentId + '::' + (r.subject || '')) === _selectedRowKey) : null;
+      const selSubjectArr = selRow && selRow.subject ? [selRow.subject] : null;
       tList.innerHTML = !assignCache.tutors.length
         ? '<div style="font-size:0.82rem;color:var(--muted);padding:1rem;">No approved tutors yet.</div>'
         : assignCache.tutors.map(t => {
-            const matches = selStudent ? subjectsMatch(selStudent.subjects, t.subjects) : false;
+            const matches = selSubjectArr ? subjectsMatch(selSubjectArr, t.subjects) : false;
             const isUnavailable = t.status === 'leave' || t.status === 'emergency_unavailable' || t.status === 'pending';
-            const dimmed = isUnavailable || (selStudent && !matches);
+            const dimmed = isUnavailable || (selRow && !matches);
             const studentCount = studentsPerTutor[t.id] || 0;
             const maxStudents = t.maxStudents || '-';
             const atCapacity = t.maxStudents && studentCount >= t.maxStudents;
@@ -8136,13 +8161,14 @@
     bar.style.display = 'flex';
     const s = _selectedStudentId ? assignCache.students.find(x => x.id === _selectedStudentId) : null;
     const t = _selectedTutorId   ? assignCache.tutors.find(x => x.id === _selectedTutorId)   : null;
+    const subjLabel = _selectedSubject ? ` <strong>(${esc(_selectedSubject)})</strong>` : '';
     if (s && t) {
-      const ok = subjectsMatch(s.subjects, t.subjects);
-      label.innerHTML = `Assign <strong>${esc(s.displayName || s.email)}</strong> to <strong>${esc(t.displayName || t.email)}</strong>${ok ? ' <span style="color:#1a6e3c;font-size:0.8rem;">✓ subjects match</span>' : ' <span style="color:#f5a623;font-size:0.8rem;">⚠ subjects may not match</span>'}`;
+      const ok = _selectedSubject ? subjectsMatch([_selectedSubject], t.subjects) : false;
+      label.innerHTML = `Assign <strong>${esc(s.displayName || s.email)}</strong>${subjLabel} to <strong>${esc(t.displayName || t.email)}</strong>${ok ? ' <span style="color:#1a6e3c;font-size:0.8rem;">✓ subjects match</span>' : ' <span style="color:#f5a623;font-size:0.8rem;">⚠ subjects may not match</span>'}`;
       btn.style.display = 'inline-block';
     } else if (s) {
-      const matchCount = assignCache.tutors.filter(t => subjectsMatch(s.subjects, t.subjects)).length;
-      label.textContent = `${s.displayName || s.email} selected - now pick a tutor (${matchCount} subject match${matchCount !== 1 ? 'es' : ''})`;
+      const matchCount = _selectedSubject ? assignCache.tutors.filter(t => subjectsMatch([_selectedSubject], t.subjects)).length : 0;
+      label.innerHTML = `${esc(s.displayName || s.email)}${subjLabel} selected - now pick a tutor (${matchCount} subject match${matchCount !== 1 ? 'es' : ''})`;
       btn.style.display = 'none';
     } else {
       label.textContent = `${t.displayName || t.email} selected - now pick a student`;
@@ -8150,8 +8176,14 @@
     }
   }
 
-  window.selectStudentForMatching = (studentId) => {
-    _selectedStudentId = _selectedStudentId === studentId ? null : studentId;
+  window.selectStudentForMatching = (rowIdx) => {
+    const row = _matchRows[rowIdx];
+    if (!row) return;
+    const rowKey = row.studentId + '::' + (row.subject || '');
+    const wasSelected = _selectedRowKey === rowKey;
+    _selectedRowKey = wasSelected ? null : rowKey;
+    _selectedStudentId = wasSelected ? null : row.studentId;
+    _selectedSubject = wasSelected ? null : row.subject;
     updateMatchActionBar();
     renderAssignPanels();
   };
@@ -8165,6 +8197,8 @@
   window.clearMatchSelection = () => {
     _selectedStudentId = null;
     _selectedTutorId = null;
+    _selectedRowKey = null;
+    _selectedSubject = null;
     updateMatchActionBar();
     renderAssignPanels();
   };
@@ -8176,22 +8210,29 @@
     if (!_selectedStudentId) return;
     const student = assignCache.students.find(s => s.id === _selectedStudentId);
     if (!student) return;
-    const matchingTutors = assignCache.tutors.filter(t => subjectsMatch(student.subjects, t.subjects));
+    const subject = _selectedSubject;
+    const matchingTutors = subject
+      ? assignCache.tutors.filter(t => subjectsMatch([subject], t.subjects))
+      : [];
     if (!matchingTutors.length) {
       const msg = document.getElementById('match-msg');
-      msg.textContent = 'No matching tutors found for this student\'s subjects.';
+      msg.textContent = subject
+        ? `No tutors found who teach "${subject}".`
+        : 'No subject selected for this request.';
       msg.style.color = '#c0392b'; msg.style.display = 'block'; return;
     }
     const btn = document.querySelector('#match-action-bar button');
     btn.disabled = true; btn.textContent = 'Sending...';
     try {
-      // Create one match request per matching tutor
+      // Create one match request per matching tutor, tagged with the specific
+      // subject this row is for (not the student's whole subject list).
       await Promise.all(matchingTutors.map(t =>
         addDoc(collection(db, 'tutor_match_requests'), {
           studentUid: student.id,
           studentName: student.displayName || student.email,
           studentEmail: student.email,
           studentSubjects: student.subjects || [],
+          matchedSubject: subject,
           studentGrade: student.grade || '',
           tutorUid: t.id,
           status: 'pending',
@@ -8202,7 +8243,7 @@
       await updateDoc(doc(db, 'users', student.id), { matchPending: true });
       assignCache.students = assignCache.students.map(s => s.id === student.id ? { ...s, matchPending: true } : s);
       const msg = document.getElementById('match-msg');
-      msg.textContent = `Requests sent to ${matchingTutors.length} tutor${matchingTutors.length !== 1 ? 's' : ''}. First to accept gets the student.`;
+      msg.textContent = `Requests sent to ${matchingTutors.length} tutor${matchingTutors.length !== 1 ? 's' : ''} for "${subject}". First to accept gets the student.`;
       msg.style.color = '#1a6e3c'; msg.style.display = 'block';
       clearStudentSelection();
     } catch(e) {
@@ -8274,6 +8315,7 @@
     const student = assignCache.students.find(s => s.id === _selectedStudentId);
     const tutor   = assignCache.tutors.find(t => t.id === _selectedTutorId);
     if (!student || !tutor) return;
+    const subject = _selectedSubject;
     const btn = document.getElementById('assign-direct-btn');
     btn.disabled = true; btn.textContent = 'Assigning...';
     try {
@@ -8282,6 +8324,11 @@
         assignedTutorName: tutor.displayName || tutor.email,
         assignedTutorEmail: tutor.email || '',
         assignedTutorSubjects: tutor.subjects || [],
+        // Which of the student's subjects this particular tutor was matched
+        // for - the rest of their subjects (if any) still show as unmatched
+        // in this panel until someone assigns them too, even though the
+        // account itself only tracks one tutor overall for now.
+        matchedSubject: subject || null,
         tutorStatus: 'assigned',
         matchPending: false
       });
@@ -8290,7 +8337,9 @@
         await addDoc(collection(db, 'notifications'), {
           uid: student.id,
           title: 'Tutor Match Confirmed!',
-          body: `You've been matched with ${tutor.displayName || tutor.email}. Head to your "My Tutor" tab to get started.`,
+          body: subject
+            ? `You've been matched with ${tutor.displayName || tutor.email} for ${subject}. Head to your "My Tutor" tab to get started.`
+            : `You've been matched with ${tutor.displayName || tutor.email}. Head to your "My Tutor" tab to get started.`,
           type: 'match',
           read: false,
           createdAt: serverTimestamp()
@@ -8302,9 +8351,11 @@
         : s);
       _selectedStudentId = null;
       _selectedTutorId = null;
+      _selectedRowKey = null;
+      _selectedSubject = null;
       updateMatchActionBar();
       renderAssignPanels();
-      showToast(`${student.displayName || student.email} assigned to ${tutor.displayName || tutor.email}`, 'success');
+      showToast(`${student.displayName || student.email} assigned to ${tutor.displayName || tutor.email}${subject ? ' for ' + subject : ''}`, 'success');
     } catch(e) {
       showToast('Assignment failed: ' + (e.message || e.code), 'error');
       btn.disabled = false; btn.textContent = 'Assign Now';
@@ -10013,7 +10064,11 @@
           <input id="tiq-email" type="email" placeholder="Email Address (you'll log in with this)" style="${inp}">
           <input id="tiq-phone" type="tel" placeholder="Phone Number" style="${inp}">
           <input id="tiq-grade" placeholder="Grade / Year (e.g. 11th grade)" style="${inp}">
-          <input id="tiq-subjects" placeholder="Subjects you can tutor" style="${inp}">
+          <div>
+            <label style="font-size:0.74rem;font-weight:600;color:var(--text-soft);display:block;margin-bottom:0.35rem;">Subjects you can tutor</label>
+            <div id="tiq-subject-pills" style="display:flex;flex-wrap:wrap;gap:0.35rem;margin-bottom:0.5rem;"></div>
+            <input id="tiq-subjects-other" placeholder="Other subject(s) not listed? (comma separated)" style="${inp}">
+          </div>
           <textarea id="tiq-experience" rows="2" placeholder="Briefly: why do you want to tutor / any experience?" style="${inp}resize:vertical;"></textarea>
           <label style="display:flex;align-items:flex-start;gap:0.5rem;font-size:0.78rem;color:var(--text-soft);line-height:1.5;cursor:pointer;">
             <input type="checkbox" id="tiq-tos-agree" style="margin-top:0.15rem;accent-color:var(--navy);cursor:pointer;flex-shrink:0;" />
@@ -10032,7 +10087,7 @@
     tiqChapterChange();
   };
 
-  window.tiqChapterChange = function() {
+  window.tiqChapterChange = async function() {
     const chapter = document.getElementById('tiq-chapter').value;
     const sel = document.getElementById('tiq-opening');
     const openings = _publicOpenings.filter(o => o.chapter === chapter);
@@ -10045,18 +10100,41 @@
     const closed = document.getElementById('tiq-closed');
     if (submit) { submit.disabled = !open; submit.style.opacity = open ? '' : '0.5'; submit.style.cursor = open ? 'pointer' : 'not-allowed'; }
     if (closed) closed.style.display = open ? 'none' : 'block';
+    await populateTiqSubjectOptions(chapter);
   };
+
+  // Subject pills for the tutor-apply modal - one checkbox per subject the
+  // chosen chapter offers, plus a free-text "Other" field for anything else.
+  async function populateTiqSubjectOptions(chapter) {
+    const wrap = document.getElementById('tiq-subject-pills');
+    if (!wrap) return;
+    if (!chapter) { wrap.innerHTML = '<span style="font-size:0.78rem;color:var(--muted);font-style:italic;">Pick a chapter to see its subjects.</span>'; return; }
+    wrap.innerHTML = '<span style="font-size:0.78rem;color:var(--muted);">Loading subjects…</span>';
+    const subs = await chapterTutorSubjects(chapter);
+    wrap.innerHTML = subs.length
+      ? subs.map(s => `<label class="subj-pill" style="font-size:0.74rem;"><input type="checkbox" value="${esc(s)}" /><span style="padding:0.22rem 0.6rem;">${esc(s)}</span></label>`).join('')
+      : `<span style="font-size:0.78rem;color:var(--muted);font-style:italic;">No subjects listed yet for ${esc(chapter)} - use "Other" below.</span>`;
+  }
+  function getTiqSubjects() {
+    const pills = [...document.querySelectorAll('#tiq-subject-pills input:checked')].map(el => el.value);
+    const other = (document.getElementById('tiq-subjects-other')?.value || '')
+      .split(',').map(s => s.trim()).filter(Boolean);
+    return [...pills, ...other];
+  }
 
   window.submitTutorInquiry = async function() {
     const v = id => (document.getElementById(id)?.value || '').trim();
     const name = v('tiq-name'), email = v('tiq-email').toLowerCase(), phone = v('tiq-phone');
-    const grade = v('tiq-grade'), subjects = v('tiq-subjects'), experience = v('tiq-experience');
+    const grade = v('tiq-grade'), subjects = getTiqSubjects().join(', '), experience = v('tiq-experience');
     const chapter = v('tiq-chapter');
     const openingId = v('tiq-opening') || null;
     const opening = _publicOpenings.find(o => o.id === openingId);
     const err = document.getElementById('tiq-err');
     if (!name || !email || !phone || !chapter) {
       err.textContent = 'Name, email, phone, and chapter are required.'; err.style.display = 'block'; return;
+    }
+    if (!subjects) {
+      err.textContent = 'Please select at least one subject you can tutor (or list one under "Other").'; err.style.display = 'block'; return;
     }
     if (!chapterTutorAppsOpen(chapter)) {
       err.textContent = `Tutor applications for ${chapter} are currently closed.`; err.style.display = 'block'; return;
