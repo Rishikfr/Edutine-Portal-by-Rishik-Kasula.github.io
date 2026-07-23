@@ -230,6 +230,54 @@
     .input-field:focus { border-color: #7ecef4; background: rgba(255,255,255,0.13); }
     .input-field::placeholder { color: rgba(180,210,255,0.4); }
 
+    /* ── Chapter picker (custom dropdown showing open/closed per chapter) ── */
+    .chapter-picker { position: relative; margin-bottom: 0.75rem; }
+    .chapter-picker-btn {
+      width: 100%; box-sizing: border-box; display: flex; align-items: center; justify-content: space-between;
+      padding: 0.85rem 1rem; border-radius: var(--r-sm); font-size: 0.9rem; font-family: 'Inter', sans-serif;
+      cursor: pointer; text-align: left; gap: 0.5rem;
+      border: 1.5px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.08); color: #e8f2ff;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .chapter-picker-btn.placeholder { color: rgba(180,210,255,0.4); }
+    .chapter-picker-btn:hover, .chapter-picker-btn.open { border-color: #7ecef4; background: rgba(255,255,255,0.13); }
+    .chapter-picker-btn.light {
+      border: 1.5px solid var(--input-border); background: var(--panel); color: var(--text);
+      padding: 0.55rem 0.8rem; font-size: 0.855rem;
+    }
+    .chapter-picker-btn.light:hover, .chapter-picker-btn.light.open { border-color: var(--navy); background: var(--white); }
+    .chapter-picker-btn.light.placeholder { color: var(--muted); }
+    .chapter-picker-caret { flex-shrink: 0; font-size: 0.72rem; opacity: 0.7; transition: transform 0.15s; }
+    .chapter-picker-btn.open .chapter-picker-caret { transform: rotate(180deg); }
+    /* position:fixed + left/top/width are set inline by initChapterPicker() so
+       the menu floats above any scrollable ancestor instead of being clipped. */
+    .chapter-picker-menu {
+      display: none; position: fixed; z-index: 9999;
+      background: #1e2840; border: 1px solid rgba(255,255,255,0.18); border-radius: 10px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.4); padding: 0.35rem; max-height: 280px; overflow-y: auto;
+    }
+    .chapter-picker-menu.light { background: var(--white); border-color: var(--border); box-shadow: var(--shadow-md); }
+    .chapter-picker-menu.open { display: block; }
+    .chapter-picker-opt {
+      width: 100%; box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; gap: 0.6rem;
+      background: none; border: none; border-radius: 7px; padding: 0.55rem 0.65rem; cursor: pointer;
+      font-family: 'Inter', sans-serif; font-size: 0.85rem; color: rgba(232,242,255,0.9); text-align: left;
+    }
+    .chapter-picker-opt:hover { background: rgba(255,255,255,0.1); }
+    .chapter-picker-opt.selected { background: rgba(126,206,244,0.16); font-weight: 700; color: #cfeeff; }
+    .chapter-picker-menu.light .chapter-picker-opt { color: var(--text); }
+    .chapter-picker-menu.light .chapter-picker-opt:hover { background: var(--panel); }
+    .chapter-picker-menu.light .chapter-picker-opt.selected { background: #eef6fb; color: var(--navy); }
+    .chapter-picker-opt-name { display: flex; align-items: center; gap: 0.5rem; min-width: 0; }
+    .chapter-picker-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .chapter-picker-dot.open { background: #3cdc96; box-shadow: 0 0 0 2px rgba(60,220,150,0.18); }
+    .chapter-picker-dot.closed { background: #e05a5a; box-shadow: 0 0 0 2px rgba(224,90,90,0.18); }
+    .chapter-picker-status { font-size: 0.66rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; flex-shrink: 0; }
+    .chapter-picker-status.open { color: #3cdc96; }
+    .chapter-picker-status.closed { color: #e05a5a; }
+    .chapter-picker-menu.light .chapter-picker-status.open { color: #1a6e3c; }
+    .chapter-picker-menu.light .chapter-picker-status.closed { color: #c0392b; }
+
     .btn-primary {
       width: 100%; padding: 0.9rem;
       background: rgba(106,176,216,0.85); color: #fff; border: none;
@@ -3479,6 +3527,121 @@
     return out;
   }
 
+  // ── Chapter picker (custom dropdown, shows open/closed per chapter) ──────
+  // Replaces the plain "Select chapter..." <select> everywhere a student or
+  // tutor picks a chapter, with color-coded status (🟢 open / 🔴 closed) so
+  // it's obvious which chapters are currently accepting that kind of
+  // application. The underlying <select> is kept in the DOM (just hidden) so
+  // every existing `.value` read and `onchange` handler keeps working
+  // untouched - this only replaces the visual control.
+  // The menu is appended straight to <body> with position:fixed, computed from
+  // the button's rect on open - several call sites (onboarding, the tutor
+  // application) live inside `overflow-y:auto` scroll panels, and a menu
+  // nested inside those would get clipped instead of floating above them.
+  const _chapterPickerOpenMenus = new Set();
+  function initChapterPicker(selectId, kindOrFn, opts = {}) {
+    const sel = document.getElementById(selectId);
+    if (!sel || sel.dataset.pickerInit) return;
+    sel.dataset.pickerInit = '1';
+    sel.style.display = 'none';
+    const light = !!opts.light;
+    const placeholder = opts.placeholder || 'Select chapter...';
+
+    const wrap = document.createElement('div');
+    wrap.className = 'chapter-picker';
+    wrap.innerHTML =
+      `<button type="button" class="chapter-picker-btn${light ? ' light' : ''} placeholder" id="${selectId}-btn">
+        <span id="${selectId}-btn-label">${esc(placeholder)}</span>
+        <span class="chapter-picker-caret">▾</span>
+      </button>`;
+    sel.insertAdjacentElement('afterend', wrap);
+
+    // Clean up any leftover menu from a previous instance of this same id
+    // (e.g. the tutor-apply modal is torn down and rebuilt on every open).
+    document.getElementById(selectId + '-menu')?.remove();
+    const menu = document.createElement('div');
+    menu.className = 'chapter-picker-menu' + (light ? ' light' : '');
+    menu.id = selectId + '-menu';
+    document.body.appendChild(menu);
+
+    const kindFor = () => (typeof kindOrFn === 'function' ? kindOrFn() : kindOrFn);
+
+    function renderMenu() {
+      const kind = kindFor();
+      menu.innerHTML = CHAPTERS.map(c => {
+        const open = kind === 'student' ? studentSignupsOpen(c) : kind === 'tutor' ? chapterTutorAppsOpen(c) : null;
+        const dot = open === null ? '' : `<span class="chapter-picker-dot ${open ? 'open' : 'closed'}"></span>`;
+        const status = open === null ? '' : `<span class="chapter-picker-status ${open ? 'open' : 'closed'}">${open ? 'Open' : 'Closed'}</span>`;
+        const selected = sel.value === c;
+        return `<button type="button" class="chapter-picker-opt${selected ? ' selected' : ''}" onclick="_chapterPickerPick('${selectId}','${esc(c).replace(/'/g,"\\'")}')">
+          <span class="chapter-picker-opt-name">${dot}${esc(c)}</span>${status}
+        </button>`;
+      }).join('');
+      // If settings haven't loaded yet, re-render once they have so dots aren't stuck blank.
+      if (!_chapterSettingsLoaded) loadChapterSettings().then(() => { if (menu.classList.contains('open')) renderMenu(); });
+    }
+
+    function positionMenu() {
+      const btn = document.getElementById(selectId + '-btn');
+      if (!btn) return;
+      const r = btn.getBoundingClientRect();
+      menu.style.left = r.left + 'px';
+      menu.style.top = (r.bottom + 4) + 'px';
+      menu.style.width = r.width + 'px';
+    }
+    function closePicker() {
+      menu.classList.remove('open');
+      document.getElementById(selectId + '-btn')?.classList.remove('open');
+      _chapterPickerOpenMenus.delete(selectId);
+    }
+    function openPicker() {
+      // Close any other open picker menus first.
+      document.querySelectorAll('.chapter-picker-menu.open').forEach(m => m.classList.remove('open'));
+      document.querySelectorAll('.chapter-picker-btn.open').forEach(b => b.classList.remove('open'));
+      _chapterPickerOpenMenus.clear();
+      renderMenu();
+      positionMenu();
+      menu.classList.add('open');
+      document.getElementById(selectId + '-btn').classList.add('open');
+      _chapterPickerOpenMenus.add(selectId);
+    }
+
+    document.getElementById(selectId + '-btn').addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (menu.classList.contains('open')) closePicker(); else openPicker();
+    });
+    // Keep the floating menu aligned to its button while open.
+    window.addEventListener('scroll', () => { if (menu.classList.contains('open')) positionMenu(); }, true);
+    window.addEventListener('resize', () => { if (menu.classList.contains('open')) positionMenu(); });
+
+    if (sel.value) _updateChapterPickerLabel(selectId, placeholder, light);
+  }
+  function _updateChapterPickerLabel(selectId, placeholder, light) {
+    const sel = document.getElementById(selectId);
+    const btn = document.getElementById(selectId + '-btn');
+    const label = document.getElementById(selectId + '-btn-label');
+    if (!sel || !btn || !label) return;
+    if (sel.value) { label.textContent = sel.value; btn.classList.remove('placeholder'); }
+    else { label.textContent = placeholder; btn.classList.add('placeholder'); }
+  }
+  window._chapterPickerPick = (selectId, chapter) => {
+    const sel = document.getElementById(selectId);
+    if (!sel) return;
+    sel.value = chapter;
+    sel.dispatchEvent(new Event('change'));
+    _updateChapterPickerLabel(selectId, 'Select chapter...', document.getElementById(selectId + '-btn')?.classList.contains('light'));
+    document.getElementById(selectId + '-menu')?.classList.remove('open');
+    document.getElementById(selectId + '-btn')?.classList.remove('open');
+    _chapterPickerOpenMenus.delete(selectId);
+  };
+  // Click-away closes any open chapter-picker menu.
+  document.addEventListener('click', () => {
+    if (!_chapterPickerOpenMenus.size) return;
+    document.querySelectorAll('.chapter-picker-menu.open').forEach(m => m.classList.remove('open'));
+    document.querySelectorAll('.chapter-picker-btn.open').forEach(b => b.classList.remove('open'));
+    _chapterPickerOpenMenus.clear();
+  });
+
   // Tutor portal orientation video - paste the YouTube/Vimeo/Drive embed URL here
   // once the orientation is recorded. Leave '' to show a "coming soon" placeholder.
   const TUTOR_ORIENTATION_VIDEO_URL = '';
@@ -5513,6 +5676,12 @@
       const el = document.getElementById(id);
       if (el && el.options.length <= 1) el.innerHTML += opts;
     });
+    // Student onboarding chapter picker - shows student sign-up status per chapter.
+    initChapterPicker('ob-chapter', 'student', { placeholder: 'Edutine Chapter Location *' });
+    // Staff/tutor application chapter picker - shows tutor-application status
+    // only when the applicant is applying to be a tutor (other roles like
+    // lead/officer aren't gated by open/closed applications).
+    initChapterPicker('app-chapter', () => (appRole === 'tutor' ? 'tutor' : null), { placeholder: 'Select chapter...' });
   }
 
   window.buildStudentSubjectPills = () => {
@@ -9845,6 +10014,7 @@
     overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
     // Populate chapter dropdown then openings
     document.getElementById('tiq-chapter').innerHTML = CHAPTERS.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join('');
+    initChapterPicker('tiq-chapter', 'tutor', { placeholder: 'Select chapter...', light: true });
     tiqChapterChange();
   };
 
@@ -10136,6 +10306,7 @@
     closedWrap.style.display = 'none';
     document.getElementById('signup-tutoring-pending').style.display = pending.length ? 'block' : 'none';
     document.getElementById('signup-tutoring-form').style.display = pending.length ? 'none' : 'block';
+    initChapterPicker('ist-chapter', 'student', { placeholder: 'Select chapter...', light: true });
     if (!pending.length) await populateSignupSubjectOptions();
   }
 
