@@ -1657,6 +1657,9 @@
       <button class="nav-item" id="nav-events" style="display:none;" onclick="showTab('events')">
         <span class="nav-icon">📅</span> Events
       </button>
+      <button class="nav-item" id="nav-appstatus" style="display:none;" onclick="showTab('appstatus')">
+        <span class="nav-icon">🔓</span> Applications
+      </button>
       <button class="nav-item" id="nav-support" style="display:none;" onclick="showTab('support')">
         <span class="nav-icon">🆘</span> <span id="nav-support-label">Support</span>
         <span id="support-badge" class="notif-badge" style="display:none;margin-left:auto;"></span>
@@ -1976,11 +1979,6 @@
         <p class="page-sub" id="tutor-review-sub">Review tutor applications and manage interviews.</p>
       </div>
       <!-- Job openings management -->
-      <div class="card" id="chapter-app-status" style="display:none;margin-bottom:1.5rem;">
-        <div class="card-label">Application Status</div>
-        <p style="font-size:0.8rem;color:var(--muted);margin:0 0 0.85rem;">Open or close applications per chapter. When closed, the public tutor form and student sign-ups are blocked for that chapter.</p>
-        <div id="chapter-app-status-list"></div>
-      </div>
       <div class="card" id="tutor-openings-manage" style="display:none;margin-bottom:1.5rem;">
         <div class="card-label">Tutor Job Openings</div>
         <p style="font-size:0.8rem;color:var(--muted);margin:0 0 0.85rem;">Post the positions applicants can apply to. Closed openings stop accepting new applications.</p>
@@ -2836,6 +2834,17 @@
     </div>
 
     <!-- ── Support (students contact staff; any staff can respond) ──────────── -->
+    <!-- ── Applications open/closed (any staff) ────────────────────────────── -->
+    <div class="tab-content" id="tab-appstatus">
+      <div class="page-header">
+        <div class="page-title">Applications</div>
+        <p class="page-sub">Open or close tutor applications and student sign-ups for each chapter. When closed, the public tutor form and student sign-ups are blocked for that chapter.</p>
+      </div>
+      <div class="card" id="chapter-app-status">
+        <div id="chapter-app-status-list"><div class="empty-state">Loading...</div></div>
+      </div>
+    </div>
+
     <div class="tab-content" id="tab-support">
       <div class="page-header">
         <div class="page-title" id="support-page-title">Support</div>
@@ -3648,6 +3657,7 @@
       'status':            () => { loadStatus(); const el = document.getElementById('staff-status-section'); if (el && el.style.display !== 'none') loadStaffStatus(); },
       'notifications':     () => loadNotificationsTab(),
       'tutor-review':      () => loadTutorReview(),
+      'appstatus':         () => loadChapterAppStatus(),
       'accounts':          () => loadAccountsTab(),
       'tutor-onboarding':  () => loadTutorOnboarding(),
       'student-support':   () => loadStudentSupport(),
@@ -3898,6 +3908,8 @@
     document.getElementById('nav-chapter-trainings').style.display = (role === 'tutor') ? 'flex' : 'none';
     // Messages is available to everyone now that you can message anyone in the portal.
     document.getElementById('nav-messages').style.display = 'flex';
+    // Applications open/close: available to every staff member (not students).
+    document.getElementById('nav-appstatus').style.display = (role !== 'student') ? 'flex' : 'none';
     // Support: students contact the team; every staff member can respond.
     document.getElementById('nav-support').style.display = 'flex';
     document.getElementById('nav-support-label').textContent = (role === 'student') ? 'Support' : 'Support Requests';
@@ -6268,7 +6280,7 @@
     feed.innerHTML = '<div class="empty-state"><span class="empty-icon">⏳</span>Loading...</div>';
 
     // New tutor application flow: job openings + walk-in applications
-    loadChapterAppStatus();
+    // (Open/close controls now live in their own "Applications" tab.)
     loadTutorOpenings();
     loadTutorApplications();
 
@@ -6515,14 +6527,12 @@
   async function loadChapterAppStatus() {
     const wrap = document.getElementById('chapter-app-status');
     if (!wrap) return;
-    if (!canManageChapterApps()) { wrap.style.display = 'none'; return; }
     wrap.style.display = 'block';
     await loadChapterSettings(true);
-    const isHigh = hasRole('ceo') || hasRole('super_admin') || hasRole('board_president') || hasRole('vp_student_tutor');
-    const myChapter = document.getElementById('sb-chapter')?.textContent || '';
-    const chapters = isHigh ? CHAPTERS : (myChapter ? [myChapter] : []);
+    // Anyone on the team can open/close applications for any chapter.
+    const chapters = CHAPTERS;
     const list = document.getElementById('chapter-app-status-list');
-    if (!chapters.length) { list.innerHTML = '<div style="font-size:0.8rem;color:var(--muted);">No chapter is set on your account.</div>'; return; }
+    if (!chapters.length) { list.innerHTML = '<div style="font-size:0.8rem;color:var(--muted);">No chapters configured.</div>'; return; }
     const pill = (chapter, kind, open) => {
       const bg = open ? '#e2f0e8' : '#fbeaea', fg = open ? '#1a6e3c' : '#c0392b', bd = open ? '#bfe0c8' : '#f0c7c7';
       return `<select onchange="setChapterAppStatus('${esc(chapter)}','${kind}',this.value==='open')" style="font-weight:700;font-size:0.78rem;padding:0.3rem 0.55rem;border-radius:8px;border:1px solid ${bd};background:${bg};color:${fg};cursor:pointer;">
